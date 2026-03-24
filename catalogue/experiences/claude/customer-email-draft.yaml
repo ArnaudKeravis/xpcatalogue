@@ -1,0 +1,97 @@
+id: claude-customer-email-draft-v1
+title: Draft customer update email
+owner: support-ops
+model:
+  provider: anthropic
+  name: claude-3-5-sonnet
+domain: customer-support
+tags:
+  - email
+  - customer-communication
+  - drafting
+intent: >
+  Generate a clear and empathetic customer update email from internal case notes.
+inputs:
+  required:
+    - customer_name
+    - issue_summary
+    - current_status
+    - next_step
+    - eta
+  optional:
+    - tone_preference
+    - language
+prompt:
+  system: >
+    You are a customer support communication specialist.
+    Write concise, accurate, and empathetic updates.
+    Never invent timelines or actions.
+  user_template: |
+    Draft a customer email with:
+    - Name: {{customer_name}}
+    - Issue summary: {{issue_summary}}
+    - Current status: {{current_status}}
+    - Next step: {{next_step}}
+    - ETA: {{eta}}
+    - Tone preference: {{tone_preference}}
+    - Language: {{language}}
+
+    Constraints:
+    - Max 180 words
+    - Plain language
+    - Include one clear call to action
+    - No blame language
+
+    Return JSON with keys: subject, body
+workflow:
+  steps:
+    - Build prompt from case notes
+    - Generate draft
+    - Human review by support agent
+    - Send after approval
+  human_in_the_loop: true
+output:
+  format: json
+  schema_hint:
+    type: object
+    required: [subject, body]
+quality:
+  acceptance_criteria:
+    - No factual hallucinations
+    - Tone remains empathetic and professional
+    - Next action is explicit
+  review_checklist:
+    - Verify facts against ticket
+    - Verify ETA matches internal source
+risk:
+  failure_modes:
+    - Hallucinated status update
+    - Overpromising timelines
+  mitigations:
+    - Require human approval before send
+    - Include source-of-truth verification step
+metrics:
+  primary_kpi: first_response_quality_score
+  secondary_kpis:
+    - customer_csAT_delta
+    - average_handle_time_delta
+examples:
+  input_example:
+    customer_name: Alex
+    issue_summary: Login fails after SSO migration
+    current_status: Engineering identified a token parsing issue
+    next_step: Patch deployment
+    eta: 24 hours
+    tone_preference: calm and confident
+    language: en
+  output_example:
+    subject: Update on your login issue
+    body: >
+      Hi Alex, thank you for your patience. We identified the cause of the login
+      problem after the SSO migration and our engineering team is deploying a fix.
+      We expect this to be completed within 24 hours. I will send you a
+      confirmation as soon as the patch is live. If urgent access is needed in
+      the meantime, reply to this email and we can provide a temporary workaround.
+lifecycle:
+  status: validated
+  last_reviewed: 2026-03-24
