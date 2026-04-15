@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" width="800" height="420" role="img" aria-label="Modular experience platform  simplified module connections">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0f4ff"/>
+      <stop offset="100%" stop-color="#e0e8fb"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="420" rx="20" fill="url(#bg)"/>
+  <g fill="none" stroke="#293896" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+    <rect x="80" y="120" width="140" height="100" rx="12" fill="#fff" stroke-width="2"/>
+    <rect x="260" y="80" width="140" height="100" rx="12" fill="#fff" stroke-width="2"/>
+    <rect x="440" y="120" width="140" height="100" rx="12" fill="#fff" stroke-width="2"/>
+    <rect x="620" y="200" width="100" height="100" rx="12" fill="#fff" stroke-width="2"/>
+    <rect x="320" y="240" width="160" height="90" rx="12" fill="#fff" stroke-width="2"/>
+    <path d="M220 170 L260 130 M400 130 L440 170 M580 170 L620 250 M400 240 L400 240"/>
+    <path d="M220 170 L320 260 M540 170 L400 285 M620 250 L480 285" opacity="0.6"/>
+  </g>
+  <g font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#293896" text-anchor="middle">
+    <text x="150" y="178">Digital Apps</text>
+    <text x="330" y="138">Conciergerie</text>
+    <text x="510" y="178">Smart retail</text>
+    <text x="670" y="258">Analytics</text>
+    <text x="400" y="292">Experience core</text>
+  </g>
+</svg>

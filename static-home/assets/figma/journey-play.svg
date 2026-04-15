@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" role="img" aria-label="Play  venue day journey (simplified; Figma Labs)">
+  <defs>
+    <pattern id="puzzle-pl" width="120" height="120" patternUnits="userSpaceOnUse">
+      <rect width="120" height="120" fill="#e8eeff"/>
+      <path d="M0 60c20-18 40-18 60 0s40 18 60 0" fill="none" stroke="#d0d8f5" stroke-width="1.2" opacity="0.9"/>
+      <path d="M60 0c18 20 18 40 0 60s-18 40 0 60" fill="none" stroke="#d0d8f5" stroke-width="1.2" opacity="0.9"/>
+    </pattern>
+    <filter id="soft-pl" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#puzzle-pl)"/>
+  <path
+    d="M 140 520 C 280 400 420 280 560 360 S 780 200 960 240 S 1180 380 1320 320 S 1520 480 1680 420 S 1780 620 1620 720"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="50"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.98"
+    filter="url(#soft-pl)"
+  />
+  <path
+    d="M 140 520 C 280 400 420 280 560 360 S 780 200 960 240 S 1180 380 1320 320 S 1520 480 1680 420 S 1780 620 1620 720"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="38"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <g font-family="Open Sans, Noto Sans, sans-serif" font-weight="700" font-size="22" fill="#001a72">
+    <rect x="80" y="420" width="200" height="48" rx="24" fill="#fff"/>
+    <text x="180" y="452" text-anchor="middle">Pre-match</text>
+    <rect x="380" y="220" width="220" height="48" rx="24" fill="#fff"/>
+    <text x="490" y="252" text-anchor="middle">Peak service</text>
+    <rect x="760" y="120" width="200" height="48" rx="24" fill="#fff"/>
+    <text x="860" y="152" text-anchor="middle">Half time</text>
+    <rect x="1180" y="240" width="200" height="48" rx="24" fill="#fff"/>
+    <text x="1280" y="272" text-anchor="middle">Full time</text>
+    <rect x="1420" y="620" width="260" height="48" rx="24" fill="#fff"/>
+    <text x="1550" y="652" text-anchor="middle">Networking lunch</text>
+  </g>
+</svg>

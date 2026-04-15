@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" role="img" aria-label="Consumer Work White Collar isometric day journey">
+  <defs>
+    <pattern id="puzzle" width="120" height="120" patternUnits="userSpaceOnUse">
+      <rect width="120" height="120" fill="#e4ecfb"/>
+      <path d="M0 60c20-18 40-18 60 0s40 18 60 0" fill="none" stroke="#d6dff5" stroke-width="1.2" opacity="0.9"/>
+      <path d="M60 0c18 20 18 40 0 60s-18 40 0 60" fill="none" stroke="#d6dff5" stroke-width="1.2" opacity="0.9"/>
+    </pattern>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#puzzle)"/>
+  <!-- Simplified white journey spine (Figma Labs — Iso Journey Work White Collar) -->
+  <path
+    d="M 180 720 C 320 680 420 560 520 480 S 760 220 960 280 S 1180 620 1320 520 S 1580 360 1760 420"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="56"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.98"
+    filter="url(#soft)"
+  />
+  <path
+    d="M 180 720 C 320 680 420 560 520 480 S 760 220 960 280 S 1180 620 1320 520 S 1580 360 1760 420"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="44"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <!-- Zone labels (approximate; replace asset with Figma export for pixel-perfect art) -->
+  <g font-family="Open Sans, Noto Sans, sans-serif" font-weight="700" font-size="28" fill="#001a72">
+    <rect x="200" y="480" width="200" height="56" rx="28" fill="#fff"/>
+    <text x="300" y="518" text-anchor="middle">Commute</text>
+    <rect x="380" y="420" width="240" height="56" rx="28" fill="#fff"/>
+    <text x="500" y="458" text-anchor="middle">Welcome area</text>
+    <rect x="720" y="120" width="200" height="56" rx="28" fill="#fff"/>
+    <text x="820" y="158" text-anchor="middle">Workplace</text>
+    <rect x="900" y="620" width="360" height="56" rx="28" fill="#fff"/>
+    <text x="1080" y="658" text-anchor="middle">Wellbeing &amp; Break time</text>
+    <rect x="1280" y="320" width="380" height="56" rx="28" fill="#fff"/>
+    <text x="1470" y="358" text-anchor="middle">Food &amp; Beverage area</text>
+  </g>
+</svg>

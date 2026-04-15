@@ -1,0 +1,72 @@
+---
+description: Sodexo Digital & AI Innovation Experience Catalogue — stack, data, Figma, Notion
+alwaysApply: true
+---
+
+# Experience Catalogue (Sodexo Digital & AI Innovation)
+
+Interactive catalogue of **90+** Sodexo digital solutions by areas (WORK / LEARN / HEAL / PLAY), personas, journey steps, and modules. **Content:** Notion. **Designs:** Figma file key `JW5MGQvB3itG9AXBKVVnuO`.
+
+## Stack
+
+- **Framework:** Next.js 14 App Router, TypeScript
+- **Styling:** Tailwind CSS + CSS variables in `src/styles/tokens.css`
+- **Components:** Shadcn/ui base + catalogue-specific components
+- **Icons:** `@phosphor-icons/react` only — **never emoji for UI icons**
+- **State:** Zustand in `src/lib/store.ts` (favourites, filters, AI chat)
+- **Data:** Notion via `src/lib/notion.ts`; fallback `src/lib/data/fallback.ts`
+- **Animation:** Framer Motion (page + card transitions)
+
+## Architecture
+
+- Fetch in **page.tsx** with `async/await` (server-side)
+- Components are **presentational** — no direct Notion/API calls
+- Types in `src/lib/data/types.ts`
+- Notion: **`revalidate: 3600`** (1h ISR); use fallback if Notion fails
+
+## Naming
+
+- **PascalCase:** components, types
+- **camelCase:** functions, variables, hooks
+- **kebab-case:** route segments, CSS classes
+- Hooks: **`use` prefix**
+
+## Component pattern
+
+```tsx
+interface Props { solution: Solution; className?: string }
+export function SolutionCard({ solution, className }: Props) {
+  return <div className={cn("...", className)}>...</div>
+}
+```
+
+Always: typed props, named export, Tailwind with token CSS vars via `cn()`.
+
+## Building a screen
+
+1. Figma MCP: `get_design_context(fileKey, nodeId)` for exact layout
+2. Map colours/spacing to token names from `design-system.md`
+3. Tailwind + CSS vars
+4. Wrap sections in Framer Motion `motion.div` for entry animations
+
+## Key Figma node IDs
+
+| Screen / asset | node-id |
+|----------------|---------|
+| Home | `2021-20460` |
+| Areas (isometric WORK/LEARN/HEAL/PLAY) | `3023-34538` |
+| Personas: Work | `2409-316825` |
+| Personas: Heal | `2410-317034` |
+| Personas: Play | `2410-317153` |
+| Personas: Learn | `2410-317272` |
+| White Collar profile + journey | `2021-19771` |
+| White Collar moment | `2021-26735` |
+| Solution card (Circles) | `3652-149930` |
+
+## Notion — Solutions DB (essential fields)
+
+Title **Name**; Select: **Module**, **Type**, **Status**; Rich text: **Context**, **Description**, **KPIs** (JSON `[{v,l}]`), **Contact**, **Benefits_***; Multi-select: **Flags**, **Hashtags**, **Areas** (WORK/LEARN/HEAL/PLAY); URL **URL**; Rich text **Img** (emoji icon).
+
+## Notion — Personas DB (essential fields)
+
+Title **Name**; Select **Area**; Rich text: **FullName**, **Role**, **Quote**, **Motivations** / **Pains** / **Needs** (JSON arrays), **Steps**, **Color** (hex), **Emoji**; Files **Photo**.

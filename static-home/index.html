@@ -1,0 +1,2729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sodexo Digital & AI Innovation Experience Catalogue">
+  <title>Sodexo Experience Catalogue</title>
+  <!-- Static single-page app: open `static-home/index.html` from this folder (or use `npx serve static-home`). Requires `catalog-solutions.js` + `assets/` alongside. No Node build. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #293896;
+      --blue-primary: #1a69ff;
+      --teal: #00d1c7;
+      --icon-bg: #dbe2fa;
+      --card-shadow: 0 4px 10.8px rgba(0, 28, 122, 0.35);
+      --radius-card: 25px;
+      --shadow-benefits: 12px 17px 24.3px rgba(0, 0, 0, 0.1);
+      --font-heading: "Open Sans", system-ui, sans-serif;
+      --font-body: "Noto Sans", system-ui, sans-serif;
+      /* Inline dotted chevron SVG (16×27) — height tokens */
+      --icon-chevron-h: 14px;
+      --icon-chevron-go-h: 11px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: var(--font-body);
+      font-weight: 400;
+      color: var(--blue);
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+    body.modal-open { overflow: hidden; }
+
+    .screen {
+      display: none;
+      min-height: 100vh;
+      position: relative;
+    }
+    .screen.active { display: block; }
+
+    .screen--modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      overflow: auto;
+      background: rgba(41, 56, 150, 0.35);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 24px 16px 48px;
+    }
+    .screen--modal.active { display: flex; align-items: flex-start; justify-content: center; }
+
+    h1, h2, h3, .font-heading {
+      font-family: var(--font-heading);
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 57px;
+      height: 57px;
+      border-radius: 46px;
+      border: 1px solid #173da6;
+      background: var(--icon-bg);
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .btn-back svg { width: 24px; height: 24px; color: var(--blue); }
+    .btn-back--sm {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border-width: 1px;
+    }
+    .btn-back--sm svg { width: 18px; height: 18px; }
+
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      border-radius: 72px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-pill:hover { transform: translateY(-1px); }
+    .btn-pill--primary {
+      background: #fff;
+      color: var(--blue-primary);
+      padding: 20px 58px;
+      font-size: clamp(22px, 3vw, 40px);
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+    .btn-pill--dark {
+      background: #fff;
+      color: var(--blue);
+      padding: 14px 32px;
+      font-size: 20px;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-radius { border-radius: var(--radius-card); }
+    .shadow-card { box-shadow: var(--card-shadow); }
+
+    /* —— Gate —— */
+    #gate {
+      background: linear-gradient(145deg, #e8ecfc 0%, #fff 50%, #d4e5ff 100%);
+      padding: 24px;
+    }
+    #gate.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gate-box {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: var(--radius-card);
+      box-shadow: var(--card-shadow);
+      padding: 40px 36px;
+      text-align: center;
+    }
+    .gate-box h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--blue);
+      margin: 0 0 8px;
+    }
+    .gate-box p { margin: 0 0 24px; font-size: 0.95rem; color: #444; }
+    .gate-box input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(41, 56, 150, 0.35);
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: var(--font-body);
+      margin-bottom: 16px;
+    }
+    .gate-box .btn-pill--primary { width: 100%; padding: 16px; font-size: 1.1rem; }
+    .gate-error { color: #c00; font-size: 0.875rem; margin-top: 12px; min-height: 1.25em; }
+
+    /* —— Home (Figma 2021:20460) —— */
+    #home {
+      background: var(--blue-primary);
+      overflow: hidden;
+    }
+    .home-inner {
+      max-width: 1920px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      padding: clamp(16px, 4vw, 48px);
+      padding-bottom: 80px;
+    }
+    .home-bokeh {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .home-bokeh--l { left: -20%; top: -5%; width: 55%; max-width: 900px; }
+    .home-bokeh--r { right: -25%; bottom: -10%; width: 55%; max-width: 900px; }
+    .home-bokeh img { width: 100%; height: auto; display: block; }
+    .home-sparkle { position: absolute; width: 18%; max-width: 340px; pointer-events: none; }
+    .home-sparkle--tl { left: -8%; top: -15%; }
+    .home-sparkle--tr { right: -5%; top: 5%; }
+
+    .home-header { text-align: center; position: relative; z-index: 2; margin-bottom: clamp(12px, 2.5vw, 28px); }
+    .home-tagline {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: clamp(22px, 3.2vw, 50px);
+      color: #fff;
+      margin: 0 auto 8px;
+      max-width: 1100px;
+      line-height: 1.15;
+    }
+    .home-underline { display: block; margin: 0 auto; height: 8px; width: 159px; }
+
+    .home-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(24px, 4vw, 64px);
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    @media (max-width: 900px) {
+      .home-row { grid-template-columns: 1fr; }
+    }
+
+    .home-copy h1 {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: clamp(2.5rem, 6vw, 120px);
+      line-height: 1.02;
+      color: #fff;
+      margin: 0 0 24px;
+    }
+    .home-sub {
+      font-size: clamp(1.1rem, 2vw, 40px);
+      color: #fff;
+      margin: 0 0 32px;
+      font-weight: 400;
+      max-width: 36ch;
+    }
+
+    .home-collage {
+      position: relative;
+      min-height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .home-circle {
+      position: absolute;
+      width: min(90%, 645px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      overflow: hidden;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .home-circle img {
+      width: 120%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      margin-left: -10%;
+    }
+    .home-portrait {
+      position: relative;
+      z-index: 2;
+      width: 45%;
+      max-width: 280px;
+      margin-right: 18%;
+      margin-top: 5%;
+    }
+    .home-portrait img { width: 100%; height: auto; display: block; }
+    .home-phone {
+      position: absolute;
+      z-index: 3;
+      right: 0;
+      top: 12%;
+      width: 28%;
+      max-width: 282px;
+      border-radius: 25px 25px 0 0;
+      overflow: hidden;
+      box-shadow: -3px 4px 21px rgba(0, 0, 0, 0.25);
+    }
+    .home-phone img { width: 100%; display: block; vertical-align: top; }
+
+    .home-brand {
+      position: absolute;
+      bottom: 32px;
+      right: clamp(16px, 4vw, 48px);
+      z-index: 4;
+    }
+    .home-brand img { height: 38px; width: auto; display: block; }
+
+    /* —— Areas —— (full-bleed background + cards on top, parallax) */
+    #areas {
+      background: #f5f7fc;
+      padding: 0 24px 48px;
+      min-height: 100vh;
+    }
+    .areas-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: clamp(2rem, 4vw, 70px);
+      color: var(--blue);
+      margin: 0 0 16px;
+      padding: 16px 8px 0;
+      position: relative;
+      z-index: 3;
+    }
+    .areas-stage {
+      position: relative;
+      max-width: 1480px;
+      margin: 0 auto;
+      min-height: min(78vh, 820px);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 48px rgba(41, 56, 150, 0.12);
+    }
+    .areas-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      will-change: transform;
+      background: #e8ecf7;
+    }
+    .areas-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      display: block;
+    }
+    .areas-cards-layer {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(200px, 300px));
+      gap: clamp(16px, 2.5vw, 28px);
+      justify-content: space-between;
+      align-content: center;
+      min-height: min(78vh, 820px);
+      padding: clamp(20px, 4vw, 48px);
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .areas-cards-layer {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-bottom: 32px;
+      }
+      .areas-stage { min-height: auto; }
+    }
+    .area-card {
+      backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: var(--radius-card);
+      padding: 16px 18px;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      text-align: left;
+      border: none;
+      font: inherit;
+      color: inherit;
+      transition: transform 0.15s ease;
+    }
+    .area-card:hover { transform: translateY(-2px); }
+    .area-card__head {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 32px;
+      color: var(--blue-primary);
+      padding: 0 20px 10px;
+    }
+    .area-card__head .icon-chevron {
+      display: block;
+      width: auto;
+      height: var(--icon-chevron-h);
+      max-height: var(--icon-chevron-h);
+      flex-shrink: 0;
+    }
+    .area-card__rule { height: 2px; margin: 0 -8px 12px; }
+    .area-card__rule img { width: 100%; height: 2px; display: block; }
+    .area-card__body {
+      font-size: 20px;
+      line-height: 1.45;
+      color: var(--blue);
+    }
+    .area-card__body strong { font-weight: 700; }
+
+    .areas-topbar {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* —— Work personas —— */
+    #work-personas,
+    #area-personas {
+      background: #fff;
+      padding: 24px 40px 64px;
+      overflow: hidden;
+    }
+    .wp-deco {
+      position: absolute;
+      right: -80px;
+      top: 10%;
+      width: 280px;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    .wp-deco img { width: 100%; height: auto; }
+    .wp-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: clamp(1.75rem, 3.5vw, 70px);
+      color: var(--blue);
+      margin: 0 0 8px;
+      padding-left: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .wp-sub {
+      font-size: clamp(1.1rem, 2vw, 40px);
+      color: var(--blue);
+      margin: 0 0 32px;
+      padding-left: 0;
+      max-width: 1000px;
+    }
+    .wp-sub strong { font-weight: 700; }
+    .wp-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, min(696px, 100%)) 1fr;
+      gap: 29px 32px;
+      align-items: start;
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 0;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 1100px) {
+      .wp-grid { grid-template-columns: 1fr; }
+    }
+    .wp-info {
+      background: rgba(255, 255, 255, 0.93);
+      border-radius: var(--radius-card);
+      padding: 22px;
+      box-shadow: 6px 12px 38px rgba(41, 56, 150, 0.29);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .wp-info-iso { width: 100%; max-width: 409px; margin: 0 auto 12px; display: block; }
+    .wp-info-rule img { width: 100%; height: 2px; }
+    .wp-info-text {
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--blue);
+      margin-top: 0;
+    }
+    .wp-info-text ul { padding-left: 1.25em; }
+    .wp-info-text li { margin-bottom: 0.5em; }
+    .wp-info-text strong { font-weight: 700; }
+
+    /* Figma 2409:316825 — ~343px column (33 offset + 310 card), row gap 32 / col gap 47 */
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 343px));
+      gap: 32px 47px;
+      align-items: start;
+      justify-content: start;
+    }
+    @media (max-width: 1200px) {
+      .persona-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 700px) {
+      .persona-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; }
+    }
+    @media (max-width: 420px) {
+      .persona-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 380px) {
+      .persona-card__block { max-width: 100%; }
+      .persona-card__inner {
+        margin-left: 0;
+        width: 100%;
+        max-width: none;
+      }
+      .persona-card__title { margin-left: 12px; }
+    }
+    /* PLAY — Figma 2410:317153 : 4 colonnes × 2 rangées, remplissage par colonne */
+    .persona-grid--play {
+      grid-template-columns: repeat(4, minmax(0, 343px));
+      grid-template-rows: repeat(2, auto);
+      grid-auto-flow: column;
+      gap: 32px 33px;
+      justify-content: start;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    @media (max-width: 1500px) {
+      .persona-grid--play {
+        grid-template-columns: repeat(3, minmax(0, 343px));
+      }
+    }
+    @media (max-width: 900px) {
+      .persona-grid--play {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-flow: row;
+      }
+    }
+    .persona-card__title--long {
+      font-size: clamp(1.1rem, 2.2vw, 32px);
+      line-height: 1.2;
+    }
+    .wp-info--learn .wp-info-iso { max-width: 560px; }
+    .persona-card {
+      position: relative;
+      text-align: left;
+      width: 100%;
+      max-width: 343px;
+      margin: 0;
+    }
+    /* Bloc coloré décalé (ml 33px dans Figma) + GO qui chevauche à gauche */
+    .persona-card__block {
+      position: relative;
+      width: 100%;
+      max-width: 343px;
+      min-height: 307px;
+    }
+    /* Titre sous la carte — Figma: 40px bold, ml 52px, mt 7px (lisible sur fond blanc: bleu) */
+    .persona-card__title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: clamp(1.5rem, 2.8vw, 40px);
+      line-height: 1.15;
+      color: var(--blue);
+      margin: 7px 0 0 52px;
+      letter-spacing: 0.01em;
+    }
+    .persona-card__inner {
+      position: relative;
+      margin-left: 33px;
+      width: 310px;
+      max-width: calc(100% - 33px);
+      border-radius: 25px;
+      overflow: hidden;
+      min-height: 307px;
+      background: #b4bbe4;
+      box-shadow: 5px 5px 18.8px rgba(41, 56, 150, 0.04);
+    }
+    .persona-card__inner--client { background: var(--blue); }
+    .persona-card__inner--op { background: #6a74b6; }
+    .persona-card__media {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 256px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .persona-card__img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+      object-fit: cover;
+      object-position: center 18%;
+    }
+    .persona-card__go {
+      position: absolute;
+      left: 0;
+      top: 116px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      background: #fff;
+      color: var(--blue-primary);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 16px;
+      padding: 12px 20px 12px 24px;
+      border-radius: 72px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+      pointer-events: auto;
+    }
+    .persona-card__go .icon-chevron {
+      display: block;
+      width: auto;
+      height: var(--icon-chevron-go-h);
+      max-height: var(--icon-chevron-go-h);
+      flex-shrink: 0;
+    }
+
+    /* —— White Collar journey —— */
+    #white-collar {
+      background: #fff;
+      padding-bottom: 48px;
+    }
+    .wc-bar {
+      text-align: center;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: clamp(1.25rem, 2.5vw, 40px);
+      color: var(--blue-primary);
+      padding: 16px 16px 0;
+    }
+    .wc-hero-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    /* Figma 1635:80131 — persona presentation (Consumer / David Miller) */
+    .wc-persona-figma {
+      margin: 0 auto;
+      max-width: 1920px;
+      padding: 12px 16px 56px;
+      border-radius: var(--radius-card);
+      background: linear-gradient(
+        90deg,
+        rgb(255, 255, 255) 6.1%,
+        rgba(223, 229, 251, 0.9) 66.28%,
+        rgba(137, 160, 240, 0.631) 119%,
+        rgba(0, 48, 222, 0.2) 123%
+      );
+      overflow: hidden;
+    }
+    .wc-persona-figma__deco {
+      position: absolute;
+      left: -15%;
+      top: 50%;
+      width: 70%;
+      height: min(1200px, 140vh);
+      transform: translateY(-50%) rotate(-75deg);
+      opacity: 0.35;
+      pointer-events: none;
+      background-image: radial-gradient(circle, rgba(41, 56, 150, 0.22) 1.2px, transparent 1.2px);
+      background-size: 14px 14px;
+    }
+    .wc-persona-figma__grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    @media (min-width: 1100px) {
+      .wc-persona-figma__grid {
+        grid-template-columns: minmax(240px, 1fr) minmax(260px, 1.1fr) minmax(280px, 1.2fr);
+        gap: 24px 28px;
+      }
+    }
+    .wc-persona-strip--figma {
+      padding: 0;
+      margin: 0 0 8px;
+      max-width: none;
+    }
+    .wc-persona-strip--figma .wc-persona-strip__eyebrow {
+      font-size: clamp(1.25rem, 2.5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .wc-persona-strip--figma .wc-persona-strip__name {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .wc-persona-strip--figma .wc-persona-strip__role {
+      font-size: clamp(1.25rem, 2.5vw, 2.5rem);
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+    .pj-context {
+      background: var(--blue);
+      color: #fff;
+      border-radius: 20px;
+      padding: 20px 18px;
+      box-shadow: var(--shadow-benefits);
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+    .pj-context__title {
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+    .pj-context ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .pj-context li { margin: 0 0 6px; }
+    .pj-context li:last-child { margin-bottom: 0; }
+    .pj-goals {
+      background: #ffd05e;
+      color: var(--blue);
+      border-radius: 20px;
+      padding: 18px 18px 20px;
+      box-shadow: var(--shadow-benefits);
+      font-size: 1.125rem;
+      line-height: 1.45;
+    }
+    .pj-goals__head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.125rem;
+    }
+    .pj-goals__head svg {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+    }
+    .pj-goals ul {
+      margin: 0;
+      padding-left: 1.35rem;
+    }
+    .pj-goals li { margin-bottom: 6px; }
+    .pj-quote {
+      margin: 0;
+      padding: 28px 26px;
+      background: #fff;
+      border-radius: 40px;
+      box-shadow: var(--shadow-benefits);
+      font-size: 1.25rem;
+      font-style: italic;
+      line-height: 1.45;
+      color: var(--blue);
+    }
+    .wc-persona-figma__col--photo {
+      position: relative;
+      min-height: 280px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      border-radius: 25px;
+      overflow: hidden;
+    }
+    .wc-persona-figma__photo-bg {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px);
+      background-size: 12px 12px;
+      opacity: 0.95;
+    }
+    .wc-persona-figma__photo {
+      position: relative;
+      z-index: 1;
+      width: auto;
+      max-width: 100%;
+      max-height: min(520px, 58vh);
+      height: auto;
+      object-fit: contain;
+      object-position: bottom center;
+    }
+    .pj-card {
+      background: #fff;
+      border-radius: 40px;
+      padding: 22px 23px;
+      box-shadow: var(--shadow-benefits);
+      color: var(--blue);
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+    .pj-card__head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+    .pj-card__head svg {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      color: var(--blue);
+    }
+    .pj-card ul {
+      margin: 0;
+      padding-left: 1.35rem;
+    }
+    .pj-card li { margin-bottom: 6px; }
+    .wc-persona-figma__logo {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      z-index: 3;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .wc-persona-figma__logo img {
+      display: block;
+      height: 32px;
+      width: auto;
+      max-width: min(200px, 42vw);
+    }
+    .wc-persona-figma__logo-fallback {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+    .wc-hero {
+      width: 100%;
+      max-height: min(70vh, 990px);
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .wc-back {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 5;
+    }
+
+    .wc-panel {
+      max-width: 1760px;
+      margin: -40px auto 0;
+      padding: 0 24px 48px;
+      position: relative;
+      z-index: 2;
+    }
+    .wc-panel-inner {
+      background: #e0e6f9;
+      border-radius: var(--radius-card);
+      box-shadow: 8px -3px 200px rgba(41, 56, 150, 0.1);
+      padding: 32px 24px 48px;
+    }
+    .wc-panel-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .wc-panel-head h2 {
+      margin: 0;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: clamp(1.5rem, 3vw, 56px);
+      color: var(--blue);
+    }
+    .wc-panel-head h2 .teal { color: var(--teal); }
+    .wc-listen {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #d4dbf3;
+      border-radius: 28px;
+      padding: 4px 4px 4px 22px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--blue);
+      border: none;
+      cursor: pointer;
+    }
+    .wc-listen .icon { width: 49px; height: 49px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .wc-intro {
+      font-size: clamp(0.95rem, 1.5vw, 19.7px);
+      line-height: 1.55;
+      color: var(--blue);
+      max-width: 1200px;
+      margin-bottom: 32px;
+    }
+    .wc-intro strong { font-weight: 700; }
+
+    .wc-journey-img {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto 24px;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .wc-modules {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .wc-mod {
+      background: #fff;
+      border-radius: 20px;
+      padding: 12px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 128, 0.12);
+      border: 1px solid #d7e4fe;
+    }
+    .wc-mod .mod-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #c6cded;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      float: left;
+      margin-right: 8px;
+      height: 80px;
+    }
+    .wc-mod .mod-title {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--blue);
+      margin: 8px 0;
+    }
+    .wc-persona-strip {
+      max-width: 1200px;
+      margin: 0 auto 20px;
+      padding: 0 24px 0 56px;
+    }
+    @media (max-width: 600px) {
+      .wc-persona-strip { padding-left: 20px; padding-right: 16px; }
+    }
+    .wc-persona-strip__eyebrow {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--blue-primary);
+      margin: 0 0 8px;
+      letter-spacing: 0.04em;
+    }
+    .wc-persona-strip__name {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--blue);
+      margin: 0 0 6px;
+      line-height: 1.1;
+    }
+    .wc-persona-strip__role {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      font-weight: 600;
+      color: var(--teal);
+      margin: 0 0 16px;
+    }
+    .wc-persona-strip__bio {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #334;
+      max-width: 52ch;
+      margin: 0;
+    }
+    .wc-persona-strip__bio p { margin: 0 0 0.75em; }
+    .wc-persona-strip__bio p:last-child { margin-bottom: 0; }
+    .wc-persona-strip__quote {
+      font-style: italic;
+      color: var(--blue);
+      margin: 0 0 1em;
+      font-size: 1.05rem;
+    }
+    .wc-modular-block {
+      margin-top: 28px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 16px;
+      border: 1px solid rgba(41, 56, 150, 0.1);
+    }
+    .wc-modular-block h3 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+      color: var(--blue);
+    }
+    /* Consumer / WORK / Persona strip (aligned with Next persona page) */
+    .wc-journey-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: clamp(8px, 2vw, 24px);
+      margin: 28px 0 12px;
+      max-width: 1200px;
+    }
+    .wc-journey-strip__seg {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: clamp(1.5rem, 5vw, 3.5rem);
+      line-height: 1;
+      color: var(--blue);
+    }
+    .wc-journey-strip__seg--teal { color: var(--teal); }
+    .wc-journey-hint {
+      font-size: 0.95rem;
+      color: #666;
+      margin: 0 0 16px;
+      max-width: 1200px;
+    }
+    .journey-map-wrap {
+      position: relative;
+      margin-top: 32px;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      line-height: 0;
+      background: #e8ecf7;
+    }
+    .journey-map-wrap > img {
+      width: 100%;
+      display: block;
+      vertical-align: middle;
+    }
+    .journey-hotspots {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+    .journey-hotspot {
+      position: absolute;
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      background: rgba(26, 105, 255, 0.18);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+      box-shadow: 0 2px 12px rgba(0, 28, 122, 0.2);
+    }
+    .journey-hotspot:hover,
+    .journey-hotspot:focus-visible {
+      background: rgba(26, 105, 255, 0.38);
+      transform: scale(1.02);
+      outline: none;
+    }
+    .journey-hotspot__label {
+      position: absolute;
+      left: 50%;
+      top: 6px;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--blue);
+      background: rgba(255, 255, 255, 0.96);
+      padding: 4px 8px;
+      border-radius: 8px;
+      white-space: normal;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+      pointer-events: none;
+      max-width: 95%;
+      text-align: center;
+      line-height: 1.15;
+    }
+    @media (max-width: 600px) {
+      .journey-hotspot__label { font-size: 8px; padding: 3px 5px; }
+    }
+
+    /* Moment detail */
+    #moment-detail .moment-body {
+      max-width: 720px;
+      padding: 24px 28px 48px;
+      margin: 0 auto;
+    }
+    #moment-detail .moment-body p { line-height: 1.65; margin: 0 0 1em; }
+
+    /* —— Solution modal (Circles) —— */
+    .solution-shell {
+      width: 100%;
+      max-width: 1100px;
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      background: #fff;
+      border-radius: var(--radius-card);
+      box-shadow: var(--card-shadow);
+      margin: auto;
+    }
+    .solution-tabbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 20px 24px;
+      border-bottom: 1px solid #ddd;
+    }
+    .solution-tabs {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+    .solution-tabs .label {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 28px;
+      color: var(--blue);
+      margin-right: 8px;
+    }
+    .solution-tabs button,
+    .solution-tabs .sol-tab {
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 20px;
+      color: #173da6;
+      padding: 8px 8px 12px;
+      cursor: pointer;
+      border-bottom: 4px solid transparent;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .solution-tabs button.active,
+    .solution-tabs .sol-tab.active {
+      border-bottom-color: #173da6;
+    }
+    .btn-close-round {
+      width: 56px;
+      height: 56px;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      background: none;
+      position: relative;
+    }
+    .btn-close-round img { width: 100%; height: auto; }
+
+    .solution-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
+    @media (max-width: 900px) {
+      .solution-body { grid-template-columns: 1fr; }
+    }
+    .solution-col {
+      padding: 28px 32px 36px;
+      border-right: 1px solid #e8e8e8;
+    }
+    .solution-col:last-child { border-right: none; }
+    @media (max-width: 900px) {
+      .solution-col { border-right: none; border-bottom: 1px solid #e8e8e8; }
+    }
+
+    .solution-col h3 {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 42px;
+      color: var(--blue);
+      margin: 0 0 16px;
+    }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    .tag {
+      display: inline-flex;
+      padding: 10px 14px;
+      border-radius: 100px;
+      font-size: 15px;
+      border: 1px solid rgba(41, 56, 150, 0.26);
+      background: #fff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .tag--teal {
+      border-color: var(--teal);
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 20px;
+    }
+    .regions {
+      margin-bottom: 24px;
+    }
+    .regions-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    .regions-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      align-items: flex-end;
+    }
+    .regions-flags img.flag { width: 35px; height: auto; border-radius: 4px; }
+    .regions-checks {
+      display: flex;
+      gap: 24px;
+      margin-top: 8px;
+      padding-left: 4px;
+    }
+    .regions-checks img { width: 28px; height: auto; }
+
+    .sol-section {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+      align-items: flex-start;
+    }
+    .sol-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--icon-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sol-icon img { width: 25px; height: auto; max-height: 28px; }
+    .sol-section h4 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+    }
+    .sol-section p, .sol-section li {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .sol-section ul { padding-left: 1.2em; margin: 8px 0 0; }
+
+    .solution-visual {
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .solution-visual img { width: 100%; display: block; vertical-align: middle; }
+
+    .benefits-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .benefits-grid {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .benefit-card {
+      flex: 1 1 100px;
+      min-width: 100px;
+      max-width: 130px;
+      border: 1px solid #d9d9d9;
+      border-radius: 10px;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+    .benefit-card strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-family: var(--font-heading);
+    }
+    .benefit-card img.ico { width: 40px; height: 40px; margin: 0 auto 8px; object-fit: contain; }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* —— Global nav & breadcrumbs —— */
+    .app-shell { max-width: 1920px; margin: 0 auto; }
+    .nav-rail {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(41, 56, 150, 0.12);
+    }
+    .nav-rail__home {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--blue-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .nav-rail__home:hover { background: var(--icon-bg); }
+    .nav-rail__start {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .nav-rail__search {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--blue);
+      background: var(--icon-bg);
+      border: 1px solid rgba(41, 56, 150, 0.22);
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .nav-rail__search:hover { background: #eef2fc; color: var(--blue-primary); }
+
+    .home-search-bar {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+      margin: 0 auto clamp(14px, 3vw, 28px);
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .home-search-bar__input {
+      flex: 1 1 220px;
+      min-width: 0;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.95);
+      font-size: 1rem;
+      font-family: var(--font-body);
+      color: var(--blue);
+      box-shadow: 0 2px 12px rgba(0, 28, 122, 0.15);
+    }
+    .home-search-bar__input::placeholder { color: rgba(41, 56, 150, 0.55); }
+    .home-search-bar__btn {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px 22px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      background: #fff;
+      color: var(--blue-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+    .home-search-bar__btn:hover { transform: translateY(-1px); }
+
+    .search-page { background: #f4f7ff; min-height: 100vh; }
+    .search-page__title {
+      font-size: clamp(1.35rem, 3vw, 1.85rem);
+      color: var(--blue);
+      margin: 0 0 8px;
+    }
+    .search-page__hint { margin: 0 0 20px; color: #445; font-size: 0.95rem; }
+    .search-page__input {
+      width: 100%;
+      max-width: 560px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(41, 56, 150, 0.2);
+      font-size: 1.05rem;
+      font-family: var(--font-body);
+      margin-bottom: 12px;
+    }
+    .search-page__meta { font-size: 0.875rem; color: #556; margin-bottom: 16px; min-height: 1.25em; }
+    .search-group { margin-bottom: 28px; }
+    .search-group__title {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(41, 56, 150, 0.65);
+      margin: 0 0 10px;
+    }
+    .search-hit {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(41, 56, 150, 0.12);
+      border-radius: var(--radius-card);
+      background: #fff;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0, 28, 122, 0.06);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .search-hit:hover {
+      border-color: var(--blue-primary);
+      box-shadow: 0 4px 12px rgba(26, 105, 255, 0.12);
+    }
+    .search-hit__badge {
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: var(--icon-bg);
+      color: var(--blue-primary);
+    }
+    .search-hit__body { min-width: 0; }
+    .search-hit__title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--blue);
+      margin: 0 0 4px;
+    }
+    .search-hit__sub { font-size: 0.875rem; color: #556; margin: 0; line-height: 1.35; }
+
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--blue);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .breadcrumb li { display: inline-flex; align-items: center; gap: 6px; }
+    .breadcrumb button {
+      background: none;
+      border: none;
+      padding: 0;
+      font: inherit;
+      color: var(--blue-primary);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .breadcrumb button:hover { color: var(--blue); }
+    .breadcrumb .sep { color: rgba(41, 56, 150, 0.45); text-decoration: none; user-select: none; }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      z-index: 999;
+      padding: 8px 16px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 4px;
+    }
+    .skip-link:focus { left: 16px; top: 16px; }
+
+    /* —— Image crops (closer to Figma framing) —— */
+    /* Do not set position on bare .img-crop — it would override .home-phone { position: absolute } */
+    .img-crop {
+      overflow: hidden;
+      display: block;
+    }
+    .img-crop img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .home-portrait.img-crop {
+      position: relative;
+      border-radius: 12px;
+      aspect-ratio: 3 / 4;
+      max-height: 420px;
+    }
+    /* Absolute fill: SVG + % height inside aspect-ratio boxes is unreliable in some engines */
+    .home-portrait.img-crop img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 15%;
+    }
+    .home-phone.img-crop {
+      aspect-ratio: 282 / 520;
+      max-height: 520px;
+    }
+    .home-phone.img-crop img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 0;
+    }
+    .wc-hero-frame {
+      max-height: min(58vh, 640px);
+      overflow: hidden;
+    }
+    .wc-hero-frame .wc-hero {
+      width: 100%;
+      height: min(58vh, 640px);
+      object-fit: cover;
+      object-position: 50% 28%;
+      max-height: none;
+    }
+    .wc-journey-frame {
+      border-radius: 12px;
+      overflow: hidden;
+      max-height: min(50vh, 480px);
+      margin: 0 auto 24px;
+      max-width: 900px;
+    }
+    .wc-journey-frame img {
+      width: 100%;
+      height: min(50vh, 480px);
+      object-fit: cover;
+      object-position: 50% 50%;
+    }
+    .wc-mod--click { cursor: pointer; transition: box-shadow 0.15s ease, transform 0.15s ease; }
+    .wc-mod--click:hover, .wc-mod--click:focus-visible {
+      box-shadow: var(--card-shadow);
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .wc-toc {
+      font-size: 14px;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      border: 1px solid rgba(41, 56, 150, 0.12);
+    }
+    .wc-toc a { color: var(--blue-primary); font-weight: 600; margin-right: 16px; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <!-- Password gate -->
+  <div class="screen active" id="gate">
+    <div class="gate-box">
+      <h1 class="font-heading">Experience Catalogue</h1>
+      <p>Enter the catalogue password to continue.</p>
+      <form id="gate-form" autocomplete="off">
+        <label class="visually-hidden" for="gate-password">Password</label>
+        <input id="gate-password" type="password" placeholder="Password" required>
+        <button type="submit" class="btn-pill btn-pill--primary">Unlock</button>
+      </form>
+      <p class="gate-error" id="gate-error" aria-live="polite"></p>
+      </div>
+      </div>
+
+  <!-- Home -->
+  <div class="screen" id="home" data-node-id="2021:20460">
+    <div class="home-inner" id="main-content" tabindex="-1">
+      <div class="home-bokeh home-bokeh--l" aria-hidden="true"><img src="./assets/figma/home-bokeh.png" alt=""></div>
+      <div class="home-bokeh home-bokeh--r" aria-hidden="true"><img src="./assets/figma/home-bokeh.png" alt=""></div>
+      <div class="home-sparkle home-sparkle--tl" aria-hidden="true"><img src="./assets/figma/home-sparkle.png" alt=""></div>
+      <div class="home-sparkle home-sparkle--tr" aria-hidden="true"><img src="./assets/figma/home-sparkle.png" alt=""></div>
+
+      <header class="home-header">
+        <p class="home-tagline">Digital, AI &amp; Innovation Experience Catalogue</p>
+        <img class="home-underline" src="./assets/figma/home-title-underline.png" alt="" width="159" height="8">
+      </header>
+
+      <div class="home-search-bar">
+        <label class="visually-hidden" for="home-search-q">Search personae, modules, solutions</label>
+        <input type="search" id="home-search-q" class="home-search-bar__input" placeholder="Search personae, modules, solutions…" autocomplete="off" spellcheck="false">
+        <button type="button" class="home-search-bar__btn" id="home-search-submit">Search</button>
+      </div>
+
+      <div class="home-row">
+        <div class="home-copy">
+          <h1>Explore<br>Digital &amp;<br>Innovative Experiences</h1>
+          <p class="home-sub">Discover and create your own experiences</p>
+          <button type="button" class="btn-pill btn-pill--primary" onclick="go('areas')">Discover</button>
+        </div>
+        <div class="home-collage">
+          <div class="home-circle" aria-hidden="true">
+            <img src="./assets/figma/hero-workplace-circle.png" alt="">
+          </div>
+          <div class="home-portrait img-crop">
+            <img src="./assets/figma/home-client-portrait.png" alt="Client portrait">
+          </div>
+          <div class="home-phone img-crop">
+            <img src="./assets/figma/home-phone-myvillage.png" alt="Mobile app preview">
+          </div>
+      </div>
+    </div>
+
+      <div class="home-brand">
+        <img src="./assets/figma/sodexo-logotype-2021.jpg" alt="Sodexo" width="1024" height="576">
+      </div>
+    </div>
+  </div>
+
+  <!-- Areas -->
+  <div class="screen" id="areas" data-node-id="3023:34538">
+    <nav class="nav-rail" aria-label="Page">
+      <div class="nav-rail__start">
+        <button type="button" class="nav-rail__home" onclick="go('home')">Home</button>
+        <button type="button" class="nav-rail__search" onclick="openCatalogSearch('')">Search</button>
+      </div>
+      <ol class="breadcrumb" id="breadcrumb-areas"></ol>
+    </nav>
+    <h2 class="areas-title app-shell">Areas Where We Operate</h2>
+    <div class="app-shell">
+      <div class="areas-stage" id="areas-stage">
+        <div class="areas-bg" id="areas-parallax-bg" aria-hidden="true">
+          <img src="./assets/figma/areas-isometric.png" alt="">
+        </div>
+        <div class="areas-cards-layer" id="areas-cards-root"></div>
+      </div>
+    </div>
+      </div>
+
+  <!-- Work personas -->
+  <div class="screen" id="work-personas" data-node-id="2409:316825">
+    <nav class="nav-rail" aria-label="Page">
+      <div class="nav-rail__start">
+        <button type="button" class="nav-rail__home" onclick="go('home')">Home</button>
+        <button type="button" class="nav-rail__search" onclick="openCatalogSearch('')">Search</button>
+        </div>
+      <ol class="breadcrumb" id="breadcrumb-work"></ol>
+    </nav>
+    <div class="wp-deco" aria-hidden="true"><img src="./assets/figma/work-page-deco.png" alt=""></div>
+    <div class="areas-topbar app-shell" style="padding-left: 0; padding-right: 0;">
+      <button type="button" class="btn-back btn-back--sm" onclick="go('areas')" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+        </div>
+    <h2 class="wp-title">Here are our key personae in the work context</h2>
+    <p class="wp-sub"><strong>WORK :</strong> Select the personae to discover.</p>
+
+    <div class="wp-grid">
+      <div class="wp-info card-radius shadow-card">
+        <img class="wp-info-iso" src="./assets/figma/work-area-info-iso.png" alt="Isometric workplace illustration">
+        <div class="wp-info-rule"><img src="./assets/figma/ui-horizontal-rule.png" alt=""></div>
+        <div class="wp-info-text">
+          <p>In every workplace, <strong>Sodexo transforms routine into experience.</strong></p>
+          <ul>
+            <li>As a <strong>client</strong>, I see how well-being and productivity grow side by side, spaces are alive, employees connect, ideas flow.</li>
+            <li>As an <strong>employee</strong>, <strong>I feel energized, valued, and cared for</strong>, enjoying healthy food, inspiring spaces, and digital simplicity that supports my day.</li>
+            <li>As an <strong>operator</strong>, <strong>I take pride in delivering</strong> a human, seamless rhythm in every service, every interaction designed to make work feel better, smarter, and more meaningful.</li>
+          </ul>
+          </div>
+        </div>
+
+      <div class="persona-grid" id="wp-personas-root"></div>
+      </div>
+    </div>
+
+  <!-- LEARN / HEAL / PLAY personae (Figma 2410:317272, 2410:317034, 2410:317153) -->
+  <div class="screen" id="area-personas" data-node-id="">
+    <nav class="nav-rail" aria-label="Page">
+      <div class="nav-rail__start">
+        <button type="button" class="nav-rail__home" onclick="go('home')">Home</button>
+        <button type="button" class="nav-rail__search" onclick="openCatalogSearch('')">Search</button>
+    </div>
+      <ol class="breadcrumb" id="breadcrumb-area-personas"></ol>
+    </nav>
+    <div class="wp-deco" aria-hidden="true"><img id="area-personas-deco" src="./assets/figma/learn-page-deco.png" alt=""></div>
+    <div class="areas-topbar app-shell" style="padding-left: 0; padding-right: 0;">
+      <button type="button" class="btn-back btn-back--sm" onclick="go('areas')" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+    <h2 class="wp-title" id="area-personas-title">Personae</h2>
+    <p class="wp-sub" id="area-personas-sub"><strong>AREA :</strong> Select the personae to discover.</p>
+    <div class="wp-grid">
+      <div class="wp-info card-radius shadow-card" id="area-personas-info-mount"></div>
+      <div class="persona-grid" id="area-personas-root"></div>
+    </div>
+  </div>
+
+  <!-- Persona journey (White Collar first; more personae via CATALOG.personas) -->
+  <div class="screen" id="white-collar" data-node-id="2021:19771">
+    <nav class="nav-rail" aria-label="Page">
+      <div class="nav-rail__start">
+        <button type="button" class="nav-rail__home" onclick="go('home')">Home</button>
+        <button type="button" class="nav-rail__search" onclick="openCatalogSearch('')">Search</button>
+      </div>
+      <ol class="breadcrumb" id="breadcrumb-persona"></ol>
+    </nav>
+    <p class="wc-bar">Digital, AI &amp; Innovation Experience Catalogue</p>
+    <div class="wc-hero-wrap wc-persona-figma" id="pj-persona-hero-shell">
+      <button type="button" class="btn-back btn-back--sm wc-back" onclick="goBackToAreaPersonae()" aria-label="Back to area personae">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="wc-persona-figma__deco" aria-hidden="true"></div>
+      <div class="wc-persona-figma__grid">
+        <div class="wc-persona-figma__col wc-persona-figma__col--left">
+          <div class="wc-persona-strip wc-persona-strip--figma">
+            <p class="wc-persona-strip__eyebrow" id="pj-eyebrow"></p>
+            <h1 class="wc-persona-strip__name" id="pj-name"></h1>
+            <p class="wc-persona-strip__role" id="pj-role"></p>
+          </div>
+          <div class="pj-context" id="pj-context" hidden></div>
+          <div class="pj-goals" id="pj-goals" hidden></div>
+          <blockquote class="pj-quote" id="pj-quote" hidden></blockquote>
+        </div>
+        <div class="wc-persona-figma__col wc-persona-figma__col--photo">
+          <div class="wc-persona-figma__photo-bg" aria-hidden="true"></div>
+          <img class="wc-persona-figma__photo" id="pj-hero" src="" alt="">
+        </div>
+        <div class="wc-persona-figma__col wc-persona-figma__col--right">
+          <div class="pj-card" id="pj-motivations" hidden></div>
+          <div class="pj-card" id="pj-pains" hidden></div>
+          <div class="pj-card" id="pj-needs" hidden></div>
+        </div>
+      </div>
+      <div class="wc-persona-figma__logo" aria-hidden="true">
+        <img src="./assets/figma/sodexo-logotype-2021.jpg" alt="" width="1024" height="576" onerror="this.style.display='none';if(this.nextElementSibling)this.nextElementSibling.hidden=false;">
+        <span class="wc-persona-figma__logo-fallback" hidden>Sodexo</span>
+      </div>
+    </div>
+    <div class="wc-panel">
+      <div class="wc-panel-inner" id="pj-panel">
+        <nav class="wc-toc" aria-label="On this page">
+          <a href="#section-modular">Modular approach</a>
+          <a href="#section-journey">Journey map</a>
+          <a href="#section-modules">Experience modules</a>
+        </nav>
+        <div class="wc-panel-head" id="section-intro">
+          <h2 id="pj-platform-heading">Our Modular Experience Platform: <span class="teal" id="pj-platform-label">Consumer</span></h2>
+          <button type="button" class="wc-listen" aria-label="Listen">
+            Listen
+            <span class="icon"><img src="./assets/figma/ui-chevron-go.png" alt="" width="28" height="28"></span>
+          </button>
+        </div>
+        <div class="wc-intro" id="pj-intro"></div>
+        <div class="wc-modular-block" id="section-modular">
+          <h3 class="font-heading">Why a modular approach?</h3>
+          <div id="pj-modular"></div>
+        </div>
+        <div class="wc-journey-frame">
+          <img id="pj-puzzle" src="./assets/figma/wc-platform-puzzle.png" alt="Modular platform puzzle journey">
+        </div>
+        <div class="wc-journey-strip" id="pj-journey-strip" aria-label="Journey context">
+          <span class="wc-journey-strip__seg" id="pj-strip-consumer">Consumer</span>
+          <span class="wc-journey-strip__seg" id="pj-strip-area">WORK</span>
+          <span class="wc-journey-strip__seg wc-journey-strip__seg--teal" id="pj-strip-persona">White Collar</span>
+        </div>
+        <h3 class="font-heading" style="font-size:1.1rem;margin:24px 0 12px;color:var(--blue);" id="section-journey">Journey map — tap a moment</h3>
+        <p class="wc-journey-hint">Consumer journey — tap a hotspot on the map to open that moment and linked solutions.</p>
+        <div class="journey-map-wrap" id="journey-map-wrap">
+          <img id="pj-map" src="./assets/figma/wc-journey-map.png" alt="Consumer journey isometric map">
+          <div class="journey-hotspots" id="journey-hotspots" role="presentation"></div>
+        </div>
+        <h3 class="font-heading" style="font-size:1.1rem;margin:32px 0 12px;color:var(--blue);" id="section-modules">Experience modules</h3>
+        <p class="wc-intro" style="margin-top:0;margin-bottom:16px;font-size:0.95rem;">Pick a module to open a solution detail (where linked). The journey map above shows how moments connect across the day.</p>
+        <div class="wc-modules" aria-label="Experience modules" id="pj-modules"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Journey moment detail -->
+  <div class="screen" id="moment-detail">
+    <nav class="nav-rail" aria-label="Page">
+      <div class="nav-rail__start">
+        <button type="button" class="nav-rail__home" onclick="go('home')">Home</button>
+        <button type="button" class="nav-rail__search" onclick="openCatalogSearch('')">Search</button>
+      </div>
+      <ol class="breadcrumb" id="breadcrumb-moment"></ol>
+    </nav>
+    <div class="areas-topbar app-shell" style="padding: 16px 20px;">
+      <button type="button" class="btn-back btn-back--sm" onclick="go('white-collar')" aria-label="Back to journey">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="moment-body app-shell" id="moment-body">
+      <h2 class="font-heading" style="font-size: clamp(1.5rem,3vw,2rem); color: var(--blue);" id="moment-title"></h2>
+      <div id="moment-content"></div>
+    </div>
+  </div>
+
+  <!-- Placeholder for personae not yet modelled (GO from grid) -->
+  <div class="screen" id="persona-placeholder">
+    <nav class="nav-rail" aria-label="Page">
+      <div class="nav-rail__start">
+        <button type="button" class="nav-rail__home" onclick="go('home')">Home</button>
+        <button type="button" class="nav-rail__search" onclick="openCatalogSearch('')">Search</button>
+      </div>
+      <ol class="breadcrumb" id="breadcrumb-placeholder"></ol>
+    </nav>
+    <div class="areas-topbar app-shell" style="padding: 24px 20px;">
+      <button type="button" class="btn-back btn-back--sm" onclick="goBackToAreaPersonae()" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="app-shell" style="padding: 24px 40px 64px; max-width: 720px;">
+      <div id="ph-hero-wrap" style="display:none;margin-bottom:20px;max-width:min(100%,360px);border-radius:20px;overflow:hidden;box-shadow:var(--card-shadow);">
+        <img id="ph-hero" src="" alt="" style="width:100%;display:block;object-fit:cover;aspect-ratio:310/307;">
+      </div>
+      <h2 class="font-heading" style="font-size: clamp(1.5rem,3vw,2rem); color: var(--blue);" id="ph-title">Persona</h2>
+      <p id="ph-body" style="font-size: 1.05rem; line-height: 1.6;">Content for this persona will be added next.</p>
+      <p style="margin-top: 24px;"><button type="button" class="btn-pill btn-pill--dark" onclick="goBackToAreaPersonae()">Back to personae</button></p>
+    </div>
+  </div>
+
+  <!-- Catalogue search -->
+  <div class="screen search-page" id="catalog-search">
+    <nav class="nav-rail" aria-label="Page">
+      <div class="nav-rail__start">
+        <button type="button" class="nav-rail__home" onclick="go('home')">Home</button>
+        <button type="button" class="nav-rail__search" onclick="openCatalogSearch('')">Search</button>
+      </div>
+      <ol class="breadcrumb" id="breadcrumb-search"></ol>
+    </nav>
+    <div class="areas-topbar app-shell" style="padding: 12px 20px;">
+      <button type="button" class="btn-back btn-back--sm" onclick="go('home')" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="app-shell" style="padding: 0 24px 64px; max-width: 720px; margin: 0 auto;">
+      <h1 class="font-heading search-page__title">Search catalogue</h1>
+      <p class="search-page__hint">Find personae, experience modules, and solutions in one place.</p>
+      <label class="visually-hidden" for="catalog-search-input">Search query</label>
+      <input type="search" id="catalog-search-input" class="search-page__input" placeholder="Search personae, modules, solutions…" autocomplete="off" spellcheck="false">
+      <p class="search-page__meta" id="catalog-search-meta"></p>
+      <div id="catalog-search-results" class="search-results" role="list"></div>
+    </div>
+  </div>
+
+  <!-- Solution modal (content from CATALOG.solutions, 3652:149930) -->
+  <div class="screen screen--modal" id="solution" data-node-id="3652:149930" aria-modal="true" role="dialog" aria-labelledby="sol-title" onclick="if (event.target === this) closeSolution()">
+    <div class="solution-shell" onclick="event.stopPropagation()">
+      <div class="solution-tabbar" id="solution-tabbar"></div>
+      <div class="solution-body" id="solution-body-mount"></div>
+    </div>
+  </div>
+
+  <script src="catalog-solutions.js"></script>
+  <script src="personas-full.js"></script>
+  <script>
+    (function () {
+      var STORAGE_KEY = 'sodexoCatalogueAuth';
+      var PASSWORD = 'Sodexo2025!';
+      var lastMainScreen = 'home';
+      var currentSolutionId = 'circles';
+      var currentSolutionDefaultId = 'circles';
+      var activePersonaId = 'whiteCollar';
+      var activeAreaPersonasKey = 'learn';
+      window.currentSolutionDefaultId = currentSolutionDefaultId;
+
+      var AS = {
+        rule: './assets/figma/ui-card-divider-line.png',
+        closeEllipse: './assets/figma/ui-chevron-card.png',
+        check: './assets/figma/ui-chevron-go.png',
+        benefitIcon: './assets/figma/ui-chevron-go.png',
+        iconGeneric: './assets/figma/ui-chevron-go.png',
+        iconDoc: './assets/figma/ui-chevron-go.png'
+      };
+
+      /** Persona portraits — exported from Figma via MCP; files in ./assets/figma/ */
+      var FIGMA_ASSETS = {
+        'work-client': './assets/figma/work-client.png',
+        'work-white-collar': './assets/figma/work-white-collar.png',
+        'work-blue-collar': './assets/figma/work-blue-collar.png',
+        'work-operator': './assets/figma/work-operator.png',
+        'work-grey-collar': './assets/figma/work-grey-collar.png',
+        'work-military': './assets/figma/work-military.png',
+        'heal-client': './assets/figma/heal-client.png',
+        'heal-doctor': './assets/figma/heal-doctor.png',
+        'heal-nurse': './assets/figma/heal-nurse.png',
+        'heal-patient': './assets/figma/heal-patient.png',
+        'heal-senior': './assets/figma/heal-senior.png',
+        'heal-operator': './assets/figma/heal-operator.png',
+        'play-client': './assets/figma/play-client.png',
+        'play-operator': './assets/figma/play-operator.png',
+        'play-sport-fan': './assets/figma/play-sport-fan.png',
+        'play-vip-guest': './assets/figma/play-vip-guest.png',
+        'play-participant': './assets/figma/play-participant.png',
+        'play-tourist': './assets/figma/play-tourist.png',
+        'learn-client': './assets/figma/learn-client.png',
+        'learn-operator': './assets/figma/learn-operator.png',
+        'learn-student': './assets/figma/learn-student.png',
+        'learn-parent': './assets/figma/learn-parent.png',
+        'learn-schoolchild': './assets/figma/learn-schoolchild.png',
+        'learn-teacher': './assets/figma/learn-teacher.png'
+      };
+
+      /** Dotted chevron (16×27); fill via currentColor = --blue-primary on parent */
+      function dottedChevronSvg() {
+        return '<svg class="icon-chevron" width="16" height="27" viewBox="0 0 16 27" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+          '<ellipse cx="1.84654" cy="24.335" rx="1.84654" ry="1.7803" fill="currentColor"/>' +
+          '<ellipse cx="5.95591" cy="20.3701" rx="1.84654" ry="1.7803" fill="currentColor"/>' +
+          '<ellipse cx="10.0575" cy="16.4131" rx="1.84654" ry="1.7803" fill="currentColor"/>' +
+          '<ellipse cx="14.1512" cy="12.4639" rx="1.84654" ry="1.7803" fill="currentColor"/>' +
+          '<ellipse cx="10.0575" cy="8.90139" rx="1.84654" ry="1.7803" fill="currentColor"/>' +
+          '<ellipse cx="5.95591" cy="5.3428" rx="1.84654" ry="1.7803" fill="currentColor"/>' +
+          '<ellipse cx="1.84654" cy="1.7803" rx="1.84654" ry="1.7803" fill="currentColor"/>' +
+          '</svg>';
+      }
+
+      var CATALOG = {
+        areas: [
+          { id: 'WORK', title: 'WORK', nav: 'work-personas', html: 'Sodexo makes <strong>every workday more inspiring and fulfilling,</strong> with spaces &amp; services that support your well-being, connection &amp; productivity.' },
+          { id: 'HEAL', title: 'HEAL', nav: 'area-personas:heal', html: 'Sodexo <strong>cares for every moment of life</strong>, ensuring comfort, nutrition, and safety for patients, residents, and caregivers alike.' },
+          { id: 'LEARN', title: 'LEARN', nav: 'area-personas:learn', html: 'Sodexo helps <strong>students thrive</strong> by creating healthy, welcoming, and motivating places to learn, grow, and connect.' },
+          { id: 'PLAY', title: 'PLAY', nav: 'area-personas:play', html: 'Sodexo Live! transforms every event into an <strong>unforgettable experience</strong>, where great food, hospitality, and emotion come together.' }
+        ],
+        workPersonas: [
+          { id: 'client', label: 'Client', variant: 'client', image: FIGMA_ASSETS['work-client'], target: 'persona:client' },
+          { id: 'whiteCollar', label: 'White Collar', variant: 'default', image: FIGMA_ASSETS['work-white-collar'], target: 'persona:whiteCollar' },
+          { id: 'blueCollar', label: 'Blue Collar', variant: 'default', image: FIGMA_ASSETS['work-blue-collar'], target: 'persona:blueCollar' },
+          { id: 'operator', label: 'Operator', variant: 'op', image: FIGMA_ASSETS['work-operator'], target: 'persona:operator' },
+          { id: 'greyCollar', label: 'Grey Collar', variant: 'default', image: FIGMA_ASSETS['work-grey-collar'], target: 'persona:greyCollar' },
+          { id: 'military', label: 'Military', variant: 'default', image: FIGMA_ASSETS['work-military'], target: 'persona:military' }
+        ],
+        areaPersonae: {
+          learn: {
+            nodeId: '2410:317272',
+            breadcrumbLabel: 'Learn',
+            title: 'Here are our key personae in the learn context',
+            subPrefix: 'LEARN',
+            infoClass: 'wp-info--learn',
+            decoSrc: './assets/figma/learn-page-deco.png',
+            infoHtml: '<img class="wp-info-iso" src="./assets/figma/learn-area-info-iso.png" alt="Campus isometric illustration"><div class="wp-info-rule"><img src="./assets/figma/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>In schools and universities, <strong>Sodexo helps learning come to life</strong> — nourishing both minds and bodies. As a <strong>client</strong>, I see spaces that inspire <strong>focus</strong>, <strong>belonging</strong>, and <strong>community</strong>. As a <strong>student</strong>, I feel safe, included, and motivated, surrounded by fresh food, dynamic spaces, and sustainable practices that reflect my values. As an <strong>operator</strong>, I know that each meal, each smile, each service <strong>moment builds a better future</strong> — one student, one day at a time.</p></div>',
+            personas: [
+              { id: 'learnClient', label: 'Client', variant: 'client', image: FIGMA_ASSETS['learn-client'], target: 'persona:learnClient' },
+              { id: 'learnStudent', label: 'Student', variant: 'default', image: FIGMA_ASSETS['learn-student'], target: 'persona:learnStudent' },
+              { id: 'learnParent', label: 'Parent', variant: 'default', image: FIGMA_ASSETS['learn-parent'], target: 'persona:learnParent' },
+              { id: 'learnOperator', label: 'Operator', variant: 'op', image: FIGMA_ASSETS['learn-operator'], target: 'persona:learnOperator' },
+              { id: 'learnSchoolchild', label: 'Schoolchild', variant: 'default', image: FIGMA_ASSETS['learn-schoolchild'], target: 'persona:learnSchoolchild' },
+              { id: 'learnTeacher', label: 'Teacher', variant: 'default', image: FIGMA_ASSETS['learn-teacher'], target: 'persona:learnTeacher' }
+            ],
+            gridClass: ''
+          },
+          heal: {
+            nodeId: '2410:317034',
+            breadcrumbLabel: 'Heal',
+            title: 'Here are our key personae in the heal context',
+            subPrefix: 'HEAL',
+            infoClass: '',
+            decoSrc: './assets/figma/heal-page-deco.png',
+            infoHtml: '<img class="wp-info-iso" src="./assets/figma/heal-area-info-iso.png" alt="Healthcare isometric illustration"><div class="wp-info-rule"><img src="./assets/figma/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>Across hospitals and care homes, <strong>Sodexo brings comfort, dignity, and trust</strong> to every touchpoint.</p><ul><li>As a <strong>client, I see a partner</strong> who understands the delicate balance between <strong>efficiency</strong> and <strong>empathy</strong> — ensuring safety, hygiene, and emotional care coexist.</li><li>As a <strong>patient or resident, I feel nurtured and respected</strong>, my recovery supported by comforting meals, warm words, and reassuring routines.</li><li>As an <strong>operator, I am proud to stand behind a service that heals</strong> beyond the clinical, creating environments where every act of care becomes a gesture of humanity.</li></ul></div>',
+            personas: [
+              { id: 'healClient', label: 'Client', variant: 'client', image: FIGMA_ASSETS['heal-client'], target: 'persona:healClient' },
+              { id: 'healDoctor', label: 'Doctor', variant: 'default', image: FIGMA_ASSETS['heal-doctor'], target: 'persona:healDoctor' },
+              { id: 'healNurse', label: 'Nurse', variant: 'default', image: FIGMA_ASSETS['heal-nurse'], target: 'persona:healNurse' },
+              { id: 'healOperator', label: 'Operator', variant: 'op', image: FIGMA_ASSETS['heal-operator'], target: 'persona:healOperator' },
+              { id: 'healSenior', label: 'Senior', variant: 'default', image: FIGMA_ASSETS['heal-senior'], target: 'persona:healSenior' },
+              { id: 'healPatient', label: 'Patient', variant: 'default', image: FIGMA_ASSETS['heal-patient'], target: 'persona:healPatient' }
+            ],
+            gridClass: ''
+          },
+          play: {
+            nodeId: '2410:317153',
+            breadcrumbLabel: 'Play',
+            title: 'Here are our key personae in the play context',
+            subPrefix: 'PLAY',
+            infoClass: '',
+            decoSrc: './assets/figma/play-page-deco.png',
+            infoHtml: '<img class="wp-info-iso" src="./assets/figma/play-area-info-iso.png" alt="Venues isometric illustration"><div class="wp-info-rule"><img src="./assets/figma/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>From stadiums to museums, <strong>Sodexo Live! turns emotion into experience</strong>.</p><p>As a <strong>client, I see my venue transformed</strong> — food, service, and storytelling merging into a living brand experience.</p><p>As a <strong>guest, I feel the thrill of belonging</strong>, tasting creativity, joy, and excellence in every moment — from the first bite to the final applause.</p><p>As an <strong>operator, I am part of the magic</strong>, orchestrating the unseen details that make every event vibrant, memorable, and unforgettable.</p></div>',
+            personas: [
+              { id: 'playClient', label: 'Client', variant: 'client', image: FIGMA_ASSETS['play-client'], target: 'persona:playClient' },
+              { id: 'playOperator', label: 'Operator', variant: 'op', image: FIGMA_ASSETS['play-operator'], target: 'persona:playOperator' },
+              { id: 'playSportFan', label: 'Sport Fan', variant: 'default', image: FIGMA_ASSETS['play-sport-fan'], target: 'persona:playSportFan' },
+              { id: 'playVipGuest', label: 'VIP Guest', variant: 'default', image: FIGMA_ASSETS['play-vip-guest'], target: 'persona:playVipGuest' },
+              { id: 'playParticipant', label: 'Participant', variant: 'default', image: FIGMA_ASSETS['play-participant'], target: 'persona:playParticipant' },
+              { id: 'playTourist', label: 'Tourist', variant: 'default', image: FIGMA_ASSETS['play-tourist'], target: 'persona:playTourist' }
+            ],
+            gridClass: 'persona-grid--play'
+          }
+        },
+        personas: {},
+        solutions: {},
+        solutionTabOrder: [],
+      };
+
+      Object.assign(CATALOG.personas, window.STATIC_PERSONA_FULL || {});
+
+      /** Breadcrumb segment after Areas — Work grid or Learn/Heal/Play area personae */
+      function personaNavCrumb(p) {
+        if (p && p.parentAreaKey && CATALOG.areaPersonae[p.parentAreaKey]) {
+          return { label: CATALOG.areaPersonae[p.parentAreaKey].breadcrumbLabel, areaKey: p.parentAreaKey };
+        }
+        return { label: 'Work', screen: 'work-personas' };
+      }
+
+      function pushPersonaAreaCrumbs(crumbs, p) {
+        var nav = personaNavCrumb(p);
+        if (nav.areaKey) {
+          crumbs.push({ label: nav.label, areaKey: nav.areaKey });
+        } else {
+          crumbs.push({ label: nav.label, screen: nav.screen });
+        }
+      }
+
+      function setPersonaJourneyBreadcrumb(p) {
+        var c = [{ label: 'Areas', screen: 'areas' }];
+        pushPersonaAreaCrumbs(c, p);
+        c.push({ label: p.label, current: true });
+        setBreadcrumb('breadcrumb-persona', c);
+      }
+
+      function escapeHtml(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      function stripTags(s) {
+        if (!s) return '';
+        var d = document.createElement('div');
+        d.innerHTML = s;
+        return (d.textContent || '').trim();
+      }
+
+      function mergeCatalogExtra() {
+        var ex = window.CATALOG_EXTRA;
+        if (!ex || !ex.solutions) return;
+        var k;
+        for (k in ex.solutions) {
+          if (Object.prototype.hasOwnProperty.call(ex.solutions, k)) {
+            CATALOG.solutions[k] = ex.solutions[k];
+          }
+        }
+        if (ex.solutionTabOrder && ex.solutionTabOrder.length) {
+          CATALOG.solutionTabOrder = ex.solutionTabOrder.slice();
+        }
+      }
+
+      var searchIndex = [];
+
+      function rebuildSearchIndex() {
+        searchIndex = [];
+        var pid;
+        for (pid in CATALOG.personas) {
+          if (!Object.prototype.hasOwnProperty.call(CATALOG.personas, pid)) continue;
+          var pers = CATALOG.personas[pid];
+          var hay = [
+            pers.label,
+            pers.areaId,
+            pers.personaName,
+            pers.personaRole,
+            pers.personaQuote,
+            pers.personaBio,
+            pers.blurb,
+            pers.personaEyebrow,
+            (pers.motivations || []).join(' '),
+            (pers.pains || []).join(' '),
+            (pers.needs || []).join(' '),
+            (pers.workplaceStats || []).join(' '),
+            (pers.professionalGoals || []).join(' '),
+            pid
+          ].filter(Boolean).join(' ');
+          var sub = pers.areaId || 'Persona';
+          if (pers.journeyMoments && pers.journeyMoments.length) {
+            sub = (pers.areaId || 'WORK') + ' · Full journey';
+          }
+          searchIndex.push({
+            kind: 'persona',
+            id: pid,
+            title: pers.label,
+            subtitle: sub,
+            solutionId: '',
+            haystack: hay.toLowerCase()
+          });
+        }
+        var wc = CATALOG.personas.whiteCollar;
+        if (wc && wc.modules) {
+          wc.modules.forEach(function (mod) {
+            var mh = (mod.name + ' ' + mod.id + ' module experience').toLowerCase();
+            searchIndex.push({
+              kind: 'module',
+              id: mod.id,
+              title: mod.name,
+              subtitle: mod.solutionId ? 'Module · linked solution' : 'Experience module',
+              solutionId: mod.solutionId || '',
+              haystack: mh
+            });
+          });
+        }
+        var sid;
+        for (sid in CATALOG.solutions) {
+          if (!Object.prototype.hasOwnProperty.call(CATALOG.solutions, sid)) continue;
+          var sol = CATALOG.solutions[sid];
+          var sh = [
+            sol.title,
+            sol.serviceLabel,
+            sol.module,
+            sol.contact,
+            sol.status,
+            (sol.tags || []).join(' '),
+            sol.context,
+            stripTags(sol.descriptionHtml || ''),
+            sid
+          ].filter(Boolean).join(' ');
+          searchIndex.push({
+            kind: 'solution',
+            id: sid,
+            title: sol.title,
+            subtitle: (sol.module || sol.serviceLabel || 'Solution') + (sol.status ? ' · ' + sol.status : ''),
+            solutionId: sid,
+            haystack: sh.toLowerCase()
+          });
+        }
+      }
+
+      function normalizeSearchQuery(q) {
+        return String(q || '').toLowerCase().trim();
+      }
+
+      function haystackMatches(haystack, query) {
+        var nq = normalizeSearchQuery(query);
+        if (!nq) return true;
+        var words = nq.split(/\s+/).filter(Boolean);
+        var h = haystack;
+        for (var i = 0; i < words.length; i++) {
+          if (h.indexOf(words[i]) === -1) return false;
+        }
+        return true;
+      }
+
+      function searchKindLabel(kind) {
+        if (kind === 'persona') return 'Persona';
+        if (kind === 'module') return 'Module';
+        return 'Solution';
+      }
+
+      function filterSearchHits(query) {
+        return searchIndex.filter(function (hit) {
+          return haystackMatches(hit.haystack, query);
+        });
+      }
+
+      function renderCatalogSearchResults(query) {
+        var root = document.getElementById('catalog-search-results');
+        var meta = document.getElementById('catalog-search-meta');
+        if (!root) return;
+        var q = normalizeSearchQuery(query);
+        if (!q) {
+          root.innerHTML = '';
+          if (meta) meta.textContent = 'Type to search across personae, modules, and solutions.';
+          return;
+        }
+        var hits = filterSearchHits(query);
+        if (meta) {
+          meta.textContent = hits.length === 0
+            ? 'No results for “' + query.trim() + '”.'
+            : hits.length + ' result' + (hits.length === 1 ? '' : 's') + ' for “' + query.trim() + '”.';
+        }
+        var groups = { persona: [], module: [], solution: [] };
+        hits.forEach(function (h) {
+          if (groups[h.kind]) groups[h.kind].push(h);
+        });
+        function renderGroup(kind, title) {
+          var list = groups[kind];
+          if (!list.length) return '';
+          var rows = list.map(function (hit) {
+            var dsol = hit.kind === 'module' ? (hit.solutionId || '') : '';
+            return '<button type="button" class="search-hit" role="listitem" data-kind="' + escapeHtml(hit.kind) + '" data-id="' + escapeHtml(hit.id) + '" data-solution="' + escapeHtml(dsol) + '">' +
+              '<span class="search-hit__badge">' + escapeHtml(searchKindLabel(hit.kind)) + '</span>' +
+              '<div class="search-hit__body"><p class="search-hit__title">' + escapeHtml(hit.title) + '</p>' +
+              '<p class="search-hit__sub">' + escapeHtml(hit.subtitle) + '</p></div></button>';
+          }).join('');
+          return '<section class="search-group" aria-label="' + escapeHtml(title) + '"><h2 class="search-group__title">' + escapeHtml(title) + '</h2>' + rows + '</section>';
+        }
+        root.innerHTML =
+          renderGroup('persona', 'Personae') +
+          renderGroup('module', 'Modules') +
+          renderGroup('solution', 'Solutions');
+      }
+
+      function activateSearchResult(kind, id, solutionId) {
+        if (kind === 'persona') {
+          openPersona(id);
+          return;
+        }
+        if (kind === 'solution') {
+          openSolution(id);
+          return;
+        }
+        if (kind === 'module') {
+          if (solutionId && CATALOG.solutions[solutionId]) {
+            openSolution(solutionId);
+          } else {
+            activePersonaId = 'whiteCollar';
+            hydratePersonaJourney(CATALOG.personas.whiteCollar);
+            go('white-collar');
+            setTimeout(function () {
+              var el = document.getElementById('section-modules');
+              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 150);
+          }
+        }
+      }
+
+      window.openCatalogSearch = function (initialQuery) {
+        var inp = document.getElementById('catalog-search-input');
+        if (inp) {
+          inp.value = initialQuery != null ? initialQuery : '';
+        }
+        go('catalog-search');
+        if (inp) {
+          renderCatalogSearchResults(inp.value);
+          setTimeout(function () {
+            try {
+              inp.focus();
+              inp.select();
+            } catch (e) {}
+          }, 0);
+        }
+      };
+
+      function renderAreasCards() {
+        var root = document.getElementById('areas-cards-root');
+        if (!root) return;
+        root.innerHTML = CATALOG.areas.map(function (a) {
+          return '<button type="button" class="area-card" data-nav="' + escapeHtml(a.nav) + '">' +
+            '<div class="area-card__head">' + escapeHtml(a.title) + ' ' + dottedChevronSvg() + '</div>' +
+            '<div class="area-card__rule"><img src="' + AS.rule + '" alt=""></div>' +
+            '<div class="area-card__body">' + a.html + '</div></button>';
+        }).join('');
+        root.querySelectorAll('.area-card').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var nav = btn.getAttribute('data-nav');
+            if (nav.indexOf('area-personas:') === 0) {
+              activateAreaPersonas(nav.slice('area-personas:'.length));
+              return;
+            }
+            go(nav);
+          });
+        });
+      }
+
+      function renderPersonaGridInto(root, personas) {
+        if (!root || !personas) return;
+        root.innerHTML = personas.map(function (p) {
+          var v = p.variant === 'client' ? ' persona-card__inner--client' : (p.variant === 'op' ? ' persona-card__inner--op' : '');
+          var alt = escapeHtml(p.label) + ' persona';
+          var tc = p.titleClass ? ' ' + p.titleClass : '';
+          return '<div class="persona-card">' +
+            '<div class="persona-card__block">' +
+            '<button type="button" class="persona-card__go" data-target="' + escapeHtml(p.target) + '">GO ' + dottedChevronSvg() + '</button>' +
+            '<div class="persona-card__inner' + v + '">' +
+            '<div class="persona-card__media"><img class="persona-card__img" src="' + p.image + '" alt="' + alt + '" loading="lazy"></div></div></div>' +
+            '<p class="persona-card__title' + tc + '">' + escapeHtml(p.label) + '</p></div>';
+        }).join('');
+        root.querySelectorAll('.persona-card__go').forEach(function (btn) {
+          btn.addEventListener('click', function () { openPersonaRoute(btn.getAttribute('data-target')); });
+        });
+      }
+
+      function renderPersonaGrid() {
+        renderPersonaGridInto(document.getElementById('wp-personas-root'), CATALOG.workPersonas);
+      }
+
+      function activateAreaPersonas(key) {
+        activeAreaPersonasKey = key;
+        var c = CATALOG.areaPersonae[key];
+        if (!c) return;
+        document.getElementById('area-personas').setAttribute('data-node-id', c.nodeId || '');
+        document.getElementById('area-personas-title').textContent = c.title;
+        document.getElementById('area-personas-sub').innerHTML = '<strong>' + escapeHtml(c.subPrefix) + ' :</strong> Select the personae to discover.';
+        var mount = document.getElementById('area-personas-info-mount');
+        mount.className = 'wp-info card-radius shadow-card ' + (c.infoClass || '');
+        mount.innerHTML = c.infoHtml;
+        var decoImg = document.getElementById('area-personas-deco');
+        if (decoImg && c.decoSrc) decoImg.src = c.decoSrc;
+        var grid = document.getElementById('area-personas-root');
+        grid.className = 'persona-grid' + (c.gridClass ? ' ' + c.gridClass : '');
+        renderPersonaGridInto(grid, c.personas);
+        go('area-personas');
+        try { window.scrollTo(0, 0); } catch (e) {}
+      }
+
+      window.activateAreaPersonas = activateAreaPersonas;
+
+      function goBackToAreaPersonae() {
+        var p = CATALOG.personas[activePersonaId];
+        if (p && p.parentAreaKey) {
+          activateAreaPersonas(p.parentAreaKey);
+        } else {
+          go('work-personas');
+        }
+      }
+
+      window.goBackToAreaPersonae = goBackToAreaPersonae;
+
+      function openPersonaRoute(target) {
+        if (target.indexOf('persona:') === 0) {
+          var pid = target.slice(8);
+          openPersona(pid);
+          return;
+        }
+        go(target);
+      }
+
+      /** Full persona journey (same DOM as White Collar) — used when screen is `white-collar` or data is complete. */
+      function personaHasFullJourney(p) {
+        if (!p) return false;
+        if (p.screen === 'white-collar') return true;
+        return !!(
+          p.journeyMoments &&
+          p.journeyMoments.length &&
+          p.personaName &&
+          p.workplaceStats &&
+          p.workplaceStats.length
+        );
+      }
+
+      function openPersona(personaId) {
+        var p = CATALOG.personas[personaId];
+        if (!p) return;
+        activePersonaId = personaId;
+        if (personaHasFullJourney(p)) {
+          currentSolutionDefaultId = p.defaultSolutionId || 'circles';
+          hydratePersonaJourney(p);
+          go('white-collar');
+          return;
+        }
+        document.getElementById('ph-title').textContent = p.label;
+        document.getElementById('ph-body').textContent = p.blurb || 'Content coming soon.';
+        var phWrap = document.getElementById('ph-hero-wrap');
+        var phHero = document.getElementById('ph-hero');
+        if (phWrap && phHero) {
+          if (p.hero) {
+            phHero.src = p.hero;
+            phHero.alt = p.label + ' — portrait';
+            phWrap.style.display = 'block';
+          } else {
+            phWrap.style.display = 'none';
+          }
+        }
+        if (p.parentAreaKey) {
+          setBreadcrumb('breadcrumb-placeholder', [
+            { label: 'Areas', screen: 'areas' },
+            { label: CATALOG.areaPersonae[p.parentAreaKey].breadcrumbLabel, areaKey: p.parentAreaKey },
+            { label: p.label, current: true }
+          ]);
+        } else {
+          setBreadcrumb('breadcrumb-placeholder', [
+            { label: 'Areas', screen: 'areas' },
+            { label: 'Work', screen: 'work-personas' },
+            { label: p.label, current: true }
+          ]);
+        }
+        go('persona-placeholder');
+      }
+
+      var activeMomentId = null;
+
+      /** Phosphor-style inline SVGs (no emoji) — persona insight cards */
+      var PJ_SVG = {
+        target: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128 24a104 104 0 1 0 104 104A104.2 104.2 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88 88.1 88.1 0 0 1-88 88Zm44-88a44 44 0 1 1-44-44 44.05 44.05 0 0 1 44 44Zm-16 0a28 28 0 1 0-28 28 28 28 0 0 0 28-28Z"/></svg>',
+        brain: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128 24a72 72 0 0 0-72 72c0 32 20 58 48 68v8a8 8 0 0 0 16 0v-4.2c28-6 48-30 48-59.8a72 72 0 0 0-72-72Zm0 128a56 56 0 1 1 56-56 56.06 56.06 0 0 1-56 56Z"/></svg>',
+        warning: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128 24a104 104 0 1 0 104 104A104.2 104.2 0 0 0 128 24Zm-8 56a8 8 0 0 1 16 0v64a8 8 0 0 1-16 0Zm8 104a12 12 0 1 1 12-12 12 12 0 0 1-12 12Z"/></svg>',
+        pin: '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M128 16a72 72 0 0 0-72 72c0 77 72 152 72 152s72-75 72-152a72 72 0 0 0-72-72Zm0 112a40 40 0 1 1 40-40 40 40 0 0 1-40 40Z"/></svg>'
+      };
+
+      function pjRenderUl(items) {
+        if (!items || !items.length) return '';
+        var i;
+        var out = '<ul>';
+        for (i = 0; i < items.length; i++) {
+          out += '<li>' + escapeHtml(items[i]) + '</li>';
+        }
+        out += '</ul>';
+        return out;
+      }
+
+      function pjSetCard(id, title, iconSvg, items) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (!items || !items.length) {
+          el.innerHTML = '';
+          el.hidden = true;
+          return;
+        }
+        el.innerHTML = '<div class="pj-card__head">' + iconSvg + '<span>' + escapeHtml(title) + '</span></div>' + pjRenderUl(items);
+        el.hidden = false;
+      }
+
+      function hydratePersonaJourney(p) {
+        var eyebrow = document.getElementById('pj-eyebrow');
+        var nameEl = document.getElementById('pj-name');
+        var roleEl = document.getElementById('pj-role');
+        if (eyebrow) eyebrow.textContent = p.personaEyebrow || (p.platformSegment + ' · ' + p.label);
+        if (nameEl) nameEl.textContent = p.personaName || p.label;
+        if (roleEl) roleEl.textContent = p.personaRole || '';
+
+        var ctx = document.getElementById('pj-context');
+        if (ctx) {
+          if (p.workplaceStats && p.workplaceStats.length) {
+            ctx.innerHTML = '<p class="pj-context__title">' + escapeHtml(p.workplaceStats[0]) + '</p>' + pjRenderUl(p.workplaceStats.slice(1));
+            ctx.hidden = false;
+          } else {
+            ctx.innerHTML = '';
+            ctx.hidden = true;
+          }
+        }
+        var goals = document.getElementById('pj-goals');
+        if (goals) {
+          if (p.professionalGoals && p.professionalGoals.length) {
+            goals.innerHTML = '<div class="pj-goals__head">' + PJ_SVG.target + '<span>Professional goals</span></div>' + pjRenderUl(p.professionalGoals);
+            goals.hidden = false;
+          } else {
+            goals.innerHTML = '';
+            goals.hidden = true;
+          }
+        }
+        var quote = document.getElementById('pj-quote');
+        if (quote) {
+          if (p.personaQuote) {
+            quote.innerHTML = '&ldquo;' + escapeHtml(p.personaQuote) + '&rdquo;';
+            quote.hidden = false;
+          } else {
+            quote.innerHTML = '';
+            quote.hidden = true;
+          }
+        }
+        pjSetCard('pj-motivations', 'Motivations', PJ_SVG.brain, p.motivations);
+        pjSetCard('pj-pains', 'Pain points & frustrations', PJ_SVG.warning, p.pains);
+        pjSetCard('pj-needs', 'Key needs', PJ_SVG.pin, p.needs);
+
+        var hero = document.getElementById('pj-hero');
+        var puzzle = document.getElementById('pj-puzzle');
+        var map = document.getElementById('pj-map');
+        if (hero) { hero.src = p.hero; hero.alt = (p.personaName || p.label) + ' — context'; }
+        if (puzzle) { puzzle.src = p.puzzleImage; puzzle.alt = 'Modular platform'; }
+        if (map) { map.src = p.journeyMapImage; map.alt = 'Journey map'; }
+        var plat = document.getElementById('pj-platform-label');
+        if (plat) plat.textContent = p.platformSegment || '';
+        var stripC = document.getElementById('pj-strip-consumer');
+        if (stripC) stripC.textContent = p.platformSegment || 'Consumer';
+        var stripA = document.getElementById('pj-strip-area');
+        if (stripA) stripA.textContent = p.areaId || 'WORK';
+        var stripP = document.getElementById('pj-strip-persona');
+        if (stripP) stripP.textContent = p.label || 'White Collar';
+        var intro = document.getElementById('pj-intro');
+        if (intro) intro.innerHTML = (p.introParagraphs || []).join('');
+        var modular = document.getElementById('pj-modular');
+        if (modular) modular.innerHTML = p.modularExplainHtml || '';
+
+        currentSolutionDefaultId = p.defaultSolutionId || 'circles';
+        window.currentSolutionDefaultId = currentSolutionDefaultId;
+
+        var modRoot = document.getElementById('pj-modules');
+        if (modRoot && p.modules) {
+          modRoot.innerHTML = p.modules.map(function (m) {
+            var sol = m.solutionId ? ' data-solution="' + m.solutionId + '"' : '';
+            var cls = 'wc-mod' + (m.solutionId ? ' wc-mod--click' : '');
+            return '<div class="' + cls + '" role="button" tabindex="0"' + sol + '><span class="mod-label">MODULES</span><div class="mod-title">' + escapeHtml(m.name) + '</div></div>';
+          }).join('');
+          modRoot.querySelectorAll('.wc-mod--click').forEach(function (el) {
+            function open() {
+              var sid = el.getAttribute('data-solution');
+              if (sid) openSolution(sid);
+            }
+            el.addEventListener('click', open);
+            el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+          });
+        }
+        renderJourneyHotspots(p);
+        setPersonaJourneyBreadcrumb(p);
+      }
+
+      function renderJourneyHotspots(p) {
+        var host = document.getElementById('journey-hotspots');
+        if (!host || !p.journeyMoments) { if (host) host.innerHTML = ''; return; }
+        host.innerHTML = p.journeyMoments.map(function (m) {
+          return '<button type="button" class="journey-hotspot" data-moment="' + escapeHtml(m.id) + '" style="left:' + m.left + '%;top:' + m.top + '%;width:' + m.w + '%;height:' + m.h + '%;" aria-label="' + escapeHtml(m.title) + '"><span class="journey-hotspot__label">' + escapeHtml(m.title) + '</span></button>';
+        }).join('');
+        host.querySelectorAll('.journey-hotspot').forEach(function (btn) {
+          btn.addEventListener('click', function () { openMoment(btn.getAttribute('data-moment')); });
+        });
+      }
+
+      function openMoment(momentId) {
+        var p = CATALOG.personas[activePersonaId];
+        if (!p || !p.journeyMoments) return;
+        var m = null;
+        for (var i = 0; i < p.journeyMoments.length; i++) {
+          if (p.journeyMoments[i].id === momentId) { m = p.journeyMoments[i]; break; }
+        }
+        if (!m) return;
+        activeMomentId = momentId;
+        document.getElementById('moment-title').textContent = stripTags(m.title);
+        document.getElementById('moment-content').innerHTML = m.body || '<p>Content for this moment.</p>';
+        var momentCrumbs = [{ label: 'Areas', screen: 'areas' }];
+        pushPersonaAreaCrumbs(momentCrumbs, p);
+        momentCrumbs.push({ label: p.label, screen: 'white-collar' });
+        momentCrumbs.push({ label: stripTags(m.title), current: true });
+        setBreadcrumb('breadcrumb-moment', momentCrumbs);
+        go('moment-detail');
+      }
+
+      function areasParallaxTick() {
+        var stage = document.getElementById('areas-stage');
+        var bg = document.getElementById('areas-parallax-bg');
+        if (!stage || !bg) return;
+        if (!document.getElementById('areas').classList.contains('active')) return;
+        var rect = stage.getBoundingClientRect();
+        var vh = window.innerHeight || 800;
+        var t = (vh * 0.5 - rect.top) / (rect.height + vh);
+        t = Math.max(0, Math.min(1, t));
+        var y = (t - 0.5) * 24;
+        bg.style.transform = 'translate3d(0, ' + y.toFixed(1) + 'px, 0)';
+      }
+
+      function setBreadcrumb(olId, items) {
+        var ol = document.getElementById(olId);
+        if (!ol) return;
+        var html = '<li><button type="button" onclick="go(\'home\')">Home</button></li>';
+        items.forEach(function (it, i) {
+          html += '<li><span class="sep" aria-hidden="true">/</span>';
+          if (it.current) {
+            html += '<span>' + escapeHtml(it.label) + '</span>';
+          } else if (it.areaKey) {
+            html += '<button type="button" onclick="activateAreaPersonas(\'' + escapeHtml(it.areaKey) + '\')">' + escapeHtml(it.label) + '</button>';
+          } else {
+            html += '<button type="button" onclick="go(\'' + it.screen + '\')">' + escapeHtml(it.label) + '</button>';
+          }
+          html += '</li>';
+        });
+        ol.innerHTML = html;
+      }
+
+      function renderSolutionTabs() {
+        var bar = document.getElementById('solution-tabbar');
+        if (!bar) return;
+        var tabs = CATALOG.solutionTabOrder.map(function (id) {
+          var s = CATALOG.solutions[id];
+          return s ? '<button type="button" class="sol-tab' + (id === currentSolutionId ? ' active' : '') + '" data-sid="' + id + '">' + escapeHtml(s.title) + '</button>' : '';
+        }).join('');
+        bar.innerHTML = '<div class="solution-tabs"><span class="label">Solutions:</span>' + tabs + '</div>' +
+          '<button type="button" class="btn-close-round" onclick="closeSolution()" aria-label="Close"><img src="' + AS.closeEllipse + '" alt=""></button>';
+        bar.querySelectorAll('.sol-tab').forEach(function (b) {
+          b.addEventListener('click', function () { openSolution(b.getAttribute('data-sid')); });
+        });
+      }
+
+      function renderSolutionBody(sid) {
+        var s = CATALOG.solutions[sid];
+        var mount = document.getElementById('solution-body-mount');
+        if (!s || !mount) return;
+        var tags = [('<span class="tag tag--teal">' + escapeHtml(s.serviceLabel) + '</span>')].concat(
+          (s.tags || []).map(function (t) { return '<span class="tag">' + escapeHtml(t) + '</span>'; })
+        ).join('');
+        var flags = (s.flags || []).map(function (src) { return '<img class="flag" src="' + src + '" alt="">'; }).join('');
+        var checks = (s.flags || []).length ? ('<div class="regions-checks">' + (s.flags || []).map(function () { return '<img src="' + AS.check + '" alt="">'; }).join('') + '</div>') : '';
+        var left = '<div class="solution-col"><h3 id="sol-title">' + escapeHtml(s.title) + '</h3>' +
+          '<div class="tag-row">' + tags + '</div>' +
+          (flags ? '<div class="regions"><div class="regions-title">Sodexo Regions:</div><div class="regions-flags">' + flags + '</div>' + checks + '</div>' : '') +
+          '<div class="sol-section"><div class="sol-icon"><img src="' + AS.iconGeneric + '" alt=""></div><div><h4>Context</h4><p>' + escapeHtml(s.context) + '</p></div></div>' +
+          '<div class="sol-section"><div class="sol-icon"><img src="' + AS.iconDoc + '" alt=""></div><div><h4>Description</h4>' + s.descriptionHtml + '</div></div>' +
+          '<div class="sol-section"><div class="sol-icon"><img src="' + AS.iconGeneric + '" alt=""></div><div><h4>Deployment status and KPI’s (numbers)</h4><ul>' +
+          (s.kpis || []).map(function (k) { return '<li>' + escapeHtml(k) + '</li>'; }).join('') + '</ul></div></div>' +
+          '<div class="sol-section"><div class="sol-icon"><img src="' + AS.iconGeneric + '" alt=""></div><div><h4>Contacts</h4><p>' + escapeHtml(s.contact) + '</p>' +
+          (s.url ? '<p><a href="' + escapeHtml(s.url) + '" target="_blank" rel="noopener noreferrer">Website</a></p>' : '') +
+          '</div></div></div>';
+        var benefits = (s.benefits || []).map(function (b) {
+          return '<div class="benefit-card"><strong>' + escapeHtml(b.role) + '</strong><img class="ico" src="' + AS.benefitIcon + '" alt="">' + escapeHtml(b.text) + '</div>';
+        }).join('');
+        var right = '<div class="solution-col"><div class="solution-visual"><img src="' + s.heroImage + '" alt="' + escapeHtml(s.title) + '"></div><p class="benefits-title">Benefits</p><div class="benefits-grid">' + benefits + '</div></div>';
+        mount.innerHTML = left + right;
+      }
+
+      window.openSolution = function (sid) {
+        if (!CATALOG.solutions[sid]) return;
+        currentSolutionId = sid;
+        renderSolutionTabs();
+        renderSolutionBody(sid);
+        go('solution');
+      };
+
+      function isModal(id) { return id === 'solution'; }
+
+      window.go = function (screenId) {
+        var screens = document.querySelectorAll('.screen');
+        var target = document.getElementById(screenId);
+        if (!target) return;
+
+        if (isModal(screenId)) {
+          var under = document.querySelector('.screen.active:not(.screen--modal)');
+          if (under) lastMainScreen = under.id;
+        } else {
+          var prev = document.querySelector('.screen.active:not(.screen--modal)');
+          if (prev) lastMainScreen = prev.id;
+        }
+
+        screens.forEach(function (s) {
+          if (isModal(screenId)) {
+            if (!s.classList.contains('screen--modal')) return;
+            s.classList.remove('active');
+          } else {
+            s.classList.remove('active');
+          }
+        });
+
+        target.classList.add('active');
+        if (isModal(screenId)) {
+          document.body.classList.add('modal-open');
+        } else {
+          document.body.classList.remove('modal-open');
+        }
+
+        if (screenId === 'areas') {
+          setBreadcrumb('breadcrumb-areas', [{ label: 'Areas', current: true }]);
+          setTimeout(areasParallaxTick, 0);
+        }
+        if (screenId === 'work-personas') {
+          setBreadcrumb('breadcrumb-work', [
+            { label: 'Areas', screen: 'areas' },
+            { label: 'Work', current: true }
+          ]);
+        }
+        if (screenId === 'area-personas') {
+          var ap = CATALOG.areaPersonae[activeAreaPersonasKey];
+          if (ap) {
+            setBreadcrumb('breadcrumb-area-personas', [
+              { label: 'Areas', screen: 'areas' },
+              { label: ap.breadcrumbLabel, current: true }
+            ]);
+          }
+        }
+        if (screenId === 'white-collar') {
+          var pp = CATALOG.personas[activePersonaId];
+          if (pp && pp.journeyMoments && pp.journeyMoments.length) {
+            setPersonaJourneyBreadcrumb(pp);
+          }
+        }
+        if (screenId === 'catalog-search') {
+          setBreadcrumb('breadcrumb-search', [
+            { label: 'Areas', screen: 'areas' },
+            { label: 'Search', current: true }
+          ]);
+          var csInp = document.getElementById('catalog-search-input');
+          if (csInp) renderCatalogSearchResults(csInp.value);
+        }
+      };
+
+      window.closeSolution = function () {
+        document.body.classList.remove('modal-open');
+        var sol = document.getElementById('solution');
+        if (sol) sol.classList.remove('active');
+        var main = document.getElementById(lastMainScreen) || document.getElementById('white-collar');
+        document.querySelectorAll('.screen:not(.screen--modal)').forEach(function (s) { s.classList.remove('active'); });
+        if (main) main.classList.add('active');
+      };
+
+      document.getElementById('gate-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = document.getElementById('gate-password');
+        var err = document.getElementById('gate-error');
+        if (input.value === PASSWORD) {
+          try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (x) {}
+          err.textContent = '';
+          go('home');
+        } else {
+          err.textContent = 'Incorrect password.';
+        }
+      });
+
+      function boot() {
+        mergeCatalogExtra();
+        rebuildSearchIndex();
+        renderAreasCards();
+        renderPersonaGrid();
+        hydratePersonaJourney(CATALOG.personas.whiteCollar);
+        window.currentSolutionDefaultId = currentSolutionDefaultId;
+        renderSolutionTabs();
+        renderSolutionBody('circles');
+        window.CATALOG = CATALOG;
+
+        var homeSq = document.getElementById('home-search-q');
+        var homeSubmit = document.getElementById('home-search-submit');
+        if (homeSq && homeSubmit) {
+          homeSubmit.addEventListener('click', function () {
+            openCatalogSearch(homeSq.value);
+          });
+          homeSq.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              openCatalogSearch(homeSq.value);
+            }
+          });
+        }
+
+        var csInpBoot = document.getElementById('catalog-search-input');
+        if (csInpBoot) {
+          csInpBoot.addEventListener('input', function () {
+            renderCatalogSearchResults(csInpBoot.value);
+          });
+        }
+        var csRoot = document.getElementById('catalog-search-results');
+        if (csRoot) {
+          csRoot.addEventListener('click', function (e) {
+            var btn = e.target.closest('.search-hit');
+            if (!btn) return;
+            activateSearchResult(btn.getAttribute('data-kind'), btn.getAttribute('data-id'), btn.getAttribute('data-solution') || '');
+          });
+        }
+
+        var ok = false;
+        try { ok = sessionStorage.getItem(STORAGE_KEY) === '1'; } catch (x) {}
+        document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+        if (ok) {
+          document.getElementById('home').classList.add('active');
+        } else {
+          document.getElementById('gate').classList.add('active');
+        }
+      }
+
+      boot();
+
+      window.addEventListener('scroll', areasParallaxTick, { passive: true });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (document.getElementById('solution').classList.contains('active')) {
+          closeSolution();
+          return;
+        }
+        if (document.getElementById('catalog-search').classList.contains('active')) {
+          go('home');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
