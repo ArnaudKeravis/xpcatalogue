@@ -19,7 +19,7 @@ import {
 import type { JourneyHotspot, JourneyStep } from '@/lib/data/types';
 import { cn } from '@/lib/utils/cn';
 
-type StepIconCmp = ComponentType<{ className?: string; weight?: 'duotone' }>;
+type StepIconCmp = ComponentType<{ className?: string; weight?: string }>;
 
 const STEP_ICONS: Record<string, StepIconCmp> = {
   commute: Car,
