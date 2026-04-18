@@ -37,13 +37,13 @@ export function filterSolutions(solutions: Solution[], p: SolutionFilterParams):
 }
 
 export function uniqueModules(solutions: Solution[]): string[] {
-  return [...new Set(solutions.map((s) => s.module))].sort((a, b) => a.localeCompare(b));
+  return Array.from(new Set(solutions.map((s) => s.module))).sort((a, b) => a.localeCompare(b));
 }
 
 export function uniqueStatuses(solutions: Solution[]): SolutionStatus[] {
-  return [...new Set(solutions.map((s) => s.status))].sort((a, b) => a.localeCompare(b));
+  return Array.from(new Set(solutions.map((s) => s.status))).sort((a, b) => a.localeCompare(b));
 }
 
 export function uniqueTypes(solutions: Solution[]): SolutionType[] {
-  return [...new Set(solutions.map((s) => s.type))].sort((a, b) => a.localeCompare(b));
+  return Array.from(new Set(solutions.map((s) => s.type))).sort((a, b) => a.localeCompare(b));
 }
