@@ -15,11 +15,12 @@ import {
   Books,
   Stethoscope,
   Truck,
+  type IconWeight,
 } from '@phosphor-icons/react';
 import type { JourneyHotspot, JourneyStep } from '@/lib/data/types';
 import { cn } from '@/lib/utils/cn';
 
-type StepIconCmp = ComponentType<{ className?: string; weight?: string }>;
+type StepIconCmp = ComponentType<{ className?: string; weight?: IconWeight }>;
 
 const STEP_ICONS: Record<string, StepIconCmp> = {
   commute: Car,
