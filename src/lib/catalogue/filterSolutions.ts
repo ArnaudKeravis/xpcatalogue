@@ -25,7 +25,7 @@ export function filterSolutions(solutions: Solution[], p: SolutionFilterParams):
     list = list.filter((s) => s.module === p.module);
   }
   if (p.area) {
-    list = list.filter((s) => s.areas.includes(p.area));
+    list = list.filter((s) => s.areas.includes(p.area!));
   }
   if (p.status) {
     list = list.filter((s) => s.status === p.status);
