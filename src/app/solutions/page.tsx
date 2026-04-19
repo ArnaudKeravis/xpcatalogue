@@ -105,50 +105,79 @@ export default async function SolutionsPage({ searchParams }: Props) {
         </Suspense>
 
         {filtered.length === 0 ? (
-          <p className="text-sm text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>
+          <p className="text-sm text-gray-500" style={{ fontFamily: 'var(--font-body)' }}>
             No solutions match your filters. Try clearing filters or broadening your search.
           </p>
         ) : (
-          <ul className="grid gap-4 md:grid-cols-2">
-            {filtered.map((s) => (
-              <li key={s.id}>
-                <Link
-                  href={`/solutions/${s.id}`}
-                  className="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-[var(--grey-border)] bg-white p-4 shadow-[var(--shadow-sm)] transition-shadow hover:shadow-md"
-                >
-                  <div className="flex flex-wrap items-start gap-2">
-                    <span className="text-2xl leading-none">{s.img}</span>
-                    <div className="min-w-0 flex-1">
-                      <span className="font-extrabold text-[var(--blue)]">{s.name}</span>
-                      <span className="ml-2 text-sm text-gray-500">{s.module}</span>
-                    </div>
-                  </div>
-                  <p
-                    className="line-clamp-2 text-sm text-gray-600"
-                    style={{ fontFamily: 'var(--font-body)' }}
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((s) => {
+              const statusColors: Record<string, { bg: string; text: string }> = {
+                Scaled: { bg: '#e8f8ef', text: '#1a7a3c' },
+                Scaling: { bg: '#fff4e6', text: '#b35900' },
+                Pilot: { bg: '#e8f0ff', text: '#1a3af0' },
+                Study: { bg: '#f5f5f5', text: '#666' },
+              };
+              const sc = statusColors[s.status] ?? statusColors.Study;
+              return (
+                <li key={s.id}>
+                  <Link
+                    href={`/solutions/${s.id}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white shadow-[var(--shadow-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                   >
-                    {s.context}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    <span className="rounded-md bg-[#f0f4ff] px-2 py-0.5 text-xs font-semibold text-[var(--blue-primary)]">
-                      {s.status}
-                    </span>
-                    <span className="rounded-md border border-[var(--grey-border)] px-2 py-0.5 text-xs text-gray-600">
-                      {s.type}
-                    </span>
-                    {s.areas.map((a) => (
-                      <span
-                        key={a}
-                        className="rounded-md px-2 py-0.5 text-xs font-medium text-white"
-                        style={{ backgroundImage: areas[a].gradient }}
+                    {/* Module colour bar */}
+                    <div className="h-1.5 w-full" style={{ background: `linear-gradient(90deg,var(--blue),var(--blue-primary))` }} />
+
+                    <div className="flex flex-1 flex-col gap-3 p-4">
+                      {/* Header */}
+                      <div className="flex items-start gap-3">
+                        <div
+                          className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-xl"
+                          style={{ background: 'var(--icon-bg)' }}
+                        >
+                          {s.img}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-extrabold leading-tight text-[var(--blue)]">
+                            {s.name}
+                          </p>
+                          <p className="mt-0.5 truncate text-xs text-gray-400">{s.module}</p>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <p
+                        className="line-clamp-2 flex-1 text-xs leading-relaxed text-gray-500"
+                        style={{ fontFamily: 'var(--font-body)' }}
                       >
-                        {areas[a].label}
-                      </span>
-                    ))}
-                  </div>
-                </Link>
-              </li>
-            ))}
+                        {s.description}
+                      </p>
+
+                      {/* Badges */}
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span
+                          className="rounded-full px-2.5 py-0.5 text-[10px] font-bold"
+                          style={{ background: sc.bg, color: sc.text }}
+                        >
+                          {s.status}
+                        </span>
+                        {s.areas.slice(0, 2).map((a) => (
+                          <span
+                            key={a}
+                            className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold text-white"
+                            style={{ backgroundImage: areas[a].gradient }}
+                          >
+                            {areas[a].label}
+                          </span>
+                        ))}
+                        {s.areas.length > 2 && (
+                          <span className="text-[10px] text-gray-400">+{s.areas.length - 2}</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         )}
       </main>
