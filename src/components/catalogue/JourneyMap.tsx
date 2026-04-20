@@ -68,12 +68,10 @@ export function JourneyMap({
   journeyHotspots,
 }: Props) {
   const hotspotFor = (stepId: string) => journeyHotspots?.find((h) => h.stepId === stepId);
-
-  const showHero = Boolean(journeyMapImage);
   const showHotspots = Boolean(journeyHotspots?.length);
 
   return (
-    <div className="space-y-4" data-area={area} data-persona={persona}>
+    <div className="space-y-0" data-area={area} data-persona={persona}>
       <div
         className={cn(
           'overflow-hidden rounded-[25px] border border-white/80',
@@ -86,14 +84,40 @@ export function JourneyMap({
             radial-gradient(ellipse 100% 60% at 80% 70%, rgba(213,223,245,0.6) 0%, transparent 50%)
           `,
         }}
-        data-node-id="1667:44064"
       >
-        {showHero ? (
+        {/* ── Moment chips — visible strip on top of the journey ──── */}
+        <div className="overflow-x-auto border-b border-white/40 px-4 py-4 sm:px-6">
+          <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
+            {steps.map((step, i) => (
+              <Link
+                key={step.id}
+                href={momentHref(area, persona, step.id)}
+                className={cn(
+                  'inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-transparent bg-white px-4 py-2 text-left shadow-[0_2px_10px_rgba(41,56,150,0.08)] transition-all',
+                  'font-bold text-[#001a72] hover:border-[var(--blue)] hover:ring-2 hover:ring-[var(--blue)]/25'
+                )}
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                <span
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold text-white"
+                  style={{ background: 'var(--blue)' }}
+                  aria-hidden
+                >
+                  {i + 1}
+                </span>
+                <StepIcon stepId={step.id} className="h-5 w-5 shrink-0 text-[var(--blue)]" />
+                <span className="whitespace-nowrap text-xs sm:text-sm">{step.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Journey map image with optional hotspot overlays ──────── */}
+        {journeyMapImage ? (
           <div className="relative w-full">
             <div className="relative aspect-[16/10] w-full md:aspect-[1920/1080]">
-              {/* Native img: reliable for local SVG + PNG; next/image can fail on some SVG layouts */}
               <img
-                src={journeyMapImage!}
+                src={journeyMapImage}
                 alt="Isometric journey map — moments across the day"
                 className="absolute inset-0 h-full w-full object-cover object-center"
                 loading="eager"
@@ -132,33 +156,7 @@ export function JourneyMap({
             </div>
           </div>
         ) : null}
-
-        <div
-          className={cn(
-            'flex flex-wrap justify-center gap-2 px-3 py-4 sm:gap-3 sm:px-5 sm:py-5',
-            showHero && 'border-t border-white/40'
-          )}
-        >
-          {steps.map((step) => (
-            <Link
-              key={step.id}
-              href={momentHref(area, persona, step.id)}
-              className={cn(
-                'inline-flex min-h-[44px] items-center gap-2 rounded-[100px] border-2 border-transparent bg-white px-4 py-2 text-left shadow-[0_2px_10px_rgba(41,56,150,0.08)] transition-all',
-                'font-bold text-[#001a72] hover:border-[var(--blue)] hover:ring-2 hover:ring-[var(--blue)]/25'
-              )}
-              style={{ fontFamily: 'var(--font-body)' }}
-            >
-              <StepIcon stepId={step.id} className="h-6 w-6 shrink-0 text-[var(--blue)]" />
-              <span className="max-w-[220px] text-xs sm:text-sm">{step.label}</span>
-            </Link>
-          ))}
-        </div>
       </div>
-
-      <p className="text-center text-xs text-gray-500" style={{ fontFamily: 'var(--font-body)' }}>
-        Each moment opens a page with modules and links to solutions for that part of the journey.
-      </p>
     </div>
   );
 }

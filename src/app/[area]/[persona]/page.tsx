@@ -45,50 +45,12 @@ export default async function PersonaPage({ params }: Props) {
 
       <main className="flex-1">
 
-        {/* ── Persona profile hero ──────────────────────────────────── */}
+        {/* ── 1. Persona profile hero ────────────────────────────────── */}
         <PersonaProfileFigma persona={persona} />
 
-        {/* ── Journey map section ───────────────────────────────────── */}
-        <section className="px-4 pb-0 pt-10 md:px-10 lg:px-14" aria-label="Consumer journey">
-          {/* Section heading */}
-          <div className="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h2
-              className="text-[clamp(1.5rem,4vw,2.75rem)] font-extrabold leading-none"
-              style={{ fontFamily: 'var(--font-heading)', color: areaConfig.color }}
-            >
-              {areaConfig.label}
-            </h2>
-            <span
-              className="text-[clamp(1.5rem,4vw,2.75rem)] font-extrabold leading-none text-[var(--blue)]"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
-              {persona.name}
-            </span>
-            <span
-              className="text-base font-semibold text-gray-400"
-              style={{ fontFamily: 'var(--font-body)' }}
-            >
-              — Day journey
-            </span>
-          </div>
-          <p
-            className="mb-6 max-w-2xl text-sm leading-relaxed text-gray-500"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            Tap a moment to explore modules and solutions for that step of the day.
-          </p>
-          <JourneyMap
-            steps={steps}
-            area={params.area}
-            persona={params.persona}
-            journeyMapImage={persona.journeyMapImage}
-            journeyHotspots={persona.journeyHotspots}
-          />
-        </section>
-
-        {/* ── Experience modules ────────────────────────────────────── */}
+        {/* ── 2. Experience Modules (modular explanation) ────────────── */}
         <section
-          className="mx-4 mb-10 mt-10 rounded-[25px] px-4 py-8 md:mx-10 md:px-8 md:py-10 lg:mx-14"
+          className="mx-4 mb-0 mt-10 rounded-[25px] px-4 py-8 md:mx-10 md:px-8 md:py-10 lg:mx-14"
           style={{ background: '#e0e6f9' }}
           aria-labelledby="section-experience-modules"
         >
@@ -103,7 +65,9 @@ export default async function PersonaPage({ params }: Props) {
             className="mb-6 max-w-2xl text-sm leading-relaxed text-[var(--blue)]/70"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            Each module groups related solutions. Select a module to browse all implementations.
+            Our solutions are organised in modules. Each module groups related digital and physical
+            experiences — tap a module to browse all implementations, or select a moment in the
+            journey below to see which modules apply.
           </p>
 
           <ul
@@ -145,6 +109,44 @@ export default async function PersonaPage({ params }: Props) {
               );
             })}
           </ul>
+        </section>
+
+        {/* ── 3. Consumer journey map ────────────────────────────────── */}
+        <section className="px-4 pb-16 pt-10 md:px-10 lg:px-14" aria-label="Consumer journey">
+          <div className="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h2
+              className="text-[clamp(1.5rem,4vw,2.75rem)] font-extrabold leading-none"
+              style={{ fontFamily: 'var(--font-heading)', color: areaConfig.color }}
+            >
+              {areaConfig.label}
+            </h2>
+            <span
+              className="text-[clamp(1.5rem,4vw,2.75rem)] font-extrabold leading-none text-[var(--blue)]"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              {persona.name}
+            </span>
+            <span
+              className="text-base font-semibold text-gray-400"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              — Day journey
+            </span>
+          </div>
+          <p
+            className="mb-6 max-w-2xl text-sm leading-relaxed text-gray-500"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            Each moment below represents a key step in {persona.name}&apos;s day. Tap a moment to
+            see the modules and solutions that apply.
+          </p>
+          <JourneyMap
+            steps={steps}
+            area={params.area}
+            persona={params.persona}
+            journeyMapImage={persona.journeyMapImage}
+            journeyHotspots={persona.journeyHotspots}
+          />
         </section>
       </main>
     </div>
