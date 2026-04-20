@@ -1,3 +1,70 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Focus-visible baseline — never outline:none without a replacement */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--blue-primary, #1a69ff);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* ─── Motion primitives ─────────────────────────────────────────────────
+   CSS-only entrance + attention animations. JS-driven (framer-motion) lives
+   in src/components/motion/. Tokens are defined in src/styles/tokens.css.
+   ─────────────────────────────────────────────────────────────────────── */
+
+@keyframes motion-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Apply to any element to have it fade+translate in on mount.
+   Customize start delay per element via `style={{ animationDelay: 'Xms' }}`. */
+.motion-fade-up {
+  opacity: 0;
+  animation: motion-fade-up var(--motion-slow, 450ms)
+    var(--ease-out-quint, cubic-bezier(0.23, 1, 0.32, 1)) forwards;
+}
+
+/* Signature pulse ring used on JourneyMap hotspots for first-paint
+   discoverability. Keep it subtle: scales up + fades out. */
+@keyframes hotspot-pulse {
+  0% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  70% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.55);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.55);
+  }
+}
+
+/* Respect OS reduced-motion preference across all animations and transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .motion-fade-up {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

@@ -1,12 +1,12 @@
-/* Sodexo Design System Tokens — Figma JW5MGQvB3itG9AXBKVVnuO */
-
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Noto+Sans:wght@400;500;600;700&display=swap');
+/* Sodexo Design System Tokens — source of truth for brand colors, spacing, radii, shadows. */
+/* Fonts (Fraunces display + Manrope body) are loaded via next/font in src/app/layout.tsx.
+   Never re-add @import url(fonts.googleapis.com) here — it reintroduces FOIT + CLS. */
 
 :root {
   --blue: #293896;
   --blue-solid: #173da6;
   --blue-primary: #1a69ff;
-  /* Figma Home hero background — Master Catalogue */
+  /* Home hero background */
   --home-hero-bg: #1c63f3;
   --blue-inverse: #173da6;
   --blue-muted: #d7e4fe;
@@ -27,8 +27,8 @@
   --area-heal: #5a64a6;
   --area-play: #1a3af0;
 
-  --font-heading: 'Open Sans', sans-serif;
-  --font-body: 'Noto Sans', sans-serif;
+  --font-heading: var(--font-fraunces), 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: var(--font-manrope), 'Manrope', system-ui, -apple-system, sans-serif;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -64,11 +64,27 @@
   --shadow-nav: 0 2px 16px rgba(41, 56, 150, 0.1);
   --shadow-sm: 0 2px 8px rgba(41, 56, 150, 0.06);
   --shadow-benefits: 12px 17px 24.3px rgba(0, 0, 0, 0.1);
+
+  /* Motion — easings (Emil Kowalski / Framer Motion course) + durations.
+     GPU-accelerated transform + opacity only. prefers-reduced-motion guard
+     lives in globals.css. Exits should be ~75% of enter duration. */
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --ease-hover: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --motion-instant: 100ms;
+  --motion-fast: 150ms;
+  --motion-base: 220ms;
+  --motion-medium: 300ms;
+  --motion-slow: 450ms;
+  --motion-hero: 650ms;
 }
 
 body {
   font-family: var(--font-body);
   color: var(--blue);
+  font-feature-settings: 'ss01', 'cv11';
 }
 
 h1,
@@ -78,4 +94,12 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
+  /* Fraunces variable axes — optical size follows weight, soft wedge for humanist warmth */
+  font-variation-settings: 'opsz' 96, 'SOFT' 50, 'WONK' 0;
+  letter-spacing: -0.01em;
+}
+
+/* Tabular figures for KPI numbers, data columns */
+.tabular {
+  font-variant-numeric: tabular-nums;
 }

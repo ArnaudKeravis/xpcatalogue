@@ -1,12 +1,13 @@
 import { Navbar } from '@/components/layout/Navbar';
 import { AreaVillageCard } from '@/components/catalogue/AreaVillageCard';
+import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getCatalogueData } from '@/lib/notion';
 import type { Area } from '@/lib/data/types';
 import { cn } from '@/lib/utils/cn';
 
 export const revalidate = 3600;
 
-const ISOMETRIC_HERO = '/images/catalogue/figma/areas-isometric.png';
+const ISOMETRIC_HERO = '/images/catalogue/assets/areas/areas-isometric.png';
 
 /** Reading order: top row WORK | HEAL, bottom row LEARN | PLAY. */
 const AREA_ORDER: Area[] = ['work', 'heal', 'learn', 'play'];
@@ -23,14 +24,14 @@ export default async function AreasPage() {
   const ordered = AREA_ORDER.map((id) => areas[id]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-white" data-name="Villages" data-node-id="3023:34538">
+    <div className="flex min-h-screen flex-col bg-white">
       <Navbar
         title="Digital, AI & Innovation Experience Catalogue"
         backHref="/"
         hideTitle
       />
 
-      <main className="flex-1 px-6 pb-12 pt-6 md:px-10">
+      <main id="main-content" className="flex-1 px-6 pb-12 pt-6 md:px-10">
         <h1
           className="max-w-[1100px] text-[clamp(2rem,6vw,4.375rem)] font-extrabold leading-none text-[var(--blue)]"
           style={{ fontFamily: 'var(--font-heading)' }}
@@ -47,19 +48,20 @@ export default async function AreasPage() {
             className="relative z-0 h-auto w-full object-contain object-center"
           />
 
-          <div className="relative z-10 mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:absolute lg:inset-0 lg:mt-0 lg:block lg:gap-0">
+          <Stagger className="relative z-10 mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:absolute lg:inset-0 lg:mt-0 lg:block lg:gap-0">
             {ordered.map((area) => (
-              <AreaVillageCard
+              <StaggerItem
                 key={area.id}
-                area={area}
                 className={cn(
                   'mx-auto w-full max-w-[282px] sm:mx-0',
                   'lg:absolute lg:w-[min(282px,calc(50%-1.5rem))]',
                   DESKTOP_PLACEMENT[area.id]
                 )}
-              />
+              >
+                <AreaVillageCard area={area} />
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </main>
     </div>

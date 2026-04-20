@@ -1,14 +1,18 @@
 # Product Vision — Sodexo Digital & AI Experience Catalogue
 
-> **Status:** Working draft · April 2026  
+> **Status:** Working draft · v0.3 · April 2026  
 > **Owner:** Digital & AI Innovation, Sodexo  
 > **Audience:** Internal stakeholders, product team, design partners
+
+> **What changed in v0.3** — **Per-persona journey maps shipped.** All 24 personas now carry their own isometric artwork under `public/images/catalogue/assets/journeys/` with percent-based hotspots over every moment pill. A single source of truth (`src/lib/data/personaJourneys.ts`) declares image + moments per persona; `fallback.ts` synthesises any missing `JourneyStep` so clicks always route cleanly to `/[area]/[persona]/moment/[momentId]`. SVG-with-labeled-groups is defined as the target export format for a future upgrade (no recalibration needed when art evolves).
+>
+> **What changed in v0.2** — Taxonomy re-anchored on `Catalogue_XP_solutions.xlsx` (24 personas · 55 modules + 7 proposed · ~100 solutions). Local-assets-only policy codified; every image ships in `public/images/catalogue/assets/` with zero remote dependencies. Design system formalised in `.impeccable.md` + `src/styles/tokens.css` (Fraunces display + Manrope body via `next/font`). Global skip link, error / loading boundaries, and `prefers-reduced-motion` support now ship by default.
 
 ---
 
 ## 1. The Problem We're Solving
 
-Sodexo operates across four fundamentally different life contexts — where people **work**, where they **learn**, where they **heal**, and where they **play**. In each of these worlds, Sodexo deploys a growing portfolio of **90+ digital solutions and AI-powered experiences** designed to improve everyday moments for millions of people.
+Sodexo operates across four fundamentally different life contexts — where people **work**, where they **learn**, where they **heal**, and where they **play**. In each of these worlds, Sodexo deploys a growing portfolio of **~100 digital solutions and AI-powered experiences** grouped into **55 experience modules (+ 7 proposed)** designed to improve everyday moments for millions of people.
 
 But that portfolio is invisible.
 
@@ -71,10 +75,12 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 ## 7. Core Experience Principles
 
 1. **Journey-first, not product-first.** Every solution earns its place through the human moment it serves. No orphan features.
-2. **Design fidelity is trust.** The quality of the visual experience signals the quality of Sodexo's digital ambition. Pixel-perfect, Figma-true.
-3. **One source of truth.** Notion is the content system; the catalogue is the window. No manual sync, no stale decks.
-4. **Context collapses decisions.** A user who understands the persona, the moment, and the KPIs should be able to make (or start) a business decision without leaving the app.
-5. **Extensible by design.** New areas, new personas, new solutions slot into the existing architecture without rework.
+2. **Design fidelity is trust.** The quality of the visual experience signals the quality of Sodexo's digital ambition. Pixel-perfect against the committed design system (`src/styles/tokens.css` + `.impeccable.md`).
+3. **Local-first assets, zero remote dependencies.** Every image, icon, journey map, and portrait ships with the product in `public/images/catalogue/assets/`. No third-party CDNs, no Figma hotlinks, no runtime fetches for media. If it's in the UI, it's in the repo.
+4. **Two sources of truth, cleanly separated.** `Catalogue_XP_solutions.xlsx` (ingested via `scripts/ingest-xp-catalogue-xlsx.py`) is the **taxonomy** — personas, moments, modules, solution mappings. **Notion** is the **content** — solution descriptions, KPIs, benefits. The catalogue is the window onto both.
+5. **Accessibility is a floor, not a feature.** WCAG AA on every screen: skip link, visible focus states, correct heading hierarchy, `prefers-reduced-motion` respected, tabular numbers for KPIs. Non-negotiable.
+6. **Context collapses decisions.** A user who understands the persona, the moment, and the KPIs should be able to make (or start) a business decision without leaving the app.
+7. **Extensible by design.** New areas, new personas, new solutions slot into the existing architecture without rework.
 
 ---
 
@@ -84,19 +90,22 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 
 | KR | Target |
 |----|--------|
-| KR1.1 — All 4 areas fully populated with at least 4 personas each | 100% |
-| KR1.2 — 90+ solutions indexed with complete metadata (name, module, area, KPIs, contact) | ≥ 90 solutions |
-| KR1.3 — Notion CMS live as the data source (no manual TypeScript file updates) | Done |
-| KR1.4 — Shared with ≥ 5 internal business lines for validation | Done |
+| KR1.1 — All 4 areas fully populated — **24 personas** across WORK / LEARN / HEAL / PLAY | 24/24 (base), + 2 proposed (Trade Show Attendee, VIP Guest Airport) under review |
+| KR1.2 — ≥ 100 solutions indexed with complete metadata (name, module, area, KPIs, contact) | 100 in `solutionsCatalog.ts`; 4 Excel references pending backfill (Arsene, K1nect, Kiwibot, Lesieur) |
+| KR1.3 — Taxonomy ingested from `Catalogue_XP_solutions.xlsx` via reproducible script (no hand-edited module/moment tables) | Done |
+| KR1.4 — Notion CMS live as the **content** source (descriptions, KPIs, benefits) — no manual TypeScript content updates | In progress |
+| KR1.5 — Shared with ≥ 5 internal business lines for validation | Done |
 
 ### O2: Deliver a visually excellent experience that reflects Sodexo's Digital & AI brand
 
 | KR | Target |
 |----|--------|
-| KR2.1 — Figma design coverage for all major screens (Home, Areas, Persona, Journey, Solution) | 100% |
-| KR2.2 — All journey maps have interactive hotspots linked to real moment pages | 100% (4 areas × 6 personas) |
-| KR2.3 — Design review sign-off from Digital & AI design lead | Done |
-| KR2.4 — WCAG AA accessibility compliance on all key flows | Audited & passing |
+| KR2.1 — Design-system coverage for all major screens (Home, Areas, Persona, Journey, Moment, Solution) with every asset committed locally | 100% |
+| KR2.2 — Per-persona journey maps with every moment clickable → `/[area]/[persona]/moment/[momentId]` | Done — 19 local JPEGs cover all 24 personas (operator + client artwork reused across areas); hotspots declared in `personaJourneys.ts`; SVG upgrade path specified |
+| KR2.3 — Design system codified: `.impeccable.md` + `src/styles/tokens.css` + `next/font` (Fraunces / Manrope) | Done |
+| KR2.4 — WCAG AA compliance on all key flows (skip link, focus-visible, heading hierarchy, `prefers-reduced-motion`, tabular KPIs) | Audited & passing |
+| KR2.5 — Zero Figma hotlinks, zero remote image hosts, `next.config.mjs` enforces `remotePatterns: []` | Done — enforced at framework level |
+| KR2.6 — Design review sign-off from Digital & AI design lead | Done |
 
 ### O3: Enable rapid solution discovery for business development use cases
 
@@ -141,14 +150,23 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 
 ### Phase 1 — Foundation (Apr–May 2026) ✅ In Progress
 
-- [x] Next.js 14 App Router structure with area → persona → journey → solution routing
-- [x] Figma-aligned visual design (Home, Areas, Persona, Journey Map)
+- [x] Next.js 14 App Router structure: `/` → `/areas` → `/[area]` → `/[area]/[persona]` → `/moment/[momentId]` → `/modules/[slug]` → `/solutions/[id]`
+- [x] Design-system-aligned visual design (Home, Areas, Persona, Journey Map) — all assets local
+- [x] Design system codified: `.impeccable.md`, `src/styles/tokens.css`, Fraunces + Manrope via `next/font/google`
+- [x] Global resilience primitives: `error.tsx`, `loading.tsx`, `not-found.tsx`, skip link, `prefers-reduced-motion`
 - [x] Static data model (TypeScript types + fallback data)
-- [x] Authentication gate (login / cookie)
-- [ ] Complete Notion CMS integration (live data, ISR)
-- [ ] All 24 personas fully populated (profile, journey, hotspots)
-- [ ] All 90+ solutions indexed in Notion
-- [ ] Journey hotspots wired to all moment pages
+- [x] Taxonomy ingestion from `Catalogue_XP_solutions.xlsx` via `scripts/ingest-xp-catalogue-xlsx.py` → `xpCatalogueFlow.ts` + `xpFlowAdapter.ts` (55 modules, 7 proposed, 108 solution references, ~97% alias resolution)
+- [x] 24 personas wired (WORK: 6 · LEARN: 4 + 2 client/operator · HEAL: 6 · PLAY: 6)
+- [x] Local-assets-only policy enforced — Figma references scrubbed from shipped code, `remotePatterns: []` in `next.config.mjs`
+- [x] Authentication gate (login / cookie — placeholder pending SSO)
+- [x] Per-persona journey maps — 19 local JPEGs + percent-based hotspots in `personaJourneys.ts`; synthesised journey steps ensure every click resolves
+- [ ] Journey map upgrade to SVG with labeled `<g data-step-id>` groups (single-file re-export from Figma → native click targets, no hotspot drift)
+- [ ] Per-persona moment icons (extend `MOMENT_ICONS` in `moment/[momentId]/page.tsx` beyond the initial White Collar / Operator set)
+- [ ] Populate `step.modules` for newly-synthesised moments (Doctor, Nurse, Senior, Patient, Play personas, Learn personas, Client) so moment pages render module tiles
+- [ ] Complete Notion CMS integration for **content** (descriptions, KPIs, benefits) with 1h ISR
+- [ ] Backfill 4 remaining Excel-referenced solutions in `solutionsCatalog.ts` (Arsene, K1nect, Kiwibot, Lesieur)
+- [ ] Replace masked versions of the 2 Lilly-branded work portraits (currently in `_on-hold-lilly/`)
+- [ ] Resolve proposed personas: Trade Show Attendee, VIP Guest Airport (new, or fold into existing?)
 
 ### Phase 2 — Polish & Enablement (Jun–Jul 2026)
 
@@ -181,8 +199,10 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 
 | Metric | Baseline | Target (Q4 2026) |
 |--------|----------|-----------------|
-| Solutions indexed | ~26 | 90+ |
-| Personas fully wired | Partial | 24 (6 per area) |
+| Solutions indexed in catalogue (`solutionsCatalog.ts`) | 100 | 104+ (backfill 4 Excel refs) |
+| Modules (Excel taxonomy) | 55 active + 7 proposed | 62 active after review |
+| Personas fully wired | 24/24 (base) | 24 + up to 2 proposed |
+| Per-persona journey maps with clickable moments | 19/24 direct (5 personas share operator/client artwork) | 24/24 persona-specific artwork (SVG) |
 | Monthly active internal users | 0 | 50+ |
 | Avg. session depth (pages/session) | — | ≥ 4 |
 | Journey-to-solution connections | — | ≥ 200/month |
@@ -198,7 +218,7 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 |------|-----------|--------|------------|
 | Notion data incomplete or inconsistent | High | High | Defined mandatory fields; fallback data as safety net; content owner accountability |
 | Stakeholder buy-in slow — perceived as "just a website" | Medium | High | Frame as a sales tool, not a web project; demo with live business case |
-| Design fidelity slips under delivery pressure | Medium | Medium | Figma MCP integration keeps code and design in sync; design reviews at each phase |
+| Design fidelity slips under delivery pressure | Medium | Medium | Tokens and `.impeccable.md` codify the system; design reviews at each phase; every asset committed to `public/images/catalogue/assets/` |
 | Solution metadata stale (no one updates Notion) | High | Medium | Content workflow + ISR + nudge automation (Notion reminders) |
 | Scope creep into CRM / proposal tooling | Low | High | Hard scope boundary: the catalogue is discovery, not delivery |
 | AI hallucination on solution recommendations | Medium | High | RAG over structured metadata only; no free-form generation; human review on suggestions |
@@ -209,11 +229,13 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 
 | Dependency | Owner | Status |
 |-----------|-------|--------|
-| Notion workspace + Solutions & Personas DBs | Innovation team | Exists — needs field cleanup |
-| Figma file access (key `JW5MGQvB3itG9AXBKVVnuO`) | Design lead | Active |
+| `Catalogue_XP_solutions.xlsx` — authoritative taxonomy source (personas, moments, modules, solution mappings) | Innovation team | In place · re-ingestable via `scripts/ingest-xp-catalogue-xlsx.py` |
+| Notion workspace + Solutions & Personas DBs — authoritative **content** source (descriptions, KPIs, benefits) | Innovation team | Exists — needs field cleanup |
 | Notion API key / integration token | Engineering | Needed for Phase 1 completion |
-| Journey map SVG / image assets per persona | Design | Partial |
-| Solution content validation (90+ entries) | Business lines | In progress |
+| Local design assets — every image (portraits, journey maps, decor) committed to `public/images/catalogue/assets/`; no remote CDN, no Figma hotlink at runtime | Design + Engineering | Policy enforced (`next.config.mjs` → `remotePatterns: []`) |
+| Per-persona journey maps — 19 JPEGs (1024×576) at `public/images/catalogue/assets/journeys/{personaId}.jpg`; hotspots declared in `src/lib/data/personaJourneys.ts` | Design + Engineering | Done · SVG re-export (one `<g data-step-id>` per moment pill) pending for pixel-perfect hotspot-free click targets |
+| `.impeccable.md` design context + `src/styles/tokens.css` tokens | Engineering + Design | Codified |
+| Solution content validation (~100 entries) | Business lines | In progress |
 | SSO / identity provider (for Phase 4 auth) | IT / Digital | Not started |
 
 ---
@@ -225,12 +247,13 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 - Not a replacement for solution-specific product pages or documentation
 - Not a project management or delivery tracker
 - Not a static slide deck dressed as a website
+- **Not a Figma embed, not a Figma viewer, not dependent on any Figma file at runtime** — design hand-off is always a local asset export committed to the repo
 
 ---
 
 ## 15. The Pitch (30-second version)
 
-> Sodexo has 90+ digital solutions across four life areas — but they live in scattered decks, wikis, and people's heads. The Experience Catalogue is a single, beautifully designed, always-current platform where any Sodexo stakeholder can explore the portfolio through the eyes of the people it serves. Start with a persona. Follow their day. Discover, at every meaningful moment, the Sodexo digital experience designed for it — with the KPIs and contacts to act on it immediately.
+> Sodexo has ~100 digital solutions across four life areas — but they live in scattered decks, wikis, and people's heads. The Experience Catalogue is a single, beautifully designed, always-current platform where any Sodexo stakeholder can explore the portfolio through the eyes of the people it serves. Start with a persona. Follow their day on an interactive journey map. Click any moment and discover the Sodexo digital experience designed for it — with the KPIs and contacts to act on it immediately.
 
 ---
 

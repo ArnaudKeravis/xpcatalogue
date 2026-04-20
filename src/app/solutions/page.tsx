@@ -8,7 +8,7 @@ import {
   uniqueModules,
   uniqueStatuses,
   uniqueTypes,
-} from '@/lib/catalogue/filterSolutions';
+} from '@/lib/queries/filterSolutions';
 import type { Area, SolutionStatus, SolutionType } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -86,7 +86,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
     <div className="flex min-h-screen flex-col bg-[var(--surface)]">
       <Navbar title={title} backHref="/areas" />
 
-      <main className="flex-1 overflow-y-auto px-8 py-6">
+      <main id="main-content" className="flex-1 overflow-y-auto px-8 py-6">
         {mod && momentLabel ? (
           <p className="mb-4 text-sm text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>
             Filtered by module <strong>{mod}</strong> in the context of moment <strong>{momentLabel}</strong>.
