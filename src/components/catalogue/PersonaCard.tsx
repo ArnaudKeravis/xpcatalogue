@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { Persona } from '@/lib/data/types';
+import { PERSONA_FIGMA_PORTRAIT_URL } from '@/lib/data/personaFigmaPortraits';
 
 interface Props {
   persona: Persona;
@@ -9,38 +10,49 @@ interface Props {
 }
 
 export function PersonaCard({ persona, href }: Props) {
+  const portraitSrc = persona.photo ?? PERSONA_FIGMA_PORTRAIT_URL[persona.id];
+
   return (
     <Link
       href={href}
-      className="group block cursor-pointer overflow-hidden rounded-[var(--radius-xl)] transition-transform hover:-translate-y-1"
-      style={{ boxShadow: 'var(--shadow-panel)' }}
+      className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white shadow-[var(--shadow-sm)] transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
     >
-      {persona.photo ? (
-        <div className="h-48 overflow-hidden">
+      {/* Portrait */}
+      <div className="relative h-44 overflow-hidden bg-gradient-to-b from-[#e8eefb] to-[#c5d2f0]">
+        {portraitSrc ? (
           <img
-            src={persona.photo}
+            src={portraitSrc}
             alt={persona.name}
-            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+            className="absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2 object-contain object-bottom transition-transform duration-300 group-hover:scale-105"
           />
-        </div>
-      ) : (
+        ) : (
+          <div
+            className="flex h-full items-center justify-center text-7xl"
+            style={{ background: `${persona.color}15` }}
+          >
+            {persona.emoji}
+          </div>
+        )}
+        {/* Gradient overlay at bottom */}
         <div
-          className="flex h-48 items-center justify-center text-8xl"
-          style={{ background: `${persona.color}18` }}
-        >
-          {persona.emoji}
-        </div>
-      )}
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-10"
+          style={{ background: `linear-gradient(to top, ${persona.color}cc, transparent)` }}
+        />
+      </div>
 
-      <div className="flex items-center justify-between px-4 py-3" style={{ background: persona.color }}>
-        <span className="text-lg font-bold text-white" style={{ fontFamily: 'var(--font-heading)' }}>
+      {/* Name bar */}
+      <div
+        className="flex items-center justify-between px-3 py-2.5"
+        style={{ background: persona.color }}
+      >
+        <span
+          className="text-sm font-bold leading-tight text-white"
+          style={{ fontFamily: 'var(--font-heading)' }}
+        >
           {persona.name}
         </span>
-        <span
-          className="rounded-full bg-white px-3 py-1 text-xs font-bold text-[var(--blue-primary)]"
-          style={{ fontFamily: 'var(--font-body)' }}
-        >
-          GO →
+        <span className="ml-1 shrink-0 text-white/80 transition-transform duration-200 group-hover:translate-x-0.5">
+          →
         </span>
       </div>
     </Link>

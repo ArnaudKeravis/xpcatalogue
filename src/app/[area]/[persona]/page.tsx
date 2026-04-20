@@ -4,7 +4,6 @@ import { JourneyMap } from '@/components/catalogue/JourneyMap';
 import { PersonaProfileFigma } from '@/components/catalogue/PersonaProfileFigma';
 import { Navbar } from '@/components/layout/Navbar';
 import { getMomentsForModuleName } from '@/lib/catalogue/journey';
-import { resolvePersonaFigmaLinks } from '@/lib/data/personaFigmaLinks';
 import { getCatalogueData } from '@/lib/notion';
 import type { Area, JourneyStep } from '@/lib/data/types';
 
@@ -25,8 +24,6 @@ export default async function PersonaPage({ params }: Props) {
 
   const persona = personas.find((p) => p.id === params.persona && p.area === params.area);
   if (!persona) notFound();
-
-  const figmaLinks = resolvePersonaFigmaLinks(persona);
 
   const steps = persona.steps
     .map((sid) => journeySteps[sid])
@@ -86,7 +83,6 @@ export default async function PersonaPage({ params }: Props) {
             persona={params.persona}
             journeyMapImage={persona.journeyMapImage}
             journeyHotspots={persona.journeyHotspots}
-            figmaJourneyUrl={figmaLinks?.personaJourney}
           />
         </section>
 

@@ -3,6 +3,7 @@
 import {
   Article,
   ChartBar,
+  DownloadSimple,
   FileText,
   Info,
   Phone,
@@ -207,6 +208,15 @@ export function SolutionCard({ solution, siblings, module }: Props) {
               </div>
             </div>
 
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-[var(--grey-border)] bg-white px-3 py-2 text-xs font-semibold text-[var(--blue)] transition-colors hover:bg-[#f0f4ff] print:hidden"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              <DownloadSimple size={14} weight="bold" aria-hidden />
+              Download solution card
+            </button>
             <p className="text-right text-xs text-gray-400" style={{ fontFamily: 'var(--font-body)' }}>
               ↻ Synced from Notion
             </p>

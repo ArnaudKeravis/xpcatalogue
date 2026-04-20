@@ -98,6 +98,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Client',
     fullName: 'Sarah Meyer',
     role: 'Portfolio Manager',
+    photo: '/images/catalogue/figma/work-client.png',
     profileEyebrow: 'Client',
     platformSegmentLabel: 'Client',
     quote:
@@ -146,6 +147,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Operator',
     fullName: 'Marina Bardi',
     role: 'Site Manager (Food & FM)',
+    photo: '/images/catalogue/figma/work-operator.png',
     profileEyebrow: 'Operator',
     platformSegmentLabel: 'Operator',
     quote:
@@ -296,6 +298,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Grey Collar',
     fullName: 'Lily Parker',
     role: 'Lab Researcher',
+    photo: '/images/catalogue/figma/work-grey-collar.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -345,6 +348,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Military',
     fullName: 'Rachel Adams',
     role: 'Army Officer',
+    photo: '/images/catalogue/figma/work-military.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -399,6 +403,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Client',
     fullName: 'Michael Anderson',
     role: 'Healthcare Portfolio Manager',
+    photo: '/images/catalogue/figma/heal-client.png',
     profileEyebrow: 'Client',
     platformSegmentLabel: 'Client',
     quote:
@@ -447,6 +452,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Operator',
     fullName: 'Priya Nair',
     role: 'Clinical Site Operations Lead',
+    photo: '/images/catalogue/figma/heal-operator.png',
     profileEyebrow: 'Operator',
     platformSegmentLabel: 'Operator',
     quote:
@@ -488,6 +494,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Doctor',
     fullName: 'Dr. Thomas Leroy',
     role: 'Hospital Physician',
+    photo: '/images/catalogue/figma/heal-doctor.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -540,6 +547,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Senior',
     fullName: 'Lia Thompson',
     role: 'Long-term Resident',
+    photo: '/images/catalogue/figma/heal-senior.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -591,6 +599,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Patient',
     fullName: 'Sophie Martin',
     role: 'Outpatient & Inpatient',
+    photo: '/images/catalogue/figma/heal-patient.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -644,6 +653,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Nurse',
     fullName: 'Laura Wilson',
     role: 'Registered Nurse',
+    photo: '/images/catalogue/figma/heal-nurse.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -698,6 +708,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Client',
     fullName: 'Daniela Ruiz',
     role: 'Venue Partnership Director',
+    photo: '/images/catalogue/figma/play-client.png',
     profileEyebrow: 'Client',
     platformSegmentLabel: 'Client',
     quote:
@@ -738,6 +749,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Operator',
     fullName: 'Omar Khalil',
     role: 'Event Operations Manager',
+    photo: '/images/catalogue/figma/play-operator.png',
     profileEyebrow: 'Operator',
     platformSegmentLabel: 'Operator',
     quote:
@@ -778,6 +790,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Sport Fan',
     fullName: 'Max Weber',
     role: 'Season Ticket Holder',
+    photo: '/images/catalogue/figma/play-sport-fan.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -818,6 +831,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'VIP guest',
     fullName: 'Zoe Cooper',
     role: 'Executive & Premium Event Guest',
+    photo: '/images/catalogue/figma/play-vip-guest.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -870,6 +884,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Participant',
     fullName: 'Arthur Foster',
     role: 'Trade Show & Event Attendee',
+    photo: '/images/catalogue/figma/play-participant.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -922,6 +937,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'VIP guest airport',
     fullName: 'Thomas Anderson',
     role: 'Business Traveller & VIP Guest',
+    photo: '/images/catalogue/figma/play-tourist.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -976,6 +992,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Client',
     fullName: 'Nina Petrov',
     role: 'Education Estates Lead',
+    photo: '/images/catalogue/figma/learn-client.png',
     profileEyebrow: 'Client',
     platformSegmentLabel: 'Client',
     quote:
@@ -1016,6 +1033,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Operator',
     fullName: 'Hugo Martins',
     role: 'Campus Services Manager',
+    photo: '/images/catalogue/figma/learn-operator.png',
     profileEyebrow: 'Operator',
     platformSegmentLabel: 'Operator',
     quote:
@@ -1056,6 +1074,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Student',
     fullName: 'Max Singh',
     role: 'University Student',
+    photo: '/images/catalogue/figma/learn-student.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -1108,6 +1127,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Schoolchild',
     fullName: 'Lucas Patel',
     role: 'Middle School Student (11–14 years)',
+    photo: '/images/catalogue/figma/learn-schoolchild.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -1160,6 +1180,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Parent',
     fullName: 'Jamal Thompson',
     role: 'Working Parent of School-Age Children',
+    photo: '/images/catalogue/figma/learn-parent.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -1212,6 +1233,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Teacher',
     fullName: 'Priya Adams',
     role: 'Middle School Teacher',
+    photo: '/images/catalogue/figma/learn-teacher.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:

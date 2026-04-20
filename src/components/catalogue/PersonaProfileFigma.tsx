@@ -1,8 +1,11 @@
+'use client';
+
 import type { ReactNode } from 'react';
-import { Brain, PushPin, Target, WarningCircle } from '@phosphor-icons/react/dist/ssr';
+import { Brain, DownloadSimple, PushPin, Target, WarningCircle } from '@phosphor-icons/react';
 import type { Persona } from '@/lib/data/types';
 import { PERSONA_FIGMA_PORTRAIT_URL } from '@/lib/data/personaFigmaPortraits';
 import { cn } from '@/lib/utils/cn';
+
 
 const HERO_GRADIENT =
   'linear-gradient(90deg, rgb(255, 255, 255) 6.1%, rgba(223, 229, 251, 0.9) 66.28%, rgba(137, 160, 240, 0.631) 119%, rgba(0, 48, 222, 0.2) 123%)';
@@ -220,6 +223,19 @@ export function PersonaProfileFigma({ persona, className }: Props) {
           </div>
         )}
 
+      </div>
+
+      {/* Download button */}
+      <div className="absolute bottom-4 left-4 z-[2] md:bottom-6 md:left-8">
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-xs font-semibold text-[var(--blue)] shadow-sm backdrop-blur-sm transition-colors hover:bg-white print:hidden"
+          style={{ fontFamily: 'var(--font-body)' }}
+        >
+          <DownloadSimple size={14} weight="bold" aria-hidden />
+          Download persona card
+        </button>
       </div>
 
       {/* Sodexo mark — official logotype (local asset) */}

@@ -49,8 +49,6 @@ interface Props {
   persona: string;
   journeyMapImage?: string;
   journeyHotspots?: JourneyHotspot[];
-  /** Figma Labs — isometric journey frame (CSV “Personae journey”) */
-  figmaJourneyUrl?: string;
 }
 
 function StepIcon({ stepId, className }: { stepId: string; className?: string }) {
@@ -68,7 +66,6 @@ export function JourneyMap({
   persona,
   journeyMapImage,
   journeyHotspots,
-  figmaJourneyUrl,
 }: Props) {
   const hotspotFor = (stepId: string) => journeyHotspots?.find((h) => h.stepId === stepId);
 
@@ -161,20 +158,6 @@ export function JourneyMap({
 
       <p className="text-center text-xs text-gray-500" style={{ fontFamily: 'var(--font-body)' }}>
         Each moment opens a page with modules and links to solutions for that part of the journey.
-        {figmaJourneyUrl ? (
-          <>
-            {' '}
-            <a
-              href={figmaJourneyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-[var(--blue-primary)] underline decoration-[var(--grey-border)] underline-offset-2 hover:decoration-[var(--blue)]"
-            >
-              Open journey map in Figma
-            </a>
-            <span className="text-gray-400"> (design source).</span>
-          </>
-        ) : null}
       </p>
     </div>
   );
