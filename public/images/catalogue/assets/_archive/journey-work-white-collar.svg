@@ -10,7 +10,7 @@
     </filter>
   </defs>
   <rect width="1920" height="1080" fill="url(#puzzle)"/>
-  <!-- Simplified white journey spine (Figma Labs — Iso Journey Work White Collar) -->
+  <!-- Simplified white journey spine (Iso Journey – Work · White Collar) -->
   <path
     d="M 180 720 C 320 680 420 560 520 480 S 760 220 960 280 S 1180 620 1320 520 S 1580 360 1760 420"
     fill="none"
@@ -29,7 +29,7 @@
     stroke-linecap="round"
     stroke-linejoin="round"
   />
-  <!-- Zone labels (approximate; replace asset with Figma export for pixel-perfect art) -->
+  <!-- Zone labels (approximate; replace asset for pixel-perfect art) -->
   <g font-family="Open Sans, Noto Sans, sans-serif" font-weight="700" font-size="28" fill="#001a72">
     <rect x="200" y="480" width="200" height="56" rx="28" fill="#fff"/>
     <text x="300" y="518" text-anchor="middle">Commute</text>

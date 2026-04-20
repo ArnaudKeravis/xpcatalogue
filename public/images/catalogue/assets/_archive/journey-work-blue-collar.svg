@@ -10,7 +10,7 @@
     </filter>
   </defs>
   <rect width="1920" height="1080" fill="url(#puzzle-bc)"/>
-  <!-- Simplified journey spine (Figma Labs — Iso Journey Work Blue Collar, node 2033:44000) -->
+  <!-- Simplified journey spine (Iso Journey – Work · Blue Collar) -->
   <path
     d="M 200 400 C 280 360 340 880 420 920 S 520 200 760 220 S 980 780 1180 720 S 1420 180 1680 240 S 1720 520 1580 680 S 1200 820 900 760 S 520 640 380 520"
     fill="none"

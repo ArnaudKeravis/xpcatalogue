@@ -6,6 +6,7 @@ import {
   DownloadSimple,
   FileText,
   Info,
+  LinkSimple,
   Phone,
   TrendUp,
   User,
@@ -41,8 +42,9 @@ export function SolutionCard({ solution, siblings, module }: Props) {
             background: module?.gradient ?? 'linear-gradient(135deg,#293896,#1a69ff)',
             boxShadow: 'var(--shadow-card)',
           }}
+          aria-hidden
         >
-          {current.img}
+          <span aria-hidden>{current.img}</span>
         </div>
         <div
           className="rounded-2xl bg-white p-3 text-xs leading-relaxed"
@@ -116,10 +118,14 @@ export function SolutionCard({ solution, siblings, module }: Props) {
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center gap-1">
+            <div
+              className="flex flex-wrap items-center gap-1"
+              role="group"
+              aria-label={`Deployed in ${current.flags.length} Sodexo region${current.flags.length === 1 ? '' : 's'}`}
+            >
               <span className="mr-1 text-xs font-bold text-[var(--blue)]">Sodexo Regions:</span>
               {current.flags.map((f) => (
-                <span key={f} className="text-xl">
+                <span key={f} className="text-xl" aria-hidden>
                   {f}
                 </span>
               ))}
@@ -139,7 +145,7 @@ export function SolutionCard({ solution, siblings, module }: Props) {
                   {current.kpis.map((k, i) => (
                     <div key={i} className="rounded-lg bg-[#f0f4ff] p-2.5">
                       <div
-                        className="text-xl font-extrabold text-[var(--blue-primary)]"
+                        className="tabular text-xl font-extrabold text-[var(--blue-primary)]"
                         style={{ fontFamily: 'var(--font-heading)' }}
                       >
                         {k.v}
@@ -157,9 +163,10 @@ export function SolutionCard({ solution, siblings, module }: Props) {
                     href={current.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1 flex items-center gap-1 text-xs font-semibold text-[var(--blue-primary)] hover:underline"
+                    className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[var(--blue-primary)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
                   >
-                    🔗 {current.url.replace('https://', '')}
+                    <LinkSimple size={12} weight="bold" aria-hidden />
+                    {current.url.replace('https://', '')}
                   </a>
                 ) : null}
               </Section>
@@ -189,7 +196,7 @@ export function SolutionCard({ solution, siblings, module }: Props) {
               className="rounded-[var(--radius-lg)] bg-white p-4"
               style={{ border: '1px solid rgba(0,0,0,.1)', boxShadow: 'var(--shadow-benefits)' }}
             >
-              <h4 className="mb-3 text-base font-bold text-[var(--blue)]">Benefits</h4>
+              <h2 className="mb-3 text-base font-bold text-[var(--blue)]">Benefits</h2>
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { label: 'Client', icon: <TrendUp size={22} weight="fill" color="var(--blue)" />, text: current.benefits.client },
@@ -234,9 +241,9 @@ function Section({ icon, title, children }: { icon: ReactNode; title: string; ch
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-[var(--icon-bg)]">
           {icon}
         </div>
-        <h4 className="text-base font-bold text-[var(--blue)]" style={{ fontFamily: 'var(--font-body)' }}>
+        <h2 className="text-base font-bold text-[var(--blue)]" style={{ fontFamily: 'var(--font-body)' }}>
           {title}
-        </h4>
+        </h2>
       </div>
       {children}
     </div>

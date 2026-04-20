@@ -10,7 +10,7 @@ interface Props {
   title: string;
   backHref?: string;
   breadcrumb?: Crumb[];
-  /** Hide the title row (e.g. Areas screen — Figma 3023:34538 shows back only). */
+  /** Hide the title row (e.g. Areas screen — keeps only the back control). */
   hideTitle?: boolean;
 }
 

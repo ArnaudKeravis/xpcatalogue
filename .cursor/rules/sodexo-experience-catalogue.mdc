@@ -1,20 +1,27 @@
 ---
-description: Sodexo Digital & AI Innovation Experience Catalogue — stack, data, Figma, Notion
+description: Sodexo Digital & AI Innovation Experience Catalogue — stack, data, assets, Notion
 alwaysApply: true
 ---
 
 # Experience Catalogue (Sodexo Digital & AI Innovation)
 
-Interactive catalogue of **90+** Sodexo digital solutions by areas (WORK / LEARN / HEAL / PLAY), personas, journey steps, and modules. **Content:** Notion. **Designs:** Figma file key `JW5MGQvB3itG9AXBKVVnuO`.
+Interactive catalogue of **90+** Sodexo digital solutions by areas (WORK / LEARN / HEAL / PLAY), personas, journey steps, and modules. **Content:** Notion. **Taxonomy source:** `Catalogue_XP_solutions.xlsx` ingested via `scripts/ingest-xp-catalogue-xlsx.py`.
+
+## Assets policy (non-negotiable)
+
+- **Local-only.** Every image, icon and asset ships in `public/images/catalogue/assets/`. **No remote image URLs, no Figma hotlinks, no third-party CDNs at runtime.** If a design is updated, export PNG/SVG locally and commit it.
+- **No Figma references in shipped code.** Do not add `data-node-id`, `data-name`, Figma file keys, node IDs, or comments like "matches Figma" in TSX / TS / CSS that is bundled.
+- Portrait paths live in `src/lib/data/personaPortraits.ts`; journey maps in `src/lib/data/personaJourneyConfig.ts`.
 
 ## Stack
 
 - **Framework:** Next.js 14 App Router, TypeScript
 - **Styling:** Tailwind CSS + CSS variables in `src/styles/tokens.css`
+- **Fonts:** `next/font/google` (Fraunces display + Manrope body). Never re-add `@import url(fonts.googleapis.com)`.
 - **Components:** Shadcn/ui base + catalogue-specific components
 - **Icons:** `@phosphor-icons/react` only — **never emoji for UI icons**
 - **State:** Zustand in `src/lib/store.ts` (favourites, filters, AI chat)
-- **Data:** Notion via `src/lib/notion.ts`; fallback `src/lib/data/fallback.ts`
+- **Data:** Notion via `src/lib/notion.ts`; fallback `src/lib/data/fallback.ts`; XP flow in `src/lib/data/xpCatalogueFlow.ts` merged by `xpFlowAdapter.ts`
 - **Animation:** Framer Motion (page + card transitions)
 
 ## Architecture
@@ -44,24 +51,10 @@ Always: typed props, named export, Tailwind with token CSS vars via `cn()`.
 
 ## Building a screen
 
-1. Figma MCP: `get_design_context(fileKey, nodeId)` for exact layout
-2. Map colours/spacing to token names from `design-system.md`
-3. Tailwind + CSS vars
-4. Wrap sections in Framer Motion `motion.div` for entry animations
-
-## Key Figma node IDs
-
-| Screen / asset | node-id |
-|----------------|---------|
-| Home | `2021-20460` |
-| Areas (isometric WORK/LEARN/HEAL/PLAY) | `3023-34538` |
-| Personas: Work | `2409-316825` |
-| Personas: Heal | `2410-317034` |
-| Personas: Play | `2410-317153` |
-| Personas: Learn | `2410-317272` |
-| White Collar profile + journey | `2021-19771` |
-| White Collar moment | `2021-26735` |
-| Solution card (Circles) | `3652-149930` |
+1. Map colours/spacing to token names from `src/styles/tokens.css` and `.impeccable.md`
+2. Tailwind + CSS vars — never hard-code brand hex outside the token layer
+3. Wrap sections in Framer Motion `motion.div` for entry animations (respect `prefers-reduced-motion`)
+4. Every `<main>` must carry `id="main-content"` to pair with the global skip link
 
 ## Notion — Solutions DB (essential fields)
 

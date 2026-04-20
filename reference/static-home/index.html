@@ -607,7 +607,7 @@
       gap: 0;
     }
     /* Figma 1635:80131 — persona presentation (Consumer / David Miller) */
-    .wc-persona-figma {
+    .wc-persona-layout {
       margin: 0 auto;
       max-width: 1920px;
       padding: 12px 16px 56px;
@@ -621,7 +621,7 @@
       );
       overflow: hidden;
     }
-    .wc-persona-figma__deco {
+    .wc-persona-layout__deco {
       position: absolute;
       left: -15%;
       top: 50%;
@@ -633,7 +633,7 @@
       background-image: radial-gradient(circle, rgba(41, 56, 150, 0.22) 1.2px, transparent 1.2px);
       background-size: 14px 14px;
     }
-    .wc-persona-figma__grid {
+    .wc-persona-layout__grid {
       position: relative;
       z-index: 1;
       display: grid;
@@ -642,27 +642,27 @@
       align-items: start;
     }
     @media (min-width: 1100px) {
-      .wc-persona-figma__grid {
+      .wc-persona-layout__grid {
         grid-template-columns: minmax(240px, 1fr) minmax(260px, 1.1fr) minmax(280px, 1.2fr);
         gap: 24px 28px;
       }
     }
-    .wc-persona-strip--figma {
+    .wc-persona-strip--hero {
       padding: 0;
       margin: 0 0 8px;
       max-width: none;
     }
-    .wc-persona-strip--figma .wc-persona-strip__eyebrow {
+    .wc-persona-strip--hero .wc-persona-strip__eyebrow {
       font-size: clamp(1.25rem, 2.5vw, 2.5rem);
       font-weight: 700;
       margin-bottom: 4px;
     }
-    .wc-persona-strip--figma .wc-persona-strip__name {
+    .wc-persona-strip--hero .wc-persona-strip__name {
       font-size: clamp(2rem, 5vw, 4rem);
       line-height: 1;
       margin-bottom: 4px;
     }
-    .wc-persona-strip--figma .wc-persona-strip__role {
+    .wc-persona-strip--hero .wc-persona-strip__role {
       font-size: clamp(1.25rem, 2.5vw, 2.5rem);
       font-weight: 600;
       margin-bottom: 0;
@@ -726,7 +726,7 @@
       line-height: 1.45;
       color: var(--blue);
     }
-    .wc-persona-figma__col--photo {
+    .wc-persona-layout__col--photo {
       position: relative;
       min-height: 280px;
       display: flex;
@@ -735,14 +735,14 @@
       border-radius: 25px;
       overflow: hidden;
     }
-    .wc-persona-figma__photo-bg {
+    .wc-persona-layout__photo-bg {
       position: absolute;
       inset: 0;
       background-image: radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px);
       background-size: 12px 12px;
       opacity: 0.95;
     }
-    .wc-persona-figma__photo {
+    .wc-persona-layout__photo {
       position: relative;
       z-index: 1;
       width: auto;
@@ -781,7 +781,7 @@
       padding-left: 1.35rem;
     }
     .pj-card li { margin-bottom: 6px; }
-    .wc-persona-figma__logo {
+    .wc-persona-layout__logo {
       position: absolute;
       bottom: 16px;
       right: 16px;
@@ -790,13 +790,13 @@
       overflow: hidden;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
-    .wc-persona-figma__logo img {
+    .wc-persona-layout__logo img {
       display: block;
       height: 32px;
       width: auto;
       max-width: min(200px, 42vw);
     }
-    .wc-persona-figma__logo-fallback {
+    .wc-persona-layout__logo-fallback {
       font-family: var(--font-heading);
       font-weight: 800;
       font-size: 1.1rem;
@@ -1557,14 +1557,14 @@
   <!-- Home -->
   <div class="screen" id="home" data-node-id="2021:20460">
     <div class="home-inner" id="main-content" tabindex="-1">
-      <div class="home-bokeh home-bokeh--l" aria-hidden="true"><img src="./assets/figma/home-bokeh.png" alt=""></div>
-      <div class="home-bokeh home-bokeh--r" aria-hidden="true"><img src="./assets/figma/home-bokeh.png" alt=""></div>
-      <div class="home-sparkle home-sparkle--tl" aria-hidden="true"><img src="./assets/figma/home-sparkle.png" alt=""></div>
-      <div class="home-sparkle home-sparkle--tr" aria-hidden="true"><img src="./assets/figma/home-sparkle.png" alt=""></div>
+      <div class="home-bokeh home-bokeh--l" aria-hidden="true"><img src="./assets/catalogue/home-bokeh.png" alt=""></div>
+      <div class="home-bokeh home-bokeh--r" aria-hidden="true"><img src="./assets/catalogue/home-bokeh.png" alt=""></div>
+      <div class="home-sparkle home-sparkle--tl" aria-hidden="true"><img src="./assets/catalogue/home-sparkle.png" alt=""></div>
+      <div class="home-sparkle home-sparkle--tr" aria-hidden="true"><img src="./assets/catalogue/home-sparkle.png" alt=""></div>
 
       <header class="home-header">
         <p class="home-tagline">Digital, AI &amp; Innovation Experience Catalogue</p>
-        <img class="home-underline" src="./assets/figma/home-title-underline.png" alt="" width="159" height="8">
+        <img class="home-underline" src="./assets/catalogue/home-title-underline.png" alt="" width="159" height="8">
       </header>
 
       <div class="home-search-bar">
@@ -1581,19 +1581,19 @@
         </div>
         <div class="home-collage">
           <div class="home-circle" aria-hidden="true">
-            <img src="./assets/figma/hero-workplace-circle.png" alt="">
+            <img src="./assets/catalogue/hero-workplace-circle.png" alt="">
           </div>
           <div class="home-portrait img-crop">
-            <img src="./assets/figma/home-client-portrait.png" alt="Client portrait">
+            <img src="./assets/catalogue/home-client-portrait.png" alt="Client portrait">
           </div>
           <div class="home-phone img-crop">
-            <img src="./assets/figma/home-phone-myvillage.png" alt="Mobile app preview">
+            <img src="./assets/catalogue/home-phone-myvillage.png" alt="Mobile app preview">
           </div>
       </div>
     </div>
 
       <div class="home-brand">
-        <img src="./assets/figma/sodexo-logotype-2021.jpg" alt="Sodexo" width="1024" height="576">
+        <img src="./assets/catalogue/sodexo-logotype-2021.jpg" alt="Sodexo" width="1024" height="576">
       </div>
     </div>
   </div>
@@ -1611,7 +1611,7 @@
     <div class="app-shell">
       <div class="areas-stage" id="areas-stage">
         <div class="areas-bg" id="areas-parallax-bg" aria-hidden="true">
-          <img src="./assets/figma/areas-isometric.png" alt="">
+          <img src="./assets/catalogue/areas-isometric.png" alt="">
         </div>
         <div class="areas-cards-layer" id="areas-cards-root"></div>
       </div>
@@ -1627,7 +1627,7 @@
         </div>
       <ol class="breadcrumb" id="breadcrumb-work"></ol>
     </nav>
-    <div class="wp-deco" aria-hidden="true"><img src="./assets/figma/work-page-deco.png" alt=""></div>
+    <div class="wp-deco" aria-hidden="true"><img src="./assets/catalogue/work-page-deco.png" alt=""></div>
     <div class="areas-topbar app-shell" style="padding-left: 0; padding-right: 0;">
       <button type="button" class="btn-back btn-back--sm" onclick="go('areas')" aria-label="Back">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -1638,8 +1638,8 @@
 
     <div class="wp-grid">
       <div class="wp-info card-radius shadow-card">
-        <img class="wp-info-iso" src="./assets/figma/work-area-info-iso.png" alt="Isometric workplace illustration">
-        <div class="wp-info-rule"><img src="./assets/figma/ui-horizontal-rule.png" alt=""></div>
+        <img class="wp-info-iso" src="./assets/catalogue/work-area-info-iso.png" alt="Isometric workplace illustration">
+        <div class="wp-info-rule"><img src="./assets/catalogue/ui-horizontal-rule.png" alt=""></div>
         <div class="wp-info-text">
           <p>In every workplace, <strong>Sodexo transforms routine into experience.</strong></p>
           <ul>
@@ -1663,7 +1663,7 @@
     </div>
       <ol class="breadcrumb" id="breadcrumb-area-personas"></ol>
     </nav>
-    <div class="wp-deco" aria-hidden="true"><img id="area-personas-deco" src="./assets/figma/learn-page-deco.png" alt=""></div>
+    <div class="wp-deco" aria-hidden="true"><img id="area-personas-deco" src="./assets/catalogue/learn-page-deco.png" alt=""></div>
     <div class="areas-topbar app-shell" style="padding-left: 0; padding-right: 0;">
       <button type="button" class="btn-back btn-back--sm" onclick="go('areas')" aria-label="Back">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -1687,14 +1687,14 @@
       <ol class="breadcrumb" id="breadcrumb-persona"></ol>
     </nav>
     <p class="wc-bar">Digital, AI &amp; Innovation Experience Catalogue</p>
-    <div class="wc-hero-wrap wc-persona-figma" id="pj-persona-hero-shell">
+    <div class="wc-hero-wrap wc-persona-layout" id="pj-persona-hero-shell">
       <button type="button" class="btn-back btn-back--sm wc-back" onclick="goBackToAreaPersonae()" aria-label="Back to area personae">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <div class="wc-persona-figma__deco" aria-hidden="true"></div>
-      <div class="wc-persona-figma__grid">
-        <div class="wc-persona-figma__col wc-persona-figma__col--left">
-          <div class="wc-persona-strip wc-persona-strip--figma">
+      <div class="wc-persona-layout__deco" aria-hidden="true"></div>
+      <div class="wc-persona-layout__grid">
+        <div class="wc-persona-layout__col wc-persona-layout__col--left">
+          <div class="wc-persona-strip wc-persona-strip--hero">
             <p class="wc-persona-strip__eyebrow" id="pj-eyebrow"></p>
             <h1 class="wc-persona-strip__name" id="pj-name"></h1>
             <p class="wc-persona-strip__role" id="pj-role"></p>
@@ -1703,19 +1703,19 @@
           <div class="pj-goals" id="pj-goals" hidden></div>
           <blockquote class="pj-quote" id="pj-quote" hidden></blockquote>
         </div>
-        <div class="wc-persona-figma__col wc-persona-figma__col--photo">
-          <div class="wc-persona-figma__photo-bg" aria-hidden="true"></div>
-          <img class="wc-persona-figma__photo" id="pj-hero" src="" alt="">
+        <div class="wc-persona-layout__col wc-persona-layout__col--photo">
+          <div class="wc-persona-layout__photo-bg" aria-hidden="true"></div>
+          <img class="wc-persona-layout__photo" id="pj-hero" src="" alt="">
         </div>
-        <div class="wc-persona-figma__col wc-persona-figma__col--right">
+        <div class="wc-persona-layout__col wc-persona-layout__col--right">
           <div class="pj-card" id="pj-motivations" hidden></div>
           <div class="pj-card" id="pj-pains" hidden></div>
           <div class="pj-card" id="pj-needs" hidden></div>
         </div>
       </div>
-      <div class="wc-persona-figma__logo" aria-hidden="true">
-        <img src="./assets/figma/sodexo-logotype-2021.jpg" alt="" width="1024" height="576" onerror="this.style.display='none';if(this.nextElementSibling)this.nextElementSibling.hidden=false;">
-        <span class="wc-persona-figma__logo-fallback" hidden>Sodexo</span>
+      <div class="wc-persona-layout__logo" aria-hidden="true">
+        <img src="./assets/catalogue/sodexo-logotype-2021.jpg" alt="" width="1024" height="576" onerror="this.style.display='none';if(this.nextElementSibling)this.nextElementSibling.hidden=false;">
+        <span class="wc-persona-layout__logo-fallback" hidden>Sodexo</span>
       </div>
     </div>
     <div class="wc-panel">
@@ -1729,7 +1729,7 @@
           <h2 id="pj-platform-heading">Our Modular Experience Platform: <span class="teal" id="pj-platform-label">Consumer</span></h2>
           <button type="button" class="wc-listen" aria-label="Listen">
             Listen
-            <span class="icon"><img src="./assets/figma/ui-chevron-go.png" alt="" width="28" height="28"></span>
+            <span class="icon"><img src="./assets/catalogue/ui-chevron-go.png" alt="" width="28" height="28"></span>
           </button>
         </div>
         <div class="wc-intro" id="pj-intro"></div>
@@ -1738,7 +1738,7 @@
           <div id="pj-modular"></div>
         </div>
         <div class="wc-journey-frame">
-          <img id="pj-puzzle" src="./assets/figma/wc-platform-puzzle.png" alt="Modular platform puzzle journey">
+          <img id="pj-puzzle" src="./assets/catalogue/wc-platform-puzzle.png" alt="Modular platform puzzle journey">
         </div>
         <div class="wc-journey-strip" id="pj-journey-strip" aria-label="Journey context">
           <span class="wc-journey-strip__seg" id="pj-strip-consumer">Consumer</span>
@@ -1748,7 +1748,7 @@
         <h3 class="font-heading" style="font-size:1.1rem;margin:24px 0 12px;color:var(--blue);" id="section-journey">Journey map — tap a moment</h3>
         <p class="wc-journey-hint">Consumer journey — tap a hotspot on the map to open that moment and linked solutions.</p>
         <div class="journey-map-wrap" id="journey-map-wrap">
-          <img id="pj-map" src="./assets/figma/wc-journey-map.png" alt="Consumer journey isometric map">
+          <img id="pj-map" src="./assets/catalogue/wc-journey-map.png" alt="Consumer journey isometric map">
           <div class="journey-hotspots" id="journey-hotspots" role="presentation"></div>
         </div>
         <h3 class="font-heading" style="font-size:1.1rem;margin:32px 0 12px;color:var(--blue);" id="section-modules">Experience modules</h3>
@@ -1848,40 +1848,40 @@
       window.currentSolutionDefaultId = currentSolutionDefaultId;
 
       var AS = {
-        rule: './assets/figma/ui-card-divider-line.png',
-        closeEllipse: './assets/figma/ui-chevron-card.png',
-        check: './assets/figma/ui-chevron-go.png',
-        benefitIcon: './assets/figma/ui-chevron-go.png',
-        iconGeneric: './assets/figma/ui-chevron-go.png',
-        iconDoc: './assets/figma/ui-chevron-go.png'
+        rule: './assets/catalogue/ui-card-divider-line.png',
+        closeEllipse: './assets/catalogue/ui-chevron-card.png',
+        check: './assets/catalogue/ui-chevron-go.png',
+        benefitIcon: './assets/catalogue/ui-chevron-go.png',
+        iconGeneric: './assets/catalogue/ui-chevron-go.png',
+        iconDoc: './assets/catalogue/ui-chevron-go.png'
       };
 
-      /** Persona portraits — exported from Figma via MCP; files in ./assets/figma/ */
-      var FIGMA_ASSETS = {
-        'work-client': './assets/figma/work-client.png',
-        'work-white-collar': './assets/figma/work-white-collar.png',
-        'work-blue-collar': './assets/figma/work-blue-collar.png',
-        'work-operator': './assets/figma/work-operator.png',
-        'work-grey-collar': './assets/figma/work-grey-collar.png',
-        'work-military': './assets/figma/work-military.png',
-        'heal-client': './assets/figma/heal-client.png',
-        'heal-doctor': './assets/figma/heal-doctor.png',
-        'heal-nurse': './assets/figma/heal-nurse.png',
-        'heal-patient': './assets/figma/heal-patient.png',
-        'heal-senior': './assets/figma/heal-senior.png',
-        'heal-operator': './assets/figma/heal-operator.png',
-        'play-client': './assets/figma/play-client.png',
-        'play-operator': './assets/figma/play-operator.png',
-        'play-sport-fan': './assets/figma/play-sport-fan.png',
-        'play-vip-guest': './assets/figma/play-vip-guest.png',
-        'play-participant': './assets/figma/play-participant.png',
-        'play-tourist': './assets/figma/play-tourist.png',
-        'learn-client': './assets/figma/learn-client.png',
-        'learn-operator': './assets/figma/learn-operator.png',
-        'learn-student': './assets/figma/learn-student.png',
-        'learn-parent': './assets/figma/learn-parent.png',
-        'learn-schoolchild': './assets/figma/learn-schoolchild.png',
-        'learn-teacher': './assets/figma/learn-teacher.png'
+      /** Persona portraits — local catalogue assets; files in ./assets/catalogue/ */
+      var CATALOGUE_ASSETS = {
+        'work-client': './assets/catalogue/work-client.png',
+        'work-white-collar': './assets/catalogue/work-white-collar.png',
+        'work-blue-collar': './assets/catalogue/work-blue-collar.png',
+        'work-operator': './assets/catalogue/work-operator.png',
+        'work-grey-collar': './assets/catalogue/work-grey-collar.png',
+        'work-military': './assets/catalogue/work-military.png',
+        'heal-client': './assets/catalogue/heal-client.png',
+        'heal-doctor': './assets/catalogue/heal-doctor.png',
+        'heal-nurse': './assets/catalogue/heal-nurse.png',
+        'heal-patient': './assets/catalogue/heal-patient.png',
+        'heal-senior': './assets/catalogue/heal-senior.png',
+        'heal-operator': './assets/catalogue/heal-operator.png',
+        'play-client': './assets/catalogue/play-client.png',
+        'play-operator': './assets/catalogue/play-operator.png',
+        'play-sport-fan': './assets/catalogue/play-sport-fan.png',
+        'play-vip-guest': './assets/catalogue/play-vip-guest.png',
+        'play-participant': './assets/catalogue/play-participant.png',
+        'play-tourist': './assets/catalogue/play-tourist.png',
+        'learn-client': './assets/catalogue/learn-client.png',
+        'learn-operator': './assets/catalogue/learn-operator.png',
+        'learn-student': './assets/catalogue/learn-student.png',
+        'learn-parent': './assets/catalogue/learn-parent.png',
+        'learn-schoolchild': './assets/catalogue/learn-schoolchild.png',
+        'learn-teacher': './assets/catalogue/learn-teacher.png'
       };
 
       /** Dotted chevron (16×27); fill via currentColor = --blue-primary on parent */
@@ -1905,12 +1905,12 @@
           { id: 'PLAY', title: 'PLAY', nav: 'area-personas:play', html: 'Sodexo Live! transforms every event into an <strong>unforgettable experience</strong>, where great food, hospitality, and emotion come together.' }
         ],
         workPersonas: [
-          { id: 'client', label: 'Client', variant: 'client', image: FIGMA_ASSETS['work-client'], target: 'persona:client' },
-          { id: 'whiteCollar', label: 'White Collar', variant: 'default', image: FIGMA_ASSETS['work-white-collar'], target: 'persona:whiteCollar' },
-          { id: 'blueCollar', label: 'Blue Collar', variant: 'default', image: FIGMA_ASSETS['work-blue-collar'], target: 'persona:blueCollar' },
-          { id: 'operator', label: 'Operator', variant: 'op', image: FIGMA_ASSETS['work-operator'], target: 'persona:operator' },
-          { id: 'greyCollar', label: 'Grey Collar', variant: 'default', image: FIGMA_ASSETS['work-grey-collar'], target: 'persona:greyCollar' },
-          { id: 'military', label: 'Military', variant: 'default', image: FIGMA_ASSETS['work-military'], target: 'persona:military' }
+          { id: 'client', label: 'Client', variant: 'client', image: CATALOGUE_ASSETS['work-client'], target: 'persona:client' },
+          { id: 'whiteCollar', label: 'White Collar', variant: 'default', image: CATALOGUE_ASSETS['work-white-collar'], target: 'persona:whiteCollar' },
+          { id: 'blueCollar', label: 'Blue Collar', variant: 'default', image: CATALOGUE_ASSETS['work-blue-collar'], target: 'persona:blueCollar' },
+          { id: 'operator', label: 'Operator', variant: 'op', image: CATALOGUE_ASSETS['work-operator'], target: 'persona:operator' },
+          { id: 'greyCollar', label: 'Grey Collar', variant: 'default', image: CATALOGUE_ASSETS['work-grey-collar'], target: 'persona:greyCollar' },
+          { id: 'military', label: 'Military', variant: 'default', image: CATALOGUE_ASSETS['work-military'], target: 'persona:military' }
         ],
         areaPersonae: {
           learn: {
@@ -1919,15 +1919,15 @@
             title: 'Here are our key personae in the learn context',
             subPrefix: 'LEARN',
             infoClass: 'wp-info--learn',
-            decoSrc: './assets/figma/learn-page-deco.png',
-            infoHtml: '<img class="wp-info-iso" src="./assets/figma/learn-area-info-iso.png" alt="Campus isometric illustration"><div class="wp-info-rule"><img src="./assets/figma/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>In schools and universities, <strong>Sodexo helps learning come to life</strong> — nourishing both minds and bodies. As a <strong>client</strong>, I see spaces that inspire <strong>focus</strong>, <strong>belonging</strong>, and <strong>community</strong>. As a <strong>student</strong>, I feel safe, included, and motivated, surrounded by fresh food, dynamic spaces, and sustainable practices that reflect my values. As an <strong>operator</strong>, I know that each meal, each smile, each service <strong>moment builds a better future</strong> — one student, one day at a time.</p></div>',
+            decoSrc: './assets/catalogue/learn-page-deco.png',
+            infoHtml: '<img class="wp-info-iso" src="./assets/catalogue/learn-area-info-iso.png" alt="Campus isometric illustration"><div class="wp-info-rule"><img src="./assets/catalogue/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>In schools and universities, <strong>Sodexo helps learning come to life</strong> — nourishing both minds and bodies. As a <strong>client</strong>, I see spaces that inspire <strong>focus</strong>, <strong>belonging</strong>, and <strong>community</strong>. As a <strong>student</strong>, I feel safe, included, and motivated, surrounded by fresh food, dynamic spaces, and sustainable practices that reflect my values. As an <strong>operator</strong>, I know that each meal, each smile, each service <strong>moment builds a better future</strong> — one student, one day at a time.</p></div>',
             personas: [
-              { id: 'learnClient', label: 'Client', variant: 'client', image: FIGMA_ASSETS['learn-client'], target: 'persona:learnClient' },
-              { id: 'learnStudent', label: 'Student', variant: 'default', image: FIGMA_ASSETS['learn-student'], target: 'persona:learnStudent' },
-              { id: 'learnParent', label: 'Parent', variant: 'default', image: FIGMA_ASSETS['learn-parent'], target: 'persona:learnParent' },
-              { id: 'learnOperator', label: 'Operator', variant: 'op', image: FIGMA_ASSETS['learn-operator'], target: 'persona:learnOperator' },
-              { id: 'learnSchoolchild', label: 'Schoolchild', variant: 'default', image: FIGMA_ASSETS['learn-schoolchild'], target: 'persona:learnSchoolchild' },
-              { id: 'learnTeacher', label: 'Teacher', variant: 'default', image: FIGMA_ASSETS['learn-teacher'], target: 'persona:learnTeacher' }
+              { id: 'learnClient', label: 'Client', variant: 'client', image: CATALOGUE_ASSETS['learn-client'], target: 'persona:learnClient' },
+              { id: 'learnStudent', label: 'Student', variant: 'default', image: CATALOGUE_ASSETS['learn-student'], target: 'persona:learnStudent' },
+              { id: 'learnParent', label: 'Parent', variant: 'default', image: CATALOGUE_ASSETS['learn-parent'], target: 'persona:learnParent' },
+              { id: 'learnOperator', label: 'Operator', variant: 'op', image: CATALOGUE_ASSETS['learn-operator'], target: 'persona:learnOperator' },
+              { id: 'learnSchoolchild', label: 'Schoolchild', variant: 'default', image: CATALOGUE_ASSETS['learn-schoolchild'], target: 'persona:learnSchoolchild' },
+              { id: 'learnTeacher', label: 'Teacher', variant: 'default', image: CATALOGUE_ASSETS['learn-teacher'], target: 'persona:learnTeacher' }
             ],
             gridClass: ''
           },
@@ -1937,15 +1937,15 @@
             title: 'Here are our key personae in the heal context',
             subPrefix: 'HEAL',
             infoClass: '',
-            decoSrc: './assets/figma/heal-page-deco.png',
-            infoHtml: '<img class="wp-info-iso" src="./assets/figma/heal-area-info-iso.png" alt="Healthcare isometric illustration"><div class="wp-info-rule"><img src="./assets/figma/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>Across hospitals and care homes, <strong>Sodexo brings comfort, dignity, and trust</strong> to every touchpoint.</p><ul><li>As a <strong>client, I see a partner</strong> who understands the delicate balance between <strong>efficiency</strong> and <strong>empathy</strong> — ensuring safety, hygiene, and emotional care coexist.</li><li>As a <strong>patient or resident, I feel nurtured and respected</strong>, my recovery supported by comforting meals, warm words, and reassuring routines.</li><li>As an <strong>operator, I am proud to stand behind a service that heals</strong> beyond the clinical, creating environments where every act of care becomes a gesture of humanity.</li></ul></div>',
+            decoSrc: './assets/catalogue/heal-page-deco.png',
+            infoHtml: '<img class="wp-info-iso" src="./assets/catalogue/heal-area-info-iso.png" alt="Healthcare isometric illustration"><div class="wp-info-rule"><img src="./assets/catalogue/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>Across hospitals and care homes, <strong>Sodexo brings comfort, dignity, and trust</strong> to every touchpoint.</p><ul><li>As a <strong>client, I see a partner</strong> who understands the delicate balance between <strong>efficiency</strong> and <strong>empathy</strong> — ensuring safety, hygiene, and emotional care coexist.</li><li>As a <strong>patient or resident, I feel nurtured and respected</strong>, my recovery supported by comforting meals, warm words, and reassuring routines.</li><li>As an <strong>operator, I am proud to stand behind a service that heals</strong> beyond the clinical, creating environments where every act of care becomes a gesture of humanity.</li></ul></div>',
             personas: [
-              { id: 'healClient', label: 'Client', variant: 'client', image: FIGMA_ASSETS['heal-client'], target: 'persona:healClient' },
-              { id: 'healDoctor', label: 'Doctor', variant: 'default', image: FIGMA_ASSETS['heal-doctor'], target: 'persona:healDoctor' },
-              { id: 'healNurse', label: 'Nurse', variant: 'default', image: FIGMA_ASSETS['heal-nurse'], target: 'persona:healNurse' },
-              { id: 'healOperator', label: 'Operator', variant: 'op', image: FIGMA_ASSETS['heal-operator'], target: 'persona:healOperator' },
-              { id: 'healSenior', label: 'Senior', variant: 'default', image: FIGMA_ASSETS['heal-senior'], target: 'persona:healSenior' },
-              { id: 'healPatient', label: 'Patient', variant: 'default', image: FIGMA_ASSETS['heal-patient'], target: 'persona:healPatient' }
+              { id: 'healClient', label: 'Client', variant: 'client', image: CATALOGUE_ASSETS['heal-client'], target: 'persona:healClient' },
+              { id: 'healDoctor', label: 'Doctor', variant: 'default', image: CATALOGUE_ASSETS['heal-doctor'], target: 'persona:healDoctor' },
+              { id: 'healNurse', label: 'Nurse', variant: 'default', image: CATALOGUE_ASSETS['heal-nurse'], target: 'persona:healNurse' },
+              { id: 'healOperator', label: 'Operator', variant: 'op', image: CATALOGUE_ASSETS['heal-operator'], target: 'persona:healOperator' },
+              { id: 'healSenior', label: 'Senior', variant: 'default', image: CATALOGUE_ASSETS['heal-senior'], target: 'persona:healSenior' },
+              { id: 'healPatient', label: 'Patient', variant: 'default', image: CATALOGUE_ASSETS['heal-patient'], target: 'persona:healPatient' }
             ],
             gridClass: ''
           },
@@ -1955,15 +1955,15 @@
             title: 'Here are our key personae in the play context',
             subPrefix: 'PLAY',
             infoClass: '',
-            decoSrc: './assets/figma/play-page-deco.png',
-            infoHtml: '<img class="wp-info-iso" src="./assets/figma/play-area-info-iso.png" alt="Venues isometric illustration"><div class="wp-info-rule"><img src="./assets/figma/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>From stadiums to museums, <strong>Sodexo Live! turns emotion into experience</strong>.</p><p>As a <strong>client, I see my venue transformed</strong> — food, service, and storytelling merging into a living brand experience.</p><p>As a <strong>guest, I feel the thrill of belonging</strong>, tasting creativity, joy, and excellence in every moment — from the first bite to the final applause.</p><p>As an <strong>operator, I am part of the magic</strong>, orchestrating the unseen details that make every event vibrant, memorable, and unforgettable.</p></div>',
+            decoSrc: './assets/catalogue/play-page-deco.png',
+            infoHtml: '<img class="wp-info-iso" src="./assets/catalogue/play-area-info-iso.png" alt="Venues isometric illustration"><div class="wp-info-rule"><img src="./assets/catalogue/ui-horizontal-rule.png" alt=""></div><div class="wp-info-text"><p>From stadiums to museums, <strong>Sodexo Live! turns emotion into experience</strong>.</p><p>As a <strong>client, I see my venue transformed</strong> — food, service, and storytelling merging into a living brand experience.</p><p>As a <strong>guest, I feel the thrill of belonging</strong>, tasting creativity, joy, and excellence in every moment — from the first bite to the final applause.</p><p>As an <strong>operator, I am part of the magic</strong>, orchestrating the unseen details that make every event vibrant, memorable, and unforgettable.</p></div>',
             personas: [
-              { id: 'playClient', label: 'Client', variant: 'client', image: FIGMA_ASSETS['play-client'], target: 'persona:playClient' },
-              { id: 'playOperator', label: 'Operator', variant: 'op', image: FIGMA_ASSETS['play-operator'], target: 'persona:playOperator' },
-              { id: 'playSportFan', label: 'Sport Fan', variant: 'default', image: FIGMA_ASSETS['play-sport-fan'], target: 'persona:playSportFan' },
-              { id: 'playVipGuest', label: 'VIP Guest', variant: 'default', image: FIGMA_ASSETS['play-vip-guest'], target: 'persona:playVipGuest' },
-              { id: 'playParticipant', label: 'Participant', variant: 'default', image: FIGMA_ASSETS['play-participant'], target: 'persona:playParticipant' },
-              { id: 'playTourist', label: 'Tourist', variant: 'default', image: FIGMA_ASSETS['play-tourist'], target: 'persona:playTourist' }
+              { id: 'playClient', label: 'Client', variant: 'client', image: CATALOGUE_ASSETS['play-client'], target: 'persona:playClient' },
+              { id: 'playOperator', label: 'Operator', variant: 'op', image: CATALOGUE_ASSETS['play-operator'], target: 'persona:playOperator' },
+              { id: 'playSportFan', label: 'Sport Fan', variant: 'default', image: CATALOGUE_ASSETS['play-sport-fan'], target: 'persona:playSportFan' },
+              { id: 'playVipGuest', label: 'VIP Guest', variant: 'default', image: CATALOGUE_ASSETS['play-vip-guest'], target: 'persona:playVipGuest' },
+              { id: 'playParticipant', label: 'Participant', variant: 'default', image: CATALOGUE_ASSETS['play-participant'], target: 'persona:playParticipant' },
+              { id: 'playTourist', label: 'Tourist', variant: 'default', image: CATALOGUE_ASSETS['play-tourist'], target: 'persona:playTourist' }
             ],
             gridClass: 'persona-grid--play'
           }

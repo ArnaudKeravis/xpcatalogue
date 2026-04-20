@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import type { Persona } from '@/lib/data/types';
-import { PERSONA_FIGMA_PORTRAIT_URL } from '@/lib/data/personaFigmaPortraits';
+import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 
 interface Props {
   persona: Persona;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function PersonaCard({ persona, href }: Props) {
-  const portraitSrc = persona.photo ?? PERSONA_FIGMA_PORTRAIT_URL[persona.id];
+  const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
 
   return (
     <Link

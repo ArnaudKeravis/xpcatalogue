@@ -27,7 +27,7 @@ export default async function SolutionPage({ params }: Props) {
         breadcrumb={[{ label: solution.module }, { label: solution.name }]}
       />
 
-      <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <SolutionCard solution={solution} siblings={siblings} module={mod} />
       </main>
     </div>

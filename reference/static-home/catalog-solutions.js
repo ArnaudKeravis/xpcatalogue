@@ -22,7 +22,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "In today's competitive work environment, organizations face challenges in attracting and retaining top talent. Employees seek a holistic work experience supporting well-being, work-life balance, and personal growth.",
     "descriptionHtml": "<p>Circles by Sodexo is a premier workplace concierge and lifestyle service platform with 25+ years of expertise. Offers assistance with everyday tasks, coordination of corporate events, social events and wellness programs.</p>",
     "kpis": [
@@ -66,7 +66,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Sodexo WRX is Sodexo's new unified container app.",
     "descriptionHtml": "<p>One-stop platform for Food, FM, and Workplace Experience. 5 countries, 5 active sites.</p>",
     "kpis": [
@@ -110,7 +110,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Traditional retail creates friction through checkout lines and staffing challenges.",
     "descriptionHtml": "<p>AI-powered autonomous stores using computer vision. 270+ stores deployed worldwide.</p>",
     "kpis": [
@@ -153,7 +153,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "High-traffic venues need to serve more customers with limited labor.",
     "descriptionHtml": "<p>Just Walk Out technology. 3 Sodexo Live! NorAm sites (7 stores). Exploring Healthcare.</p>",
     "kpis": [
@@ -196,7 +196,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "High-traffic venues require fast, frictionless retail.",
     "descriptionHtml": "<p>Cashierless platform. Piloted at Roland-Garros 2024. Revenues up to +80%.</p>",
     "kpis": [
@@ -238,7 +238,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Traditional office cafeterias fail to meet modern workplace needs.",
     "descriptionHtml": "<p>Office micro stores. 10,000+ users. €4M Series A.</p>",
     "kpis": [
@@ -281,7 +281,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "High-traffic foodservice faces pressure with labor constraints.",
     "descriptionHtml": "<p>World's fastest AI-powered self-checkout. ~10 seconds. 136 University + 7 Live! sites.</p>",
     "kpis": [
@@ -321,7 +321,7 @@
     "flags": [
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "High-traffic canteens face pressure to reduce queue times.",
     "descriptionHtml": "<p>AI product recognition, 10 seconds. 30+ CS France. 95% accuracy.</p>",
     "kpis": [
@@ -366,7 +366,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Employees expect flexible on-demand access to quality meals.",
     "descriptionHtml": "<p>1M+ users, 4.76/5 satisfaction, 30M orders/year, +50% mobile.</p>",
     "kpis": [
@@ -410,7 +410,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Unified app for all Sodexo services.",
     "descriptionHtml": "<p>Food, FM, and Workplace in one app. 5 countries.</p>",
     "kpis": [
@@ -452,7 +452,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Food waste is a persistent challenge in foodservice.",
     "descriptionHtml": "<p>AI + 3D cameras. -20% food cost year 1, -50% after 3 years. 160+ locations.</p>",
     "kpis": [
@@ -497,7 +497,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Food waste drives up costs in commercial kitchens.",
     "descriptionHtml": "<p>Smart scale + tablet. 3,851 sites, 37 countries, -50% food waste.</p>",
     "kpis": [
@@ -537,7 +537,7 @@
     "flags": [
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Menu planning is complex with regulatory requirements.",
     "descriptionHtml": "<p>Generates complete seasonal menus in minutes. 50x faster.</p>",
     "kpis": [
@@ -577,7 +577,7 @@
     "flags": [
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Misalignment between demand and staffing impacts profitability.",
     "descriptionHtml": "<p>Workforce optimization. 250 sites, 87% accuracy, €5M GP impact.</p>",
     "kpis": [
@@ -621,7 +621,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Supply chains face cost, availability, and sustainability pressure.",
     "descriptionHtml": "<p>AI product swap optimization. €4.5M savings Q2 FY25.</p>",
     "kpis": [
@@ -663,7 +663,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Bid teams face increasing RFP volumes.",
     "descriptionHtml": "<p>Gen AI for proposals. 100+ proposals, 100 users, -15% hours.</p>",
     "kpis": [
@@ -707,7 +707,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Managing HSE incidents globally needs consistent reporting.",
     "descriptionHtml": "<p>Global HSE platform. 423,500 employees. 81.5% retention rate.</p>",
     "kpis": [
@@ -747,7 +747,7 @@
     "flags": [
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Students on large campuses struggle to get food quickly.",
     "descriptionHtml": "<p>Last-mile robotic delivery. 60 robots at Manson University.</p>",
     "kpis": [
@@ -787,7 +787,7 @@
     "flags": [
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Staff in hospitality transport heavy loads limiting interaction.",
     "descriptionHtml": "<p>Adopted at Coeur Défense Paris. 3x table clearing, 150kg crockery/service.</p>",
     "kpis": [
@@ -828,7 +828,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Companies struggle with underutilized internal assets.",
     "descriptionHtml": "<p>Platform for second-life assets. €156k saved, 20.5t CO₂, 1,631 users.</p>",
     "kpis": [
@@ -871,7 +871,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Companies struggle to understand customer and employee experience.",
     "descriptionHtml": "<p>AI-powered XM platform. USA Sep 2025. Australia Oct 2025.</p>",
     "kpis": [
@@ -913,7 +913,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Manual temperature checks are time-consuming and error-prone.",
     "descriptionHtml": "<p>Remote temperature monitoring. 115+ USA sites. 4-5 month payback.</p>",
     "kpis": [
@@ -954,7 +954,7 @@
     "flags": [
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Organizations face challenges managing foot traffic.",
     "descriptionHtml": "<p>Measure, forecast, manage building flows. Olympics 2024.</p>",
     "kpis": [
@@ -999,7 +999,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Organizations need to turn operational data into insights.",
     "descriptionHtml": "<p>AI+ML analytics. Combines Everyday app data. €5M GP impact.</p>",
     "kpis": [
@@ -1042,7 +1042,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Organizations seek sustainable alternatives to bottled beverages.",
     "descriptionHtml": "<p>Smart water dispenser. APM: 466L, 932 bottles saved, 482kg CO₂.</p>",
     "kpis": [
@@ -1084,7 +1084,7 @@
       "./assets/placeholder.svg",
       "./assets/placeholder.svg"
     ],
-    "heroImage": "./assets/figma/work-area-info-iso.png",
+    "heroImage": "./assets/catalogue/work-area-info-iso.png",
     "context": "Managing assets in complex indoor environments is resource-heavy.",
     "descriptionHtml": "<p>Indoor AR digital twins. -80% time, -10% resources, +3% satisfaction.</p>",
     "kpis": [
