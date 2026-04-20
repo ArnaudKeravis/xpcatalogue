@@ -12,15 +12,15 @@ import {
   GraduationCap,
   Heart,
   Knife,
-  Play,
   SoccerBall,
   Stethoscope,
   Truck,
   X,
 } from '@phosphor-icons/react/dist/ssr';
 import type { Icon, IconWeight } from '@phosphor-icons/react';
-import { Navbar } from '@/components/layout/Navbar';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
+import { FavouriteButton } from '@/components/ui/FavouriteButton';
+import { ShareButton } from '@/components/ui/ShareButton';
 import { getCatalogueData } from '@/lib/notion';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import type { Area, Module } from '@/lib/data/types';
@@ -97,19 +97,21 @@ export default async function MomentPage({ params }: Props) {
   const solutionsCountFor = (moduleName: string) =>
     solutions.filter((s) => s.module === moduleName).length;
 
-  return (
-    <div className="relative flex min-h-screen flex-col bg-[#E8EEFB]">
-      <Navbar
-        hideTitle
-        title={`${areaConfig.label} · ${persona.name} · ${step.label}`}
-        backHref={`/${params.area}/${params.persona}`}
-        breadcrumb={[
-          { label: areaConfig.label, href: `/${params.area}` },
-          { label: persona.name, href: `/${params.area}/${params.persona}` },
-          { label: step.label },
-        ]}
-      />
+  // Position in journey → Before / During / After framing
+  const stepIdx = persona.steps.indexOf(step.id);
+  const prevStep = stepIdx > 0 ? journeySteps[persona.steps[stepIdx - 1]] : null;
+  const nextStep =
+    stepIdx < persona.steps.length - 1 ? journeySteps[persona.steps[stepIdx + 1]] : null;
 
+  // Cross-persona — which other personas also have a step called `step.label`?
+  const crossPersonas = personas.filter(
+    (p) => p.id !== persona.id && p.steps.some((sid) => journeySteps[sid]?.label === step.label)
+  );
+
+  const momentHref = `/${params.area}/${params.persona}/moment/${step.id}`;
+
+  return (
+    <div className="relative flex flex-1 flex-col bg-[#E8EEFB]">
       {/* ── Journey image (background) ───────────────────────────── */}
       <div className="relative z-0 h-[36vh] w-full overflow-hidden sm:h-[40vh] md:h-[44vh] lg:h-[46vh]">
         {mapImage ? (
@@ -129,7 +131,7 @@ export default async function MomentPage({ params }: Props) {
       </div>
 
       {/* ── Moment overlay card ─────────────────────────────────── */}
-      <main id="main-content" className="relative z-10 -mt-16 flex-1 px-4 pb-10 md:-mt-24 md:px-8 lg:-mt-32 lg:px-12">
+      <div className="relative z-10 -mt-16 flex-1 px-4 pb-10 md:-mt-24 md:px-8 lg:-mt-32 lg:px-12">
         <article
           className="mx-auto flex w-full max-w-[1280px] flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_20px_60px_rgba(41,56,150,0.18)]"
         >
@@ -222,18 +224,20 @@ export default async function MomentPage({ params }: Props) {
                     {step.label}
                   </h1>
                 </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-[var(--grey-border)] bg-white px-3 py-1.5 text-xs font-bold text-[var(--blue)] transition-colors hover:bg-[#f0f4ff]"
-                    style={{ fontFamily: 'var(--font-body)' }}
-                    aria-label="Listen to this moment"
-                  >
-                    Listen
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--blue)] text-white">
-                      <Play size={10} weight="fill" />
-                    </span>
-                  </button>
+                <div className="flex shrink-0 items-center gap-2 print:hidden">
+                  <FavouriteButton
+                    kind="moment"
+                    id={`${persona.area}/${persona.id}/${step.id}`}
+                    label={step.label}
+                    href={momentHref}
+                    meta={`${persona.name} · ${areaConfig.label}`}
+                  />
+                  <ShareButton
+                    title={`${step.label} — ${persona.fullName}`}
+                    text={step.description}
+                    url={momentHref}
+                    variant="icon"
+                  />
                   <Link
                     href={`/${params.area}/${params.persona}`}
                     className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200"
@@ -372,9 +376,127 @@ export default async function MomentPage({ params }: Props) {
             )}
           </div>
 
+          {/* ── Before / During / After framing ─────────────────── */}
+          <div
+            className="grid gap-px border-t border-[var(--grey-border)] bg-[var(--grey-border)] md:grid-cols-3"
+            aria-label="Moment in context"
+          >
+            {[
+              {
+                tag: 'Before',
+                role: 'Builds up to this moment',
+                step: prevStep,
+              },
+              {
+                tag: 'During',
+                role: 'What Sodexo changes right now',
+                step,
+              },
+              {
+                tag: 'After',
+                role: 'Opens up what comes next',
+                step: nextStep,
+              },
+            ].map(({ tag, role, step: s }, i) => {
+              const isCurrent = i === 1;
+              if (!s) {
+                return (
+                  <div
+                    key={tag}
+                    className="flex flex-col gap-2 bg-white px-5 py-5 md:px-7 opacity-60"
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/50">
+                      {tag}
+                    </span>
+                    <p className="text-sm text-[var(--blue)]/50" style={{ fontFamily: 'var(--font-body)' }}>
+                      {tag === 'Before' ? 'Start of day' : 'End of day'}
+                    </p>
+                  </div>
+                );
+              }
+              return (
+                <Link
+                  key={tag}
+                  href={`/${params.area}/${params.persona}/moment/${s.id}`}
+                  className={
+                    isCurrent
+                      ? 'flex flex-col gap-2 bg-[var(--icon-bg)] px-5 py-5 md:px-7'
+                      : 'group flex flex-col gap-2 bg-white px-5 py-5 md:px-7 transition-colors hover:bg-[#f8faff]'
+                  }
+                  aria-current={isCurrent ? 'step' : undefined}
+                >
+                  <span
+                    className={
+                      isCurrent
+                        ? 'text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--blue-primary)]'
+                        : 'text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/50'
+                    }
+                  >
+                    {tag}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl" aria-hidden>{s.icon}</span>
+                    <h3
+                      className="text-base font-extrabold leading-tight text-[var(--blue)]"
+                      style={{ fontFamily: 'var(--font-heading)' }}
+                    >
+                      {s.label}
+                    </h3>
+                  </div>
+                  <p
+                    className="text-xs leading-snug text-[var(--blue)]/70"
+                    style={{ fontFamily: 'var(--font-body)' }}
+                  >
+                    {role}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* ── Cross-persona "same moment, other lives" ───────── */}
+          {crossPersonas.length > 0 ? (
+            <div className="border-t border-[var(--grey-border)] bg-white px-5 py-5 md:px-7">
+              <p
+                className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/60"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                This moment also happens for
+              </p>
+              <p
+                className="mt-1 text-xs text-[var(--blue)]/70"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                Same label, different life — switch perspectives without losing the moment.
+              </p>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {crossPersonas.map((p) => {
+                  const matchingStep = p.steps
+                    .map((sid) => journeySteps[sid])
+                    .find((s): s is NonNullable<typeof s> => Boolean(s && s.label === step.label));
+                  if (!matchingStep) return null;
+                  return (
+                    <li key={p.id}>
+                      <Link
+                        href={`/${p.area}/${p.id}/moment/${matchingStep.id}`}
+                        className="inline-flex items-center gap-2 rounded-full border border-[var(--grey-border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-semibold text-[var(--blue)] transition-colors hover:border-[var(--blue-primary)] hover:text-[var(--blue-primary)]"
+                      >
+                        <span className="text-sm" aria-hidden>{p.emoji}</span>
+                        {p.name}
+                        <span className="rounded-full bg-[var(--icon-bg)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--blue)]/70">
+                          {areas[p.area].label}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : null}
+
           {/* Footer quick-nav */}
           <div
-            className="flex items-center justify-between border-t border-[var(--grey-border)] bg-white px-5 py-3 md:px-7"
+            className="flex items-center justify-between border-t border-[var(--grey-border)] bg-white px-5 py-3 md:px-7 print:hidden"
           >
             <Link
               href={`/${params.area}/${params.persona}`}
@@ -393,7 +515,7 @@ export default async function MomentPage({ params }: Props) {
             </Link>
           </div>
         </article>
-      </main>
+      </div>
     </div>
   );
 }

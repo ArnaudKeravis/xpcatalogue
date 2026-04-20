@@ -1,5 +1,5 @@
 /* Sodexo Design System Tokens — source of truth for brand colors, spacing, radii, shadows. */
-/* Fonts (Fraunces display + Manrope body) are loaded via next/font in src/app/layout.tsx.
+/* Open Sans is loaded via next/font in src/app/layout.tsx for both heading + body.
    Never re-add @import url(fonts.googleapis.com) here — it reintroduces FOIT + CLS. */
 
 :root {
@@ -27,8 +27,8 @@
   --area-heal: #5a64a6;
   --area-play: #1a3af0;
 
-  --font-heading: var(--font-fraunces), 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body: var(--font-manrope), 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-open-sans), 'Open Sans', system-ui, -apple-system, sans-serif;
+  --font-body: var(--font-open-sans), 'Open Sans', system-ui, -apple-system, sans-serif;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -81,10 +81,49 @@
   --motion-hero: 650ms;
 }
 
+/* ── Dark theme ─────────────────────────────────────────────────────
+   Applied when <html data-theme="dark"> (manual) or via prefers-color-scheme
+   if user chose "system" (see theme-init script in layout.tsx).
+   Persona + area colors stay the same — they read well on dark surfaces.
+   ─────────────────────────────────────────────────────────────────── */
+:root[data-theme='dark'] {
+  /* Surfaces — deep navy, warmer than pure black */
+  --surface: #0a1230;
+  --surface-card: rgba(22, 34, 72, 0.72);
+  --surface-glass: rgba(22, 34, 72, 0.5);
+  --home-hero-bg: #0a1230;
+
+  /* Text: inverse scale — was #293896, now lifted near-white-blue */
+  --blue: #e3eaff;
+  --blue-solid: #dbe4ff;
+  --blue-primary: #7ba6ff;
+  --blue-inverse: #0a1230;
+  --blue-muted: #1e2f6a;
+
+  /* Teal accent — keep, slight lift */
+  --teal: #3ae5db;
+  --teal-dark: #1fb6ac;
+
+  /* Icon chips and borders */
+  --icon-bg: rgba(123, 166, 255, 0.12);
+  --icon-bg-muted: rgba(123, 166, 255, 0.08);
+  --grey-subtle: #9aa4d2;
+  --grey-border: rgba(255, 255, 255, 0.08);
+
+  /* Shadows turn into soft glows on dark surfaces */
+  --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --shadow-nav: 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-benefits: 0 18px 30px rgba(0, 0, 0, 0.45);
+}
+
 body {
   font-family: var(--font-body);
   color: var(--blue);
-  font-feature-settings: 'ss01', 'cv11';
+  background-color: var(--surface);
+  transition: background-color 240ms var(--ease-out-quint), color 240ms var(--ease-out-quint);
 }
 
 h1,
@@ -94,8 +133,6 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
-  /* Fraunces variable axes — optical size follows weight, soft wedge for humanist warmth */
-  font-variation-settings: 'opsz' 96, 'SOFT' 50, 'WONK' 0;
   letter-spacing: -0.01em;
 }
 

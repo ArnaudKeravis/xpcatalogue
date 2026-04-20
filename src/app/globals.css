@@ -52,6 +52,61 @@
   }
 }
 
+/* ─── Print styles ─────────────────────────────────────────────────────
+   When a user prints a persona, moment or solution page we want the content
+   without chrome. `print:hidden` utility classes are applied to Header/Footer/
+   tab-bar/breadcrumb so they drop out automatically; this block handles global
+   print ergonomics (margins, colors, links).
+   ──────────────────────────────────────────────────────────────────────── */
+
+@media print {
+  /* Force white background and high-contrast text regardless of theme */
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000 !important;
+  }
+  /* Hide the app shell */
+  header[class*='sticky'],
+  nav[aria-label='Breadcrumb'],
+  nav[aria-label='Quick navigation'],
+  nav[aria-label='Primary'],
+  footer {
+    display: none !important;
+  }
+  /* Drop interactive button chrome */
+  button {
+    display: none !important;
+  }
+  /* Expose link URLs for printed reference */
+  a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: #4a4a4a;
+  }
+  a[href^='#']::after,
+  a[href^='/']::after {
+    content: '';
+  }
+  /* Avoid breaking cards across pages */
+  article,
+  section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  /* Keep headings together with following content */
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  /* Sane page margins */
+  @page {
+    margin: 16mm 14mm;
+  }
+}
+
 /* Respect OS reduced-motion preference across all animations and transitions */
 @media (prefers-reduced-motion: reduce) {
   *,

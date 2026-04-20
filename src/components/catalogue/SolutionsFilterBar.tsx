@@ -1,27 +1,47 @@
 'use client';
 
-import { FunnelSimple, X } from '@phosphor-icons/react';
+import { CaretDown, FunnelSimple, X } from '@phosphor-icons/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import type { Area, SolutionStatus, SolutionType } from '@/lib/data/types';
 
 type AreaOption = { value: Area; label: string };
+type PersonaOption = { value: string; label: string; area: Area; areaLabel: string };
+type MomentOption = { value: string; label: string; icon: string; personaId: string };
 
 interface Props {
   modules: string[];
   areaOptions: AreaOption[];
   statuses: SolutionStatus[];
   types: SolutionType[];
+  personas: PersonaOption[];
+  moments: MomentOption[];
+  hashtags: { tag: string; count: number }[];
+  flags: { flag: string; count: number }[];
   totalCount: number;
   filteredCount: number;
 }
 
-/** URL-driven filters (shareable). Preserves `moment` / `momentId` when present. */
+const MULTI_KEYS = ['hashtag', 'flag'] as const;
+const HASHTAG_COLLAPSED_COUNT = 14;
+
+/**
+ * URL-driven filter bar for /solutions.
+ *
+ * All state lives in `?q=&module=&area=&status=&type=&persona=&moment=&hashtag=A&hashtag=B&flag=🇫🇷`
+ * so every filtered view is shareable. Multi-value filters (hashtag / flag) use repeated params.
+ *
+ * Preserves `moment` / `momentId` passthrough params that might arrive from the moment page.
+ */
 export function SolutionsFilterBar({
   modules,
   areaOptions,
   statuses,
   types,
+  personas,
+  moments,
+  hashtags,
+  flags,
   totalCount,
   filteredCount,
 }: Props) {
@@ -29,10 +49,15 @@ export function SolutionsFilterBar({
   const sp = useSearchParams();
   const [pending, startTransition] = useTransition();
   const [qInput, setQInput] = useState(sp.get('q') ?? '');
+  const [showAllHashtags, setShowAllHashtags] = useState(false);
 
   useEffect(() => {
     setQInput(sp.get('q') ?? '');
   }, [sp]);
+
+  const selectedHashtags = useMemo(() => sp.getAll('hashtag'), [sp]);
+  const selectedFlags = useMemo(() => sp.getAll('flag'), [sp]);
+  const selectedPersona = sp.get('persona') ?? '';
 
   const activeFilterCount = useMemo(() => {
     let n = 0;
@@ -41,8 +66,12 @@ export function SolutionsFilterBar({
     if (sp.get('area')) n++;
     if (sp.get('status')) n++;
     if (sp.get('type')) n++;
+    if (sp.get('persona')) n++;
+    if (sp.get('moment')) n++;
+    n += selectedHashtags.length;
+    n += selectedFlags.length;
     return n;
-  }, [sp]);
+  }, [sp, selectedHashtags.length, selectedFlags.length]);
 
   const pushParams = useCallback(
     (mutate: (p: URLSearchParams) => void) => {
@@ -58,9 +87,7 @@ export function SolutionsFilterBar({
     setQInput('');
     startTransition(() => {
       const next = new URLSearchParams();
-      const moment = sp.get('moment');
       const momentId = sp.get('momentId');
-      if (moment) next.set('moment', moment);
       if (momentId) next.set('momentId', momentId);
       const qs = next.toString();
       router.push(qs ? `/solutions?${qs}` : '/solutions');
@@ -77,8 +104,38 @@ export function SolutionsFilterBar({
     });
   }, [debouncedQ, pushParams, sp]);
 
+  const toggleMulti = (key: (typeof MULTI_KEYS)[number], value: string) => {
+    pushParams((p) => {
+      const current = p.getAll(key);
+      p.delete(key);
+      if (current.includes(value)) {
+        current.filter((v) => v !== value).forEach((v) => p.append(key, v));
+      } else {
+        [...current, value].forEach((v) => p.append(key, v));
+      }
+    });
+  };
+
+  const personaOptions = useMemo(() => {
+    const byArea = new Map<string, PersonaOption[]>();
+    for (const p of personas) {
+      const arr = byArea.get(p.areaLabel) ?? [];
+      arr.push(p);
+      byArea.set(p.areaLabel, arr);
+    }
+    return Array.from(byArea.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [personas]);
+
+  const availableMoments = useMemo(() => {
+    if (!selectedPersona) return moments;
+    return moments.filter((m) => m.personaId === selectedPersona);
+  }, [moments, selectedPersona]);
+
+  const visibleHashtags = showAllHashtags ? hashtags : hashtags.slice(0, HASHTAG_COLLAPSED_COUNT);
+
   return (
     <div className="mb-8 rounded-[var(--radius-lg)] border border-[var(--grey-border)] bg-white p-4 shadow-[var(--shadow-sm)]">
+      {/* Header row — title + result count */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-[var(--blue)]">
           <FunnelSimple size={22} weight="duotone" aria-hidden />
@@ -96,8 +153,9 @@ export function SolutionsFilterBar({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
+      {/* Row A: free-text search + clear */}
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+        <label className="flex flex-1 flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
           Search
           <input
             type="search"
@@ -109,7 +167,20 @@ export function SolutionsFilterBar({
             autoComplete="off"
           />
         </label>
+        <button
+          type="button"
+          onClick={clearFilters}
+          disabled={activeFilterCount === 0 && !qInput.trim()}
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--grey-border)] bg-white px-3 py-2 text-sm font-semibold text-[var(--blue)] transition-colors hover:bg-[#f8faff] disabled:pointer-events-none disabled:opacity-40 sm:self-end"
+          style={{ fontFamily: 'var(--font-body)' }}
+        >
+          <X size={18} aria-hidden />
+          Clear filters
+        </button>
+      </div>
 
+      {/* Row B: scope selects */}
+      <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <FilterSelect
           label="Module"
           value={sp.get('module') ?? ''}
@@ -122,7 +193,6 @@ export function SolutionsFilterBar({
           }
           disabled={pending}
         />
-
         <FilterSelect
           label="Area"
           value={sp.get('area') ?? ''}
@@ -135,7 +205,6 @@ export function SolutionsFilterBar({
           }
           disabled={pending}
         />
-
         <FilterSelect
           label="Status"
           value={sp.get('status') ?? ''}
@@ -148,7 +217,6 @@ export function SolutionsFilterBar({
           }
           disabled={pending}
         />
-
         <FilterSelect
           label="Type"
           value={sp.get('type') ?? ''}
@@ -161,20 +229,106 @@ export function SolutionsFilterBar({
           }
           disabled={pending}
         />
-
-        <div className="flex flex-col justify-end">
-          <button
-            type="button"
-            onClick={clearFilters}
-            disabled={activeFilterCount === 0 && !qInput.trim()}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--grey-border)] bg-white px-3 py-2 text-sm font-semibold text-[var(--blue)] transition-colors hover:bg-[#f8faff] disabled:pointer-events-none disabled:opacity-40"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            <X size={18} aria-hidden />
-            Clear filters
-          </button>
-        </div>
+        <FilterSelectGrouped
+          label="Persona"
+          value={selectedPersona}
+          groups={[
+            { label: 'All personas', options: [{ value: '', label: 'All personas' }] },
+            ...personaOptions.map(([group, opts]) => ({
+              label: group,
+              options: opts.map((p) => ({ value: p.value, label: p.label })),
+            })),
+          ]}
+          onChange={(v) =>
+            pushParams((p) => {
+              if (v) p.set('persona', v);
+              else p.delete('persona');
+              // A persona change invalidates a previously-selected moment that doesn't belong to them.
+              const mom = p.get('moment');
+              if (mom && !moments.some((m) => m.value === mom && m.personaId === v)) {
+                p.delete('moment');
+              }
+            })
+          }
+          disabled={pending}
+        />
+        <FilterSelect
+          label={selectedPersona ? 'Moment (persona day)' : 'Moment of day'}
+          value={sp.get('moment') ?? ''}
+          options={[
+            { value: '', label: selectedPersona ? 'All moments' : 'All moments (any persona)' },
+            ...availableMoments.map((m) => ({
+              value: m.value,
+              label: `${m.icon} ${m.label}`,
+            })),
+          ]}
+          onChange={(v) =>
+            pushParams((p) => {
+              if (v) p.set('moment', v);
+              else p.delete('moment');
+            })
+          }
+          disabled={pending || availableMoments.length === 0}
+        />
       </div>
+
+      {/* Row C: hashtag chips (top-N with expand) */}
+      {hashtags.length > 0 ? (
+        <ChipGroup
+          label="Hashtags"
+          suffix={
+            hashtags.length > HASHTAG_COLLAPSED_COUNT ? (
+              <button
+                type="button"
+                onClick={() => setShowAllHashtags((v) => !v)}
+                className="ml-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold text-[var(--blue-primary)] transition-colors hover:bg-[#f0f4ff]"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                {showAllHashtags ? 'Show fewer' : `Show all ${hashtags.length}`}
+                <CaretDown size={12} weight="bold" className={showAllHashtags ? 'rotate-180' : ''} aria-hidden />
+              </button>
+            ) : null
+          }
+        >
+          {visibleHashtags.map(({ tag, count }) => {
+            const active = selectedHashtags.includes(tag);
+            return (
+              <Chip
+                key={tag}
+                active={active}
+                onClick={() => toggleMulti('hashtag', tag)}
+                disabled={pending}
+                title={`${count} solution${count === 1 ? '' : 's'}`}
+              >
+                {tag}
+                <span className="ml-1 text-[10px] opacity-60">{count}</span>
+              </Chip>
+            );
+          })}
+        </ChipGroup>
+      ) : null}
+
+      {/* Row D: country chips (flags) */}
+      {flags.length > 0 ? (
+        <ChipGroup label="Countries">
+          {flags.map(({ flag, count }) => {
+            const active = selectedFlags.includes(flag);
+            return (
+              <Chip
+                key={flag}
+                active={active}
+                onClick={() => toggleMulti('flag', flag)}
+                disabled={pending}
+                title={`${count} solution${count === 1 ? '' : 's'}`}
+              >
+                <span className="text-base leading-none">{flag}</span>
+                <span className="ml-1 text-[10px] opacity-60">{count}</span>
+              </Chip>
+            );
+          })}
+        </ChipGroup>
+      ) : null}
+
       {pending ? (
         <p className="mt-3 text-xs text-gray-400" style={{ fontFamily: 'var(--font-body)' }}>
           Updating…
@@ -183,6 +337,8 @@ export function SolutionsFilterBar({
     </div>
   );
 }
+
+/* ── Sub-components ──────────────────────────────────────────────── */
 
 function FilterSelect({
   label,
@@ -204,7 +360,7 @@ function FilterSelect({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className="rounded-lg border border-[var(--grey-border)] bg-white px-3 py-2 text-sm font-normal normal-case text-[var(--blue)] outline-none transition-colors focus:border-[var(--blue-primary)]"
+        className="rounded-lg border border-[var(--grey-border)] bg-white px-3 py-2 text-sm font-normal normal-case text-[var(--blue)] outline-none transition-colors focus:border-[var(--blue-primary)] disabled:cursor-not-allowed disabled:opacity-50"
         style={{ fontFamily: 'var(--font-body)' }}
       >
         {options.map((o, i) => (
@@ -214,6 +370,106 @@ function FilterSelect({
         ))}
       </select>
     </label>
+  );
+}
+
+function FilterSelectGrouped({
+  label,
+  value,
+  groups,
+  onChange,
+  disabled,
+}: {
+  label: string;
+  value: string;
+  groups: { label: string; options: { value: string; label: string }[] }[];
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
+      {label}
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        className="rounded-lg border border-[var(--grey-border)] bg-white px-3 py-2 text-sm font-normal normal-case text-[var(--blue)] outline-none transition-colors focus:border-[var(--blue-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+        style={{ fontFamily: 'var(--font-body)' }}
+      >
+        {groups.map((g, gi) =>
+          g.options.length === 1 && g.options[0].value === '' ? (
+            <option key={`g-${gi}`} value="">
+              {g.options[0].label}
+            </option>
+          ) : (
+            <optgroup key={`g-${gi}`} label={g.label}>
+              {g.options.map((o, i) => (
+                <option key={`${g.label}-${i}-${o.value}`} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </optgroup>
+          )
+        )}
+      </select>
+    </label>
+  );
+}
+
+function ChipGroup({
+  label,
+  suffix,
+  children,
+}: {
+  label: string;
+  suffix?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="mb-3 last:mb-0">
+      <div className="mb-1.5 flex items-center">
+        <span
+          className="text-[11px] font-semibold uppercase tracking-wide text-gray-500"
+          style={{ fontFamily: 'var(--font-body)' }}
+        >
+          {label}
+        </span>
+        {suffix}
+      </div>
+      <div className="flex flex-wrap gap-1.5">{children}</div>
+    </div>
+  );
+}
+
+function Chip({
+  active,
+  onClick,
+  disabled,
+  children,
+  title,
+}: {
+  active: boolean;
+  onClick: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+  title?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-pressed={active}
+      title={title}
+      className={
+        active
+          ? 'inline-flex items-center rounded-full bg-[var(--blue-primary)] px-3 py-1 text-xs font-semibold text-white shadow-sm transition-all hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)] disabled:opacity-50'
+          : 'inline-flex items-center rounded-full border border-[var(--grey-border)] bg-white px-3 py-1 text-xs font-semibold text-[var(--blue)] transition-colors hover:border-[var(--blue-primary)] hover:bg-[#f8faff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)] disabled:opacity-50'
+      }
+      style={{ fontFamily: 'var(--font-body)' }}
+    >
+      {children}
+    </button>
   );
 }
 

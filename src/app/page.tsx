@@ -1,85 +1,259 @@
+import { ArrowRight, Buildings, Compass, UsersThree } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
-import { cn } from '@/lib/utils/cn';
+import { getCatalogueData } from '@/lib/notion';
+import { TodayWidget, type BucketIconKey } from '@/components/home/TodayWidget';
+import { CountryLens } from '@/components/home/CountryLens';
+import { FeaturedPersona } from '@/components/home/FeaturedPersona';
+import type { Area } from '@/lib/data/types';
 
-/** All hero artwork lives in `public/images/catalogue/assets/` — no remote fetches. */
+export const revalidate = 3600;
+
 const ASSETS = {
   bokeh: '/images/catalogue/assets/home/home-bokeh.png',
   sparkle: '/images/catalogue/assets/home/home-sparkle.png',
-  heroCircle: '/images/catalogue/assets/home/hero-workplace-circle.png',
-  sodexoWordmark: '/images/catalogue/assets/brand/sodexo-logotype-2021.jpg',
-  phoneMockup: '/images/catalogue/assets/home/home-phone-myvillage.png',
-  portrait: '/images/catalogue/assets/home/home-client-portrait.png',
-  titleUnderline: '/images/catalogue/assets/home/home-title-underline.png',
 } as const;
 
-export default function HomePage() {
+const AREAS: Area[] = ['work', 'learn', 'heal', 'play'];
+
+export default async function HomePage() {
+  const data = await getCatalogueData();
+
+  const counts = {
+    solutions: data.solutions.length,
+    personas: data.personas.length,
+    modules: Object.keys(data.modules).length,
+    areas: AREAS.length,
+    countries: new Set(data.solutions.flatMap((s) => s.flags)).size,
+  };
+
+  // Country flags sorted by deployment count, top 8.
+  const flagCounts = new Map<string, number>();
+  data.solutions.forEach((s) => s.flags.forEach((f) => flagCounts.set(f, (flagCounts.get(f) ?? 0) + 1)));
+  const topCountries = Array.from(flagCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8)
+    .map(([flag, count]) => ({ flag, count }));
+
+  // Deterministic "featured persona of the day" (rotates by calendar day).
+  const dayIdx = Math.floor(Date.now() / 86400000) % Math.max(1, data.personas.length);
+  const featured = data.personas[dayIdx];
+  const featuredArea = featured ? data.areas[featured.area] : null;
+
+  // Moments across the day (bucketed by position in a persona's journey). We don't have
+  // timestamps, so we use position in each persona's `steps` array as a proxy for
+  // morning (0) → midday → afternoon → evening.
+  const bucketLabels: { key: BucketIconKey; label: string; time: string }[] = [
+    { key: 'morning', label: 'Morning rhythm', time: '06–11' },
+    { key: 'midday', label: 'Midday surge', time: '11–14' },
+    { key: 'afternoon', label: 'Afternoon focus', time: '14–18' },
+    { key: 'evening', label: 'Evening wind-down', time: '18–22' },
+  ];
+  const buckets = bucketLabels.map((b, i) => {
+    const items: { label: string; icon: string; href: string; personaName: string; areaLabel: string }[] = [];
+    for (const p of data.personas) {
+      const stepIdx = Math.min(i, p.steps.length - 1);
+      const stepId = p.steps[stepIdx];
+      const step = stepId ? data.journeySteps[stepId] : null;
+      if (step) {
+        items.push({
+          label: step.label,
+          icon: step.icon,
+          href: `/${p.area}/${p.id}/moment/${step.id}`,
+          personaName: p.name,
+          areaLabel: data.areas[p.area].label,
+        });
+      }
+    }
+    return { ...b, items: items.slice(0, 4) };
+  });
+
   return (
-    <main
-      id="main-content"
-      className="relative min-h-screen overflow-hidden bg-[var(--home-hero-bg)]"
-    >
+    <div className="relative flex flex-1 flex-col overflow-hidden bg-[var(--home-hero-bg)]">
       <HeroDecor />
 
-      <header className="relative z-10 px-4 pt-10 text-center md:pt-14">
-        <p
-          className="motion-fade-up mx-auto max-w-[1100px] text-[clamp(1.125rem,2.6vw,3.125rem)] font-semibold leading-tight text-white"
-          style={{ fontFamily: 'var(--font-heading)', animationDelay: '80ms' }}
-        >
-          Digital, AI &amp; Innovation Experience Catalogue
-        </p>
-        <div className="motion-fade-up mt-3 flex justify-center" style={{ animationDelay: '220ms' }}>
-          <img
-            src={ASSETS.titleUnderline}
-            alt=""
-            width={159}
-            height={8}
-            className="h-2 w-auto max-w-[min(159px,40vw)]"
-          />
-        </div>
-      </header>
-
-      <div className="relative z-10 mx-auto flex max-w-[1600px] flex-col items-center gap-10 px-6 pb-28 pt-8 md:px-12 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:pb-20 lg:pt-6">
-        <div className="w-full max-w-[640px] shrink-0 lg:max-w-[46%]">
-          <h1
-            className="motion-fade-up text-[clamp(2.75rem,7vw,7.5rem)] font-extrabold leading-[1.02] tracking-tight text-white"
-            style={{ fontFamily: 'var(--font-heading)', animationDelay: '340ms' }}
+      {/* ── Hero band ─────────────────────────────────────────── */}
+      <section className="relative z-10 px-6 pb-10 pt-12 md:px-12 md:pt-16 lg:pt-20">
+        <div className="mx-auto flex max-w-[1600px] flex-col items-start gap-6 text-white">
+          <span
+            className="motion-fade-up rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] backdrop-blur"
+            style={{ animationDelay: '60ms' }}
           >
-            Explore
-            <br />
-            Digital &amp;
-            <br />
-            Innovative Experiences
+            Digital · AI · Innovation — Experience Catalogue
+          </span>
+          <h1
+            className="motion-fade-up max-w-[16ch] text-[clamp(2.75rem,6.5vw,6.5rem)] font-extrabold leading-[0.98] tracking-tight"
+            style={{ fontFamily: 'var(--font-heading)', animationDelay: '160ms' }}
+          >
+            Where does tomorrow&rsquo;s day{' '}
+            <em
+              className="bg-gradient-to-r from-white via-white to-[var(--teal)] bg-clip-text not-italic text-transparent"
+            >
+              change?
+            </em>
           </h1>
           <p
-            className="motion-fade-up mt-5 text-[clamp(1.125rem,2.2vw,2.5rem)] font-normal leading-snug text-white/95"
-            style={{ fontFamily: 'var(--font-heading)', animationDelay: '460ms' }}
+            className="motion-fade-up max-w-2xl text-[clamp(1rem,1.6vw,1.25rem)] font-medium leading-relaxed text-white/85"
+            style={{ animationDelay: '280ms' }}
           >
-            Discover and create your own experiences
+            Every Sodexo solution sits inside someone&rsquo;s real day — a nurse on morning rounds, a
+            white-collar worker hunting for lunch, a learner arriving on campus. Start with a{' '}
+            <strong className="text-white">place</strong>, a <strong className="text-white">person</strong>, or a{' '}
+            <strong className="text-white">moment</strong>.
           </p>
-          <Link
+        </div>
+
+        {/* Three entry points */}
+        <div
+          className="motion-fade-up mx-auto mt-10 grid max-w-[1600px] gap-4 md:grid-cols-3"
+          style={{ animationDelay: '400ms' }}
+        >
+          <EntryCard
             href="/areas"
-            className="motion-fade-up mt-10 inline-flex items-center justify-center rounded-[72px] bg-white px-[58px] py-5 text-[clamp(1.25rem,2vw,2.5rem)] font-bold text-[#1a69ff] shadow-[0_4px_4px_rgba(0,0,0,0.25)] transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(0,0,0,0.2)] active:scale-[0.98]"
-            style={{ fontFamily: 'var(--font-heading)', animationDelay: '620ms' }}
-          >
-            Discover
-          </Link>
+            tag="Place"
+            icon={<Buildings size={28} weight="duotone" aria-hidden />}
+            title="Start with a place"
+            body="Four worlds — Work, Learn, Heal, Play. Each with its own personas and daily rhythms."
+            footer="4 areas"
+          />
+          <EntryCard
+            href={featured ? `/${featured.area}/${featured.id}` : '/areas'}
+            tag="Person"
+            icon={
+              featured ? (
+                <span className="text-3xl leading-none" aria-hidden>{featured.emoji}</span>
+              ) : (
+                <UsersThree size={28} weight="duotone" aria-hidden />
+              )
+            }
+            title={featured ? `Meet ${featured.fullName.split(' ')[0]}` : 'Meet a persona'}
+            body={
+              featured
+                ? `${featured.role} · ${featuredArea?.label}. See how ${featured.fullName.split(' ')[0]}\u2019s day unfolds.`
+                : `${counts.personas} personas across the four areas — each with a documented journey.`
+            }
+            footer={`${counts.personas} personas`}
+            hint="Featured today"
+          />
+          <EntryCard
+            href="/solutions"
+            tag="Tool"
+            icon={<Compass size={28} weight="duotone" aria-hidden />}
+            title="Jump into a solution"
+            body="Power users only — 91 solutions with filters for module, persona, moment, hashtag and country."
+            footer={`${counts.solutions} solutions`}
+          />
         </div>
+      </section>
 
-        <div className="motion-fade-up w-full max-w-[min(100%,720px)] shrink lg:max-w-[52%]" style={{ animationDelay: '540ms' }}>
-          <HeroCollage />
+      {/* ── Today + Featured + Countries band ─────────────────── */}
+      <section className="relative z-10 bg-[var(--surface)] px-6 pb-12 pt-12 md:px-12 md:pt-16">
+        <div className="mx-auto grid max-w-[1600px] gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <TodayWidget buckets={buckets} />
+          {featured && featuredArea ? (
+            <FeaturedPersona
+              personaName={featured.name}
+              fullName={featured.fullName}
+              role={featured.role}
+              quote={featured.quote}
+              areaLabel={featuredArea.label}
+              areaColor={featuredArea.color}
+              color={featured.color}
+              emoji={featured.emoji}
+              photo={featured.photo}
+              href={`/${featured.area}/${featured.id}`}
+            />
+          ) : null}
         </div>
-      </div>
+      </section>
 
-      <div className="pointer-events-none absolute bottom-6 right-6 z-10 md:right-10">
-        <img
-          src={ASSETS.sodexoWordmark}
-          alt="Sodexo"
-          width={1024}
-          height={576}
-          className="h-8 w-auto max-w-[min(200px,42vw)] opacity-95 md:h-9"
-        />
+      {/* ── Country lens ──────────────────────────────────────── */}
+      <section className="relative z-10 bg-[var(--surface)] px-6 pb-16 md:px-12">
+        <div className="mx-auto max-w-[1600px]">
+          <CountryLens countries={topCountries} totalCountries={counts.countries} />
+        </div>
+      </section>
+
+      {/* ── Live stat band ───────────────────────────────────── */}
+      <section className="relative z-10 border-t border-[var(--grey-border)] bg-[var(--surface)] px-6 py-10 md:px-12">
+        <div className="mx-auto grid max-w-[1600px] grid-cols-2 gap-4 md:grid-cols-5">
+          {[
+            { v: counts.areas, l: 'Areas of life' },
+            { v: counts.personas, l: 'Personas' },
+            { v: counts.modules, l: 'Experience modules' },
+            { v: counts.solutions, l: 'Solutions' },
+            { v: counts.countries, l: 'Countries' },
+          ].map((s) => (
+            <div
+              key={s.l}
+              className="rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-5 text-center transition-transform hover:-translate-y-0.5"
+            >
+              <p
+                className="tabular text-[clamp(1.75rem,3vw,2.5rem)] font-extrabold leading-none text-[var(--blue)]"
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                {s.v}
+              </p>
+              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--blue)]/60">
+                {s.l}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/* ── Sub-parts ──────────────────────────────────────────────── */
+
+function EntryCard({
+  href,
+  tag,
+  icon,
+  title,
+  body,
+  footer,
+  hint,
+}: {
+  href: string;
+  tag: string;
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+  footer: string;
+  hint?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-6 text-white backdrop-blur-xl transition-all duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:bg-white/15 hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
+          {icon}
+        </div>
+        <span className="rounded-full bg-black/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em]">
+          {tag}
+        </span>
       </div>
-    </main>
+      <h2
+        className="mt-6 text-[clamp(1.5rem,2.2vw,2rem)] font-extrabold leading-tight"
+        style={{ fontFamily: 'var(--font-heading)' }}
+      >
+        {title}
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed text-white/80" style={{ fontFamily: 'var(--font-body)' }}>
+        {body}
+      </p>
+      <div className="mt-6 flex items-center justify-between text-[11px]">
+        <span className="font-semibold uppercase tracking-[0.14em] text-white/60">
+          {hint ?? footer}
+        </span>
+        <span className="inline-flex items-center gap-1.5 font-bold text-white transition-all group-hover:gap-2.5">
+          Explore <ArrowRight size={14} weight="bold" aria-hidden />
+        </span>
+      </div>
+    </Link>
   );
 }
 
@@ -97,47 +271,6 @@ function HeroDecor() {
       </div>
       <div className="absolute -left-[25%] -top-[55%] hidden h-[min(90vh,700px)] w-[min(100vw,650px)] opacity-35 md:block">
         <img src={ASSETS.sparkle} alt="" className="h-full w-full object-cover" />
-      </div>
-    </div>
-  );
-}
-
-function HeroCollage() {
-  return (
-    <div className={cn('relative aspect-[16/11] min-h-[280px] md:aspect-[16/10] lg:min-h-[420px]')}>
-      {/* Isometric workplace — circular hero, roughly 645px diameter at the design breakpoint. */}
-      <div
-        className="absolute right-[4%] top-[8%] z-0 h-[min(58%,360px)] w-[min(58%,360px)] translate-x-0 overflow-hidden rounded-full shadow-[0_8px_40px_rgba(0,0,0,0.12)] md:right-[8%] md:top-[10%] md:h-[min(62%,400px)] md:w-[min(62%,400px)] lg:right-[12%] lg:top-1/2 lg:h-[min(72%,420px)] lg:w-[min(72%,420px)] lg:-translate-y-1/2"
-      >
-        <img
-          src={ASSETS.heroCircle}
-          alt=""
-          className="h-full w-full object-cover object-[28%_center]"
-        />
-      </div>
-
-      {/* Portrait — centered / slightly left of collage */}
-      <div
-        className="absolute bottom-0 left-1/2 z-[1] h-[92%] w-[55%] max-w-[380px] -translate-x-[58%] md:h-[94%] md:max-w-[420px] lg:left-[8%] lg:w-[48%] lg:max-w-none lg:translate-x-0 xl:max-w-[480px]"
-      >
-        <img
-          src={ASSETS.portrait}
-          alt=""
-          className="h-full w-full object-cover object-[50%_15%]"
-        />
-      </div>
-
-      {/* Phone mockup — far right */}
-      <div
-        className="absolute bottom-[2%] right-0 z-[2] w-[38%] max-w-[200px] overflow-hidden rounded-t-[20px] shadow-[-3px_4px_21px_rgba(0,0,0,0.25)] md:bottom-[4%] md:max-w-[240px] lg:max-w-[282px]"
-      >
-        <div className="relative aspect-[282/565] w-full">
-          <img
-            src={ASSETS.phoneMockup}
-            alt="Mobile app preview"
-            className="absolute inset-0 h-full w-full object-cover object-top"
-          />
-        </div>
       </div>
     </div>
   );

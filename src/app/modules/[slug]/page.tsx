@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
 import { SolutionCard } from '@/components/catalogue/SolutionCard';
-import { Navbar } from '@/components/layout/Navbar';
 import { getCatalogueData } from '@/lib/notion';
 import type { Area, Module, Solution } from '@/lib/data/types';
 
@@ -75,9 +74,7 @@ export default async function ModulePage({ params, searchParams }: Props) {
   const [primary, ...siblings] = moduleSolutions;
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--surface)]">
-      <Navbar title={mod.name} backHref={backHref} breadcrumb={breadcrumb} />
-
+    <div className="flex flex-1 flex-col bg-[var(--surface)]">
       {/* Module header strip */}
       <header
         className="flex flex-col gap-3 border-b border-[var(--grey-border)] bg-white px-6 py-5 md:flex-row md:items-center md:gap-5 md:px-8"

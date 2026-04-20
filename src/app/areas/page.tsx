@@ -1,4 +1,3 @@
-import { Navbar } from '@/components/layout/Navbar';
 import { AreaVillageCard } from '@/components/catalogue/AreaVillageCard';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getCatalogueData } from '@/lib/notion';
@@ -24,14 +23,8 @@ export default async function AreasPage() {
   const ordered = AREA_ORDER.map((id) => areas[id]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
-      <Navbar
-        title="Digital, AI & Innovation Experience Catalogue"
-        backHref="/"
-        hideTitle
-      />
-
-      <main id="main-content" className="flex-1 px-6 pb-12 pt-6 md:px-10">
+    <div className="flex flex-1 flex-col bg-white">
+      <div className="flex-1 px-6 pb-12 pt-6 md:px-10">
         <h1
           className="max-w-[1100px] text-[clamp(2rem,6vw,4.375rem)] font-extrabold leading-none text-[var(--blue)]"
           style={{ fontFamily: 'var(--font-heading)' }}
@@ -63,7 +56,7 @@ export default async function AreasPage() {
             ))}
           </Stagger>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

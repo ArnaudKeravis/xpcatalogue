@@ -31,3 +31,4 @@ _verify_*.mjs
 _verify_*.ts
 _scratch_*.mjs
 _scratch_*.ts
+.venv-img/

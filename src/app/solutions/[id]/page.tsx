@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import { SolutionCard } from '@/components/catalogue/SolutionCard';
-import { Navbar } from '@/components/layout/Navbar';
 import { getCatalogueData } from '@/lib/notion';
 
 export const revalidate = 3600;
@@ -20,16 +19,8 @@ export default async function SolutionPage({ params }: Props) {
     : [];
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--surface)]">
-      <Navbar
-        title={solution.name}
-        backHref="/areas"
-        breadcrumb={[{ label: solution.module }, { label: solution.name }]}
-      />
-
-      <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <SolutionCard solution={solution} siblings={siblings} module={mod} />
-      </main>
+    <div className="flex flex-1 flex-col bg-[var(--surface)]">
+      <SolutionCard solution={solution} siblings={siblings} module={mod} />
     </div>
   );
 }

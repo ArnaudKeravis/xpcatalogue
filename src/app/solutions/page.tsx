@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Navbar } from '@/components/layout/Navbar';
 import { SolutionsFilterBar } from '@/components/catalogue/SolutionsFilterBar';
 import { getCatalogueData } from '@/lib/notion';
 import {
   filterSolutions,
+  rankedFlags,
+  rankedHashtags,
   uniqueModules,
   uniqueStatuses,
   uniqueTypes,
@@ -24,6 +25,11 @@ function first(param: string | string[] | undefined): string | undefined {
   return param;
 }
 
+function many(param: string | string[] | undefined): string[] {
+  if (!param) return [];
+  return Array.isArray(param) ? param.filter(Boolean) : [param];
+}
+
 function parseArea(raw: string | undefined): Area | undefined {
   if (!raw || !AREA_KEYS.has(raw as Area)) return undefined;
   return raw as Area;
@@ -40,26 +46,74 @@ function parseType(raw: string | undefined, allowed: SolutionType[]): SolutionTy
 }
 
 export default async function SolutionsPage({ searchParams }: Props) {
-  const { solutions, areas } = await getCatalogueData();
+  const catalogue = await getCatalogueData();
+  const { solutions, areas, personas, journeySteps } = catalogue;
+
   const modules = uniqueModules(solutions);
   const statuses = uniqueStatuses(solutions);
   const types = uniqueTypes(solutions);
+  const hashtags = rankedHashtags(solutions);
+  const flags = rankedFlags(solutions);
+
+  // Build persona + moment option lists from the catalogue graph.
+  const personaOptions = personas.map((p) => ({
+    value: p.id,
+    label: p.name,
+    area: p.area,
+    areaLabel: areas[p.area].label,
+  }));
+
+  const momentOptions = personas.flatMap((p) =>
+    p.steps
+      .map((sid) => journeySteps[sid])
+      .filter((step): step is NonNullable<typeof step> => Boolean(step))
+      .map((step) => ({
+        value: step.id,
+        label: step.label,
+        icon: step.icon,
+        personaId: p.id,
+      }))
+  );
 
   const rawMod = first(searchParams.module)?.trim();
   const mod = rawMod && modules.includes(rawMod) ? rawMod : undefined;
   const q = first(searchParams.q)?.trim();
-  const momentLabel = first(searchParams.moment)?.trim();
 
   const area = parseArea(first(searchParams.area));
   const status = parseStatus(first(searchParams.status), statuses);
   const type = parseType(first(searchParams.type), types);
 
+  const personaId = first(searchParams.persona)?.trim();
+  const persona = personaId ? personas.find((p) => p.id === personaId) : undefined;
+
+  const momentId = first(searchParams.moment)?.trim();
+  const moment = momentId ? journeySteps[momentId] : undefined;
+
+  // A persona OR a moment narrows the eligible module set. If both are set and
+  // the moment belongs to the selected persona, the moment wins (more specific).
+  let moduleWhitelist: string[] | undefined;
+  if (moment) {
+    moduleWhitelist = moment.modules;
+  } else if (persona) {
+    const modules = persona.steps
+      .map((sid) => journeySteps[sid])
+      .filter((s): s is NonNullable<typeof s> => Boolean(s))
+      .flatMap((s) => s.modules);
+    moduleWhitelist = Array.from(new Set(modules));
+  }
+
+  const hashtagFilter = many(searchParams.hashtag);
+  const flagFilter = many(searchParams.flag);
+
   const filtered = filterSolutions(solutions, {
     q,
     module: mod,
+    modules: moduleWhitelist,
     area,
     status,
     type,
+    hashtags: hashtagFilter,
+    flags: flagFilter,
   });
 
   const titleParts: string[] = [];
@@ -67,15 +121,12 @@ export default async function SolutionsPage({ searchParams }: Props) {
   if (area) titleParts.push(areas[area].label);
   if (status) titleParts.push(status);
   if (type) titleParts.push(type);
+  if (persona) titleParts.push(persona.name);
+  if (moment) titleParts.push(`${moment.icon} ${moment.label}`);
+  if (hashtagFilter.length > 0) titleParts.push(hashtagFilter.join(' · '));
+  if (flagFilter.length > 0) titleParts.push(flagFilter.join(' '));
   if (q) titleParts.push(`“${q}”`);
-  const title =
-    titleParts.length > 0
-      ? momentLabel
-        ? `Solutions — ${titleParts.join(' · ')} · ${momentLabel}`
-        : `Solutions — ${titleParts.join(' · ')}`
-      : momentLabel
-        ? `Solutions · ${momentLabel}`
-        : 'All solutions';
+  const title = titleParts.length > 0 ? `Solutions — ${titleParts.join(' · ')}` : 'All solutions';
 
   const areaOptions = (['work', 'learn', 'heal', 'play'] as const).map((id) => ({
     value: id,
@@ -83,13 +134,23 @@ export default async function SolutionsPage({ searchParams }: Props) {
   }));
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--surface)]">
-      <Navbar title={title} backHref="/areas" />
-
-      <main id="main-content" className="flex-1 overflow-y-auto px-8 py-6">
-        {mod && momentLabel ? (
+    <div className="flex flex-1 flex-col bg-[var(--surface)]">
+      <div className="px-4 py-6 md:px-8">
+        <h1
+          className="mb-4 text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold leading-tight text-[var(--blue)]"
+          style={{ fontFamily: 'var(--font-heading)' }}
+        >
+          {title}
+        </h1>
+      </div>
+      <div className="flex-1 px-4 pb-10 md:px-8">
+        {persona && moment ? (
           <p className="mb-4 text-sm text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>
-            Filtered by module <strong>{mod}</strong> in the context of moment <strong>{momentLabel}</strong>.
+            Filtered to solutions relevant during <strong>{moment.icon} {moment.label}</strong> for <strong>{persona.name}</strong>.
+          </p>
+        ) : persona ? (
+          <p className="mb-4 text-sm text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>
+            Filtered to solutions that apply to <strong>{persona.name}</strong>&apos;s journey.
           </p>
         ) : null}
 
@@ -99,6 +160,10 @@ export default async function SolutionsPage({ searchParams }: Props) {
             areaOptions={areaOptions}
             statuses={statuses}
             types={types}
+            personas={personaOptions}
+            moments={momentOptions}
+            hashtags={hashtags}
+            flags={flags}
             totalCount={solutions.length}
             filteredCount={filtered.length}
           />
@@ -180,7 +245,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
             })}
           </ul>
         )}
-      </main>
+      </div>
     </div>
   );
 }

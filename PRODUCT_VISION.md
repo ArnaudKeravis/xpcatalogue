@@ -6,7 +6,7 @@
 
 > **What changed in v0.3** — **Per-persona journey maps shipped.** All 24 personas now carry their own isometric artwork under `public/images/catalogue/assets/journeys/` with percent-based hotspots over every moment pill. A single source of truth (`src/lib/data/personaJourneys.ts`) declares image + moments per persona; `fallback.ts` synthesises any missing `JourneyStep` so clicks always route cleanly to `/[area]/[persona]/moment/[momentId]`. SVG-with-labeled-groups is defined as the target export format for a future upgrade (no recalibration needed when art evolves).
 >
-> **What changed in v0.2** — Taxonomy re-anchored on `Catalogue_XP_solutions.xlsx` (24 personas · 55 modules + 7 proposed · ~100 solutions). Local-assets-only policy codified; every image ships in `public/images/catalogue/assets/` with zero remote dependencies. Design system formalised in `.impeccable.md` + `src/styles/tokens.css` (Fraunces display + Manrope body via `next/font`). Global skip link, error / loading boundaries, and `prefers-reduced-motion` support now ship by default.
+> **What changed in v0.2** — Taxonomy re-anchored on `Catalogue_XP_solutions.xlsx` (24 personas · 55 modules + 7 proposed · ~100 solutions). Local-assets-only policy codified; every image ships in `public/images/catalogue/assets/` with zero remote dependencies. Design system formalised in `.impeccable.md` + `src/styles/tokens.css` (Open Sans via `next/font`, used for both heading and body). Global skip link, error / loading boundaries, and `prefers-reduced-motion` support now ship by default.
 
 ---
 
@@ -102,7 +102,7 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 |----|--------|
 | KR2.1 — Design-system coverage for all major screens (Home, Areas, Persona, Journey, Moment, Solution) with every asset committed locally | 100% |
 | KR2.2 — Per-persona journey maps with every moment clickable → `/[area]/[persona]/moment/[momentId]` | Done — 19 local JPEGs cover all 24 personas (operator + client artwork reused across areas); hotspots declared in `personaJourneys.ts`; SVG upgrade path specified |
-| KR2.3 — Design system codified: `.impeccable.md` + `src/styles/tokens.css` + `next/font` (Fraunces / Manrope) | Done |
+| KR2.3 — Design system codified: `.impeccable.md` + `src/styles/tokens.css` + `next/font` (Open Sans) | Done |
 | KR2.4 — WCAG AA compliance on all key flows (skip link, focus-visible, heading hierarchy, `prefers-reduced-motion`, tabular KPIs) | Audited & passing |
 | KR2.5 — Zero Figma hotlinks, zero remote image hosts, `next.config.mjs` enforces `remotePatterns: []` | Done — enforced at framework level |
 | KR2.6 — Design review sign-off from Digital & AI design lead | Done |
@@ -152,7 +152,7 @@ The Experience Catalogue is the definitive interactive map of Sodexo's digital a
 
 - [x] Next.js 14 App Router structure: `/` → `/areas` → `/[area]` → `/[area]/[persona]` → `/moment/[momentId]` → `/modules/[slug]` → `/solutions/[id]`
 - [x] Design-system-aligned visual design (Home, Areas, Persona, Journey Map) — all assets local
-- [x] Design system codified: `.impeccable.md`, `src/styles/tokens.css`, Fraunces + Manrope via `next/font/google`
+- [x] Design system codified: `.impeccable.md`, `src/styles/tokens.css`, Open Sans via `next/font/google`
 - [x] Global resilience primitives: `error.tsx`, `loading.tsx`, `not-found.tsx`, skip link, `prefers-reduced-motion`
 - [x] Static data model (TypeScript types + fallback data)
 - [x] Taxonomy ingestion from `Catalogue_XP_solutions.xlsx` via `scripts/ingest-xp-catalogue-xlsx.py` → `xpCatalogueFlow.ts` + `xpFlowAdapter.ts` (55 modules, 7 proposed, 108 solution references, ~97% alias resolution)

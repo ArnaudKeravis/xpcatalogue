@@ -12,6 +12,8 @@ import {
   User,
 } from '@phosphor-icons/react';
 import { useState, type ReactNode } from 'react';
+import { FavouriteButton } from '@/components/ui/FavouriteButton';
+import { ShareButton } from '@/components/ui/ShareButton';
 import type { Module, Solution } from '@/lib/data/types';
 
 interface Props {
@@ -85,6 +87,21 @@ export function SolutionCard({ solution, siblings, module }: Props) {
                 {s.name}
               </button>
             ))}
+          </div>
+          <div className="ml-auto flex shrink-0 items-center gap-2 pl-2 print:hidden">
+            <FavouriteButton
+              kind="solution"
+              id={current.id}
+              label={current.name}
+              href={`/solutions/${current.id}`}
+              meta={current.module}
+            />
+            <ShareButton
+              title={current.name}
+              text={current.description}
+              url={`/solutions/${current.id}`}
+              variant="icon"
+            />
           </div>
         </div>
 

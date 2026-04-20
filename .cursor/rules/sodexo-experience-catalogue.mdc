@@ -17,7 +17,7 @@ Interactive catalogue of **90+** Sodexo digital solutions by areas (WORK / LEARN
 
 - **Framework:** Next.js 14 App Router, TypeScript
 - **Styling:** Tailwind CSS + CSS variables in `src/styles/tokens.css`
-- **Fonts:** `next/font/google` (Fraunces display + Manrope body). Never re-add `@import url(fonts.googleapis.com)`.
+- **Fonts:** `next/font/google` — Open Sans for both heading and body. Never re-add `@import url(fonts.googleapis.com)`.
 - **Components:** Shadcn/ui base + catalogue-specific components
 - **Icons:** `@phosphor-icons/react` only — **never emoji for UI icons**
 - **State:** Zustand in `src/lib/store.ts` (favourites, filters, AI chat)
