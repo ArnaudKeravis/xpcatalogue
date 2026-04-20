@@ -1,10 +1,11 @@
 /**
- * Portrait image paths — stable local exports from Figma in `public/images/catalogue/figma/`.
+ * Portrait image paths — local catalogue assets in `public/images/catalogue/assets/`.
+ * Every image ships with the product; there are no remote fetches at runtime.
  */
 
-const BASE = '/images/catalogue/figma';
+const BASE = '/images/catalogue/assets';
 
-export const PERSONA_FIGMA_PORTRAIT_URL: Record<string, string> = {
+export const PERSONA_PORTRAIT_URL: Record<string, string> = {
   // WORK
   'client-work':    `${BASE}/work-client.png`,
   'operator-work':  `${BASE}/work-operator.png`,

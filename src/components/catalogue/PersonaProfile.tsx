@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { Brain, DownloadSimple, PushPin, Target, WarningCircle } from '@phosphor-icons/react';
 import type { Persona } from '@/lib/data/types';
-import { PERSONA_FIGMA_PORTRAIT_URL } from '@/lib/data/personaFigmaPortraits';
+import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import { cn } from '@/lib/utils/cn';
 
 
@@ -52,19 +52,19 @@ function ListCard({
   );
 }
 
-export function PersonaProfileFigma({ persona, className }: Props) {
+export function PersonaProfile({ persona, className }: Props) {
   const eyebrow = persona.profileEyebrow ?? persona.name;
   const hasRichLeft = (persona.workplaceStats?.length ?? 0) > 0 && (persona.professionalGoals?.length ?? 0) > 0;
-  const portraitSrc = persona.photo ?? PERSONA_FIGMA_PORTRAIT_URL[persona.id];
+  const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
 
   return (
     <section
       className={cn('relative overflow-hidden rounded-[25px] pb-16 md:pb-20', className)}
       data-persona={persona.id}
-      data-layout={hasRichLeft ? 'figma-rich' : 'figma-simple'}
+      data-layout={hasRichLeft ? 'rich' : 'simple'}
       style={{ background: HERO_GRADIENT }}
     >
-      {/* Decorative dot field — Figma “Sans titre” layer */}
+      {/* Decorative dot field — decorative dot field */}
       <div
         className="pointer-events-none absolute -left-[20%] top-1/2 h-[min(140%,1200px)] w-[80%] -translate-y-1/2 rotate-[-75deg] opacity-[0.35]"
         style={{
@@ -75,7 +75,7 @@ export function PersonaProfileFigma({ persona, className }: Props) {
       />
 
       <div className="relative z-[1] px-4 pb-10 pt-6 md:px-8 lg:px-12">
-        {/* Name row — Figma 1635:80136 */}
+        {/* Name row — persona name row */}
         <div className="mb-8 flex flex-col gap-1 md:mb-10">
           <p
             className="text-[clamp(1.25rem,3vw,2.5rem)] font-bold text-[var(--blue)]"
@@ -98,9 +98,9 @@ export function PersonaProfileFigma({ persona, className }: Props) {
         </div>
 
         {hasRichLeft ? (
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,1.4fr)_minmax(0,1.2fr)] lg:gap-8">
             {/* Left: workplace + goals + quote */}
-            <div className="flex flex-col gap-5 lg:col-span-3">
+            <div className="flex flex-col gap-5">
               <div
                 className="rounded-[20px] px-4 py-5 text-white"
                 style={{ background: 'var(--blue)', boxShadow: 'var(--shadow-benefits)' }}
@@ -147,31 +147,31 @@ export function PersonaProfileFigma({ persona, className }: Props) {
             </div>
 
             {/* Center: portrait on dotted art */}
-            <div className="relative flex min-h-[300px] items-end justify-center overflow-hidden rounded-[25px] lg:col-span-4">
+            <div className="relative flex min-h-[420px] items-end justify-center overflow-hidden rounded-[25px]">
               <div
                 className="absolute inset-0 opacity-90"
                 style={{
                   backgroundImage:
                     'radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px)',
-                  backgroundSize: '12px 12px',
+                  backgroundSize: '14px 14px',
                 }}
                 aria-hidden
               />
-              <div className="relative z-[1] flex w-full max-w-md items-end justify-center pb-1 pt-12">
+              <div className="relative z-[1] flex w-full items-end justify-center pb-0 pt-6">
                 {portraitSrc ? (
                   <img
                     src={portraitSrc}
                     alt={persona.fullName}
-                    className="max-h-[min(520px,58vh)] w-auto object-contain object-bottom"
+                    className="h-auto w-full max-w-[560px] object-contain object-bottom lg:max-h-[min(780px,85vh)] lg:min-h-[560px]"
                   />
                 ) : (
-                  <span className="text-[120px] leading-none">{persona.emoji}</span>
+                  <span className="text-[160px] leading-none">{persona.emoji}</span>
                 )}
               </div>
             </div>
 
             {/* Right: motivations / pains / needs */}
-            <div className="flex flex-col gap-5 lg:col-span-5">
+            <div className="flex flex-col gap-5">
               <ListCard title="Motivations" icon={<Brain size={22} weight="fill" />} items={persona.motivations} />
               <ListCard
                 title="Pain points & frustrations"
@@ -182,26 +182,26 @@ export function PersonaProfileFigma({ persona, className }: Props) {
             </div>
           </div>
         ) : (
-          <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-2">
-            <div className="relative flex min-h-[260px] items-end justify-center overflow-hidden rounded-[25px]">
+          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+            <div className="relative flex min-h-[420px] items-end justify-center overflow-hidden rounded-[25px]">
               <div
                 className="absolute inset-0 opacity-90"
                 style={{
                   backgroundImage:
                     'radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px)',
-                  backgroundSize: '12px 12px',
+                  backgroundSize: '14px 14px',
                 }}
                 aria-hidden
               />
-              <div className="relative z-[1] flex w-full items-end justify-center pb-2 pt-12">
+              <div className="relative z-[1] flex w-full items-end justify-center pb-0 pt-6">
                 {portraitSrc ? (
                   <img
                     src={portraitSrc}
                     alt={persona.fullName}
-                    className="max-h-[min(380px,50vh)] w-auto object-contain object-bottom"
+                    className="h-auto w-full max-w-[560px] object-contain object-bottom lg:max-h-[min(720px,80vh)] lg:min-h-[500px]"
                   />
                 ) : (
-                  <span className="text-[100px] leading-none">{persona.emoji}</span>
+                  <span className="text-[140px] leading-none">{persona.emoji}</span>
                 )}
               </div>
             </div>
@@ -242,7 +242,7 @@ export function PersonaProfileFigma({ persona, className }: Props) {
       <div className="pointer-events-none absolute bottom-4 right-4 z-[2] md:bottom-6 md:right-8">
         <div className="overflow-hidden rounded-md shadow-md">
           <img
-            src="/images/catalogue/figma/sodexo-logotype-2021.jpg"
+            src="/images/catalogue/assets/brand/sodexo-logotype-2021.jpg"
             alt="Sodexo"
             width={1024}
             height={576}

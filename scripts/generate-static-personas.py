@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate static-home/personas-full.js from personaDefinitions.ts (parsed fields + journey templates)."""
+"""Generate reference/static-home/personas-full.js from personaDefinitions.ts (parsed fields + journey templates)."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TS = ROOT / "src/lib/data/personaDefinitions.ts"
-OUT = ROOT / "static-home/personas-full.js"
+OUT = ROOT / "reference/static-home/personas-full.js"
 
 ID_MAP = {
     "client-work": "client",
@@ -210,28 +210,28 @@ def main() -> None:
         needs = extract_str_array("needs", block)
 
         if area == "work":
-            jmap = "./assets/figma/journey-work-blue-collar.svg" if pid == "blue-collar" else "./assets/figma/journey-work-white-collar.svg"
+            jmap = "./assets/catalogue/journey-work-blue-collar.svg" if pid == "blue-collar" else "./assets/catalogue/journey-work-white-collar.svg"
             jmom = J_BLUE if pid == "blue-collar" else J_WORK
             aid = "WORK"
             parent_line = ""
         elif area == "learn":
-            jmap = "./assets/figma/journey-learn.svg"
+            jmap = "./assets/catalogue/journey-learn.svg"
             jmom = J_LEARN
             aid = "LEARN"
             parent_line = "\n            parentAreaKey: 'learn',"
         elif area == "heal":
-            jmap = "./assets/figma/journey-heal.svg"
+            jmap = "./assets/catalogue/journey-heal.svg"
             jmom = J_HEAL
             aid = "HEAL"
             parent_line = "\n            parentAreaKey: 'heal',"
         else:
-            jmap = "./assets/figma/journey-play.svg"
+            jmap = "./assets/catalogue/journey-play.svg"
             jmom = J_PLAY
             aid = "PLAY"
             parent_line = "\n            parentAreaKey: 'play',"
 
         hk = HERO_KEY[pid]
-        hero_path = f"./assets/figma/{hk}.png"
+        hero_path = f"./assets/catalogue/{hk}.png"
         block_js = f"""        {json.dumps(sk)}: {{
             label: {json.dumps(name)},
             areaId: {json.dumps(aid)},
@@ -250,7 +250,7 @@ def main() -> None:
             needs: {js_array_str(needs)},
             introParagraphs: {INTRO},
             modularExplainHtml: {MODULAR},
-            puzzleImage: './assets/figma/modular-platform-puzzle.svg',
+            puzzleImage: './assets/catalogue/modular-platform-puzzle.svg',
             journeyMapImage: {json.dumps(jmap)},
             defaultSolutionId: 'circles',
             modules: {WORK_MODULES},

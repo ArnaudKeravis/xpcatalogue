@@ -1,11 +1,13 @@
 /**
- * Persona catalogue — Figma Labs “Personae Description” frames (Fv4jcBErywa8gpH97BIMh0)
- * Journey map + hotspots: `XP-catalogue-journey.csv` + `personaJourneyConfig.ts`. Figma links: `personaFigmaLinks.ts`.
+ * Persona catalogue — source of truth for persona copy, goals, and journey wiring.
+ *
+ * Each persona's journey artwork + clickable moment hotspots live in
+ * `personaJourneys.ts`. The `w()` helper below wires each persona to its
+ * journey via `resolveJourneyMapImage` / `resolveJourneyHotspots`.
  */
 
-import type { JourneyHotspot, Persona } from './types';
-import { PERSONA_FIGMA_LINKS } from './personaFigmaLinks';
-import { resolveJourneyHotspots, resolveJourneyMapImage } from './personaJourneyConfig';
+import type { Persona } from './types';
+import { resolveJourneyHotspots, resolveJourneyMapImage } from './personaJourneys';
 
 const WORK_STEPS: string[] = [
   'commute',
@@ -20,45 +22,6 @@ const LEARN_STEPS: string[] = ['arrival-campus', 'morning-class', 'lunch-break',
 const HEAL_STEPS: string[] = ['morning-rounds', 'meal-service', 'meal-distribution', 'kitchen-prep'];
 
 const PLAY_STEPS: string[] = ['pre-match', 'peak-service', 'half-time', 'full-time', 'networking-lunch'];
-
-const WORK_HOTSPOTS: JourneyHotspot[] = [
-  { stepId: 'commute', left: 5, top: 34, w: 16, h: 22 },
-  { stepId: 'welcome-area', left: 22, top: 30, w: 15, h: 24 },
-  { stepId: 'workplace', left: 40, top: 26, w: 18, h: 28 },
-  { stepId: 'wellbeing-break', left: 56, top: 40, w: 16, h: 24 },
-  { stepId: 'food-beverage-work', left: 70, top: 46, w: 16, h: 26 },
-];
-
-/** Hotspot boxes aligned to ellipse waypoints on the Blue Collar isometric map (Figma node `2033:44000`). */
-const WORK_BLUE_COLLAR_HOTSPOTS: JourneyHotspot[] = [
-  { stepId: 'commute', left: 5.5, top: 32, w: 8, h: 13 },
-  { stepId: 'welcome-area', left: 19, top: 80, w: 10, h: 15 },
-  { stepId: 'workplace', left: 19, top: 7, w: 11, h: 15 },
-  { stepId: 'wellbeing-break', left: 12, top: 66, w: 11, h: 14 },
-  { stepId: 'food-beverage-work', left: 77, top: 7, w: 12, h: 15 },
-];
-
-const LEARN_HOTSPOTS: JourneyHotspot[] = [
-  { stepId: 'arrival-campus', left: 8, top: 28, w: 18, h: 26 },
-  { stepId: 'morning-class', left: 28, top: 28, w: 18, h: 26 },
-  { stepId: 'lunch-break', left: 48, top: 40, w: 18, h: 26 },
-  { stepId: 'study-session', left: 68, top: 48, w: 18, h: 24 },
-];
-
-const HEAL_HOTSPOTS: JourneyHotspot[] = [
-  { stepId: 'morning-rounds', left: 6, top: 32, w: 18, h: 26 },
-  { stepId: 'meal-service', left: 28, top: 28, w: 18, h: 28 },
-  { stepId: 'meal-distribution', left: 50, top: 38, w: 18, h: 26 },
-  { stepId: 'kitchen-prep', left: 72, top: 44, w: 16, h: 28 },
-];
-
-const PLAY_HOTSPOTS: JourneyHotspot[] = [
-  { stepId: 'pre-match', left: 5, top: 34, w: 16, h: 22 },
-  { stepId: 'peak-service', left: 26, top: 30, w: 18, h: 26 },
-  { stepId: 'half-time', left: 48, top: 36, w: 16, h: 24 },
-  { stepId: 'full-time', left: 66, top: 44, w: 16, h: 24 },
-  { stepId: 'networking-lunch', left: 84, top: 52, w: 14, h: 20 },
-];
 
 function w(
   p: Omit<Persona, 'steps'> & { steps?: string[] } & Partial<
@@ -83,10 +46,8 @@ function w(
     motivations: p.motivations,
     pains: p.pains,
     needs: p.needs,
-    journeyMapImage: p.journeyMapImage ?? resolveJourneyMapImage(p.id, p.area),
-    journeyHotspots:
-      p.journeyHotspots ??
-      resolveJourneyHotspots(p.id, p.area, WORK_HOTSPOTS, WORK_BLUE_COLLAR_HOTSPOTS, LEARN_HOTSPOTS, HEAL_HOTSPOTS, PLAY_HOTSPOTS),
+    journeyMapImage: p.journeyMapImage ?? resolveJourneyMapImage(p.id),
+    journeyHotspots: p.journeyHotspots ?? resolveJourneyHotspots(p.id),
     steps,
   };
 }
@@ -98,7 +59,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Client',
     fullName: 'Sarah Meyer',
     role: 'Portfolio Manager',
-    photo: '/images/catalogue/figma/work-client.png',
+    photo: '/images/catalogue/assets/personas/work-client.png',
     profileEyebrow: 'Client',
     platformSegmentLabel: 'Client',
     quote:
@@ -147,7 +108,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Operator',
     fullName: 'Marina Bardi',
     role: 'Site Manager (Food & FM)',
-    photo: '/images/catalogue/figma/work-operator.png',
+    photo: '/images/catalogue/assets/personas/work-operator.png',
     profileEyebrow: 'Operator',
     platformSegmentLabel: 'Operator',
     quote:
@@ -188,7 +149,13 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
       'Fast, clear internal communication (HR, procurement, finance etc.)',
       'Recognition from clients and Sodexo hierarchy when goals are met',
     ],
-    steps: WORK_STEPS,
+    steps: [
+      'op-kick-off',
+      'op-fm-round',
+      'op-office-time',
+      'op-order-planning',
+      'op-food-service',
+    ],
   }),
   w({
     id: 'white-collar',
@@ -200,7 +167,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
       'I need quick, healthy, and affordable food at work, with little extras that make my day easier, otherwise I’ll just go elsewhere.',
     emoji: '👨‍💻',
     color: '#b4bbe4',
-    photo: '/images/catalogue/figma/work-white-collar.png',
+    photo: '/images/catalogue/assets/personas/work-white-collar.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     workplaceStats: [
@@ -251,8 +218,8 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
       'I need fast, simple food that gives me energy for my shift, without wasting my short breaks standing in line or figuring out complicated systems.',
     emoji: '👷',
     color: '#b4bbe4',
-    /** Local export from Figma Labs frame `1635:133254` (WORK: Blue Collar) */
-    photo: '/images/catalogue/figma/work-blue-collar.png',
+    /** Local portrait asset — WORK: Blue Collar */
+    photo: '/images/catalogue/assets/personas/work-blue-collar.png',
     workplaceStats: [
       'International Large R&D Center',
       'Lab-based & Manufacturing: ~60%',
@@ -298,7 +265,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Grey Collar',
     fullName: 'Lily Parker',
     role: 'Lab Researcher',
-    photo: '/images/catalogue/figma/work-grey-collar.png',
+    photo: '/images/catalogue/assets/personas/work-grey-collar.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -348,7 +315,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Military',
     fullName: 'Rachel Adams',
     role: 'Army Officer',
-    photo: '/images/catalogue/figma/work-military.png',
+    photo: '/images/catalogue/assets/personas/work-military.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -396,14 +363,14 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     steps: WORK_STEPS,
   }),
 
-  // HEAL — Client profile from Figma Labs HEAL_Director; other heal roles aligned to same template
+  // HEAL — Client profile based on the Director template; other heal roles follow the same layout
   w({
     id: 'client-heal',
     area: 'heal',
     name: 'Client',
     fullName: 'Michael Anderson',
     role: 'Healthcare Portfolio Manager',
-    photo: '/images/catalogue/figma/heal-client.png',
+    photo: '/images/catalogue/assets/personas/heal-client.png',
     profileEyebrow: 'Client',
     platformSegmentLabel: 'Client',
     quote:
@@ -452,7 +419,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Operator',
     fullName: 'Priya Nair',
     role: 'Clinical Site Operations Lead',
-    photo: '/images/catalogue/figma/heal-operator.png',
+    photo: '/images/catalogue/assets/personas/heal-operator.png',
     profileEyebrow: 'Operator',
     platformSegmentLabel: 'Operator',
     quote:
@@ -494,7 +461,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Doctor',
     fullName: 'Dr. Thomas Leroy',
     role: 'Hospital Physician',
-    photo: '/images/catalogue/figma/heal-doctor.png',
+    photo: '/images/catalogue/assets/personas/heal-doctor.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -547,7 +514,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Senior',
     fullName: 'Lia Thompson',
     role: 'Long-term Resident',
-    photo: '/images/catalogue/figma/heal-senior.png',
+    photo: '/images/catalogue/assets/personas/heal-senior.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -599,7 +566,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Patient',
     fullName: 'Sophie Martin',
     role: 'Outpatient & Inpatient',
-    photo: '/images/catalogue/figma/heal-patient.png',
+    photo: '/images/catalogue/assets/personas/heal-patient.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -653,7 +620,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Nurse',
     fullName: 'Laura Wilson',
     role: 'Registered Nurse',
-    photo: '/images/catalogue/figma/heal-nurse.png',
+    photo: '/images/catalogue/assets/personas/heal-nurse.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -708,7 +675,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Client',
     fullName: 'Daniela Ruiz',
     role: 'Venue Partnership Director',
-    photo: '/images/catalogue/figma/play-client.png',
+    photo: '/images/catalogue/assets/personas/play-client.png',
     profileEyebrow: 'Client',
     platformSegmentLabel: 'Client',
     quote:
@@ -747,14 +714,14 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     id: 'operator-play',
     area: 'play',
     name: 'Operator',
-    fullName: 'Omar Khalil',
+    fullName: 'Leila Khalil',
     role: 'Event Operations Manager',
-    photo: '/images/catalogue/figma/play-operator.png',
+    photo: '/images/catalogue/assets/personas/play-operator.png',
     profileEyebrow: 'Operator',
     platformSegmentLabel: 'Operator',
     quote:
       'Give me one command view of concessions, kitchens, and queues — and tools my crew can use with gloves on.',
-    emoji: '👨‍💼',
+    emoji: '👩‍💼',
     color: '#4d8aff',
     workplaceStats: [
       'Live events',
@@ -788,9 +755,9 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     id: 'sport-fan',
     area: 'play',
     name: 'Sport Fan',
-    fullName: 'Max Weber',
+    fullName: 'Lena Weber',
     role: 'Season Ticket Holder',
-    photo: '/images/catalogue/figma/play-sport-fan.png',
+    photo: '/images/catalogue/assets/personas/play-sport-fan.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -831,7 +798,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'VIP guest',
     fullName: 'Zoe Cooper',
     role: 'Executive & Premium Event Guest',
-    photo: '/images/catalogue/figma/play-vip-guest.png',
+    photo: '/images/catalogue/assets/personas/play-vip-guest.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -884,7 +851,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Participant',
     fullName: 'Arthur Foster',
     role: 'Trade Show & Event Attendee',
-    photo: '/images/catalogue/figma/play-participant.png',
+    photo: '/images/catalogue/assets/personas/play-participant.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -937,7 +904,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'VIP guest airport',
     fullName: 'Thomas Anderson',
     role: 'Business Traveller & VIP Guest',
-    photo: '/images/catalogue/figma/play-tourist.png',
+    photo: '/images/catalogue/assets/personas/play-tourist.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -992,7 +959,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Client',
     fullName: 'Nina Petrov',
     role: 'Education Estates Lead',
-    photo: '/images/catalogue/figma/learn-client.png',
+    photo: '/images/catalogue/assets/personas/learn-client.png',
     profileEyebrow: 'Client',
     platformSegmentLabel: 'Client',
     quote:
@@ -1031,14 +998,14 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     id: 'operator-learn',
     area: 'learn',
     name: 'Operator',
-    fullName: 'Hugo Martins',
+    fullName: 'Helena Martins',
     role: 'Campus Services Manager',
-    photo: '/images/catalogue/figma/learn-operator.png',
+    photo: '/images/catalogue/assets/personas/learn-operator.png',
     profileEyebrow: 'Operator',
     platformSegmentLabel: 'Operator',
     quote:
       'One day it’s exam week, the next it’s summer — I need scheduling and staffing tools that flex with the calendar.',
-    emoji: '👨‍💼',
+    emoji: '👩‍💼',
     color: '#00d1c7',
     workplaceStats: [
       'On-site campus',
@@ -1072,9 +1039,9 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     id: 'student',
     area: 'learn',
     name: 'Student',
-    fullName: 'Max Singh',
+    fullName: 'Maya Singh',
     role: 'University Student',
-    photo: '/images/catalogue/figma/learn-student.png',
+    photo: '/images/catalogue/assets/personas/learn-student.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -1127,7 +1094,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Schoolchild',
     fullName: 'Lucas Patel',
     role: 'Middle School Student (11–14 years)',
-    photo: '/images/catalogue/figma/learn-schoolchild.png',
+    photo: '/images/catalogue/assets/personas/learn-schoolchild.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -1180,7 +1147,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Parent',
     fullName: 'Jamal Thompson',
     role: 'Working Parent of School-Age Children',
-    photo: '/images/catalogue/figma/learn-parent.png',
+    photo: '/images/catalogue/assets/personas/learn-parent.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -1233,7 +1200,7 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     name: 'Teacher',
     fullName: 'Priya Adams',
     role: 'Middle School Teacher',
-    photo: '/images/catalogue/figma/learn-teacher.png',
+    photo: '/images/catalogue/assets/personas/learn-teacher.png',
     profileEyebrow: 'Consumer',
     platformSegmentLabel: 'Consumer',
     quote:
@@ -1282,7 +1249,4 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
   }),
 ];
 
-export const CATALOGUE_PERSONAS: Persona[] = RAW_CATALOGUE_PERSONAS.map((p) => ({
-  ...p,
-  figmaLinks: PERSONA_FIGMA_LINKS[p.id],
-}));
+export const CATALOGUE_PERSONAS: Persona[] = RAW_CATALOGUE_PERSONAS;

@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { Navbar } from '@/components/layout/Navbar';
+import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getCatalogueData } from '@/lib/notion';
-import { PERSONA_FIGMA_PORTRAIT_URL } from '@/lib/data/personaFigmaPortraits';
+import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import type { Area, Persona } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -15,7 +16,7 @@ interface Props {
 }
 
 function PersonaPortraitCard({ persona, href }: { persona: Persona; href: string }) {
-  const portraitSrc = persona.photo ?? PERSONA_FIGMA_PORTRAIT_URL[persona.id];
+  const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
   const eyebrow = persona.profileEyebrow ?? '';
 
   return (
@@ -24,63 +25,75 @@ function PersonaPortraitCard({ persona, href }: { persona: Persona; href: string
       className="group relative flex cursor-pointer flex-col overflow-hidden rounded-[20px] bg-white transition-all duration-200 hover:-translate-y-1.5 hover:shadow-xl"
       style={{ boxShadow: '0 4px 20px rgba(41,56,150,0.10)' }}
     >
-      {/* Portrait area */}
+      {/* Portrait area — dotted art background, portrait fills from bottom */}
       <div
-        className="relative overflow-hidden"
+        className="relative aspect-[3/4] overflow-hidden"
         style={{
-          height: 220,
-          background: portraitSrc
-            ? `linear-gradient(180deg, ${persona.color}22 0%, ${persona.color}44 100%)`
-            : persona.color,
+          background: `linear-gradient(180deg, ${persona.color}1a 0%, ${persona.color}33 100%)`,
         }}
       >
-        {portraitSrc ? (
-          <img
-            src={portraitSrc}
-            alt={persona.name}
-            className="absolute bottom-0 left-1/2 h-full w-auto max-w-[200%] -translate-x-1/2 object-contain object-bottom transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <span className="text-8xl">{persona.emoji}</span>
-          </div>
-        )}
-        {/* Bottom fade */}
+        {/* Dotted pattern, matches persona profile hero */}
         <div
-          className="pointer-events-none absolute bottom-0 left-0 right-0 h-16"
-          style={{ background: `linear-gradient(to top, ${persona.color}dd, transparent)` }}
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, rgba(41, 56, 150, 0.18) 1px, transparent 1px)',
+            backgroundSize: '10px 10px',
+          }}
+          aria-hidden
         />
+
+        <img
+          src={portraitSrc}
+          alt={persona.fullName}
+          className="absolute bottom-0 left-1/2 h-[108%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom transition-transform duration-300 group-hover:scale-[1.04]"
+          loading="lazy"
+          decoding="async"
+        />
+
         {/* Eyebrow badge top-left */}
         {eyebrow && (
           <span
             className="absolute left-3 top-3 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white"
-            style={{ background: 'rgba(0,0,0,0.25)', backdropFilter: 'blur(4px)' }}
+            style={{ background: 'rgba(0, 26, 114, 0.55)', backdropFilter: 'blur(4px)' }}
           >
             {eyebrow}
           </span>
         )}
+
+        {/* Soft bottom fade to accent bar */}
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-20"
+          style={{ background: `linear-gradient(to top, ${persona.color}dd, transparent)` }}
+        />
       </div>
 
       {/* Name bar */}
       <div
-        className="flex items-center justify-between px-4 py-3"
+        className="flex items-center justify-between gap-2 px-4 py-3"
         style={{ background: persona.color }}
       >
-        <div>
+        <div className="min-w-0">
           <p
-            className="text-sm font-extrabold leading-tight text-white"
+            className="truncate text-[11px] font-bold uppercase tracking-[0.12em] text-white/75"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             {persona.name}
           </p>
-          <p className="text-[11px] font-medium text-white/75" style={{ fontFamily: 'var(--font-body)' }}>
+          <p
+            className="truncate text-sm font-extrabold leading-tight text-white"
+            style={{ fontFamily: 'var(--font-heading)' }}
+          >
+            {persona.fullName}
+          </p>
+          <p className="truncate text-[11px] font-medium text-white/80" style={{ fontFamily: 'var(--font-body)' }}>
             {persona.role}
           </p>
         </div>
         <ArrowRight
           size={18}
           weight="bold"
-          className="shrink-0 text-white/80 transition-transform duration-200 group-hover:translate-x-0.5"
+          className="shrink-0 text-white/85 transition-transform duration-200 group-hover:translate-x-0.5"
           aria-hidden
         />
       </div>
@@ -106,7 +119,7 @@ export default async function AreaPage({ params }: Props) {
         breadcrumb={[{ label: 'Areas', href: '/areas' }, { label: areaConfig.label }]}
       />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         {/* ── Hero: large isometric + area label ─────────────────── */}
         <div className="relative overflow-hidden">
           {/* Gradient background */}
@@ -163,15 +176,16 @@ export default async function AreaPage({ params }: Props) {
             Select a persona to explore their journey and discover tailored solutions.
           </p>
 
-          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <Stagger className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
             {areaPersonas.map((persona) => (
-              <PersonaPortraitCard
-                key={persona.id}
-                persona={persona}
-                href={`/${params.area}/${persona.id}`}
-              />
+              <StaggerItem key={persona.id}>
+                <PersonaPortraitCard
+                  persona={persona}
+                  href={`/${params.area}/${persona.id}`}
+                />
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </main>
     </div>

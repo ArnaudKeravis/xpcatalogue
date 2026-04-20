@@ -1,7 +1,7 @@
-/** Auto-generated from `static-home/catalog-solutions.js` — do not edit by hand; re-run sync script. */
+/** Auto-generated from `reference/static-home/catalog-solutions.js` — do not edit by hand; re-run sync script. */
 import type { Area, Solution, SolutionStatus, SolutionType } from './types';
 
-const HERO = '/images/catalogue/figma/work-area-info-iso.png';
+const HERO = '/images/catalogue/assets/areas/work-area-info-iso.png';
 
 export const SOLUTIONS_CATALOG: Solution[] = [
   {
@@ -2251,5 +2251,59 @@ export const SOLUTIONS_CATALOG: Solution[] = [
     contact: "Contact team",
     benefits: { client: "Execution guarantee.", consumer: "Consistent service.", sodexo: "Field efficiency." },
     areas: ['work', 'heal', 'learn'] as Area[],
+  },
+  {
+    id: "dishTracker",
+    name: "DishTracker",
+    module: "Self-Checkout AI",
+    type: "Software" as SolutionType,
+    status: "Pilot" as SolutionStatus,
+    hashtags: ["#ComputerVision", "#SelfCheckout", "#QueueReduction"],
+    flags: ["🇫🇷"],
+    img: "📷",
+    heroImage: HERO,
+    context: "High-traffic canteens need fast, accurate self-checkout without adding hardware cost or staffing overhead.",
+    description:
+      "AI-based computer vision self-checkout for food establishments. Enables efficient SKU recognition through image input, with operational readiness achieved in just two weeks. Can leverage the built-in camera of basic tablets, avoiding extra hardware.",
+    kpis: [
+      { v: "2 weeks", l: "Go-live" },
+      { v: "No HW", l: "Tablet-native" },
+      { v: "AI", l: "Vision SKU" },
+      { v: "Pilot", l: "Status" },
+    ],
+    contact: "Contact team",
+    benefits: {
+      client: "Reduce queuing; increase revenue; avoid peak-hour extras.",
+      consumer: "Faster billing, less waiting.",
+      sodexo: "Lightweight deployment on existing devices.",
+    },
+    areas: ['work', 'learn'] as Area[],
+  },
+  {
+    id: "visioLab",
+    name: "VisioLab",
+    module: "Self-Checkout AI",
+    type: "Software" as SolutionType,
+    status: "Scaling" as SolutionStatus,
+    hashtags: ["#ComputerVision", "#SelfCheckout", "#Canteen"],
+    flags: ["🇩🇪"],
+    img: "📷",
+    heroImage: HERO,
+    context: "High-volume canteens and micro-markets need reliable self-checkout that is easy to maintain and scale across sites.",
+    description:
+      "AI-based computer vision self-checkout solution proven successful in high-volume canteen and micro-market environments. Light on hardware — relies on Apple iPad for easy maintenance and Google Cloud for advanced analytics.",
+    kpis: [
+      { v: "iPad", l: "Hardware" },
+      { v: "GCP", l: "Analytics" },
+      { v: "Scaling", l: "Status" },
+      { v: "DE", l: "Origin" },
+    ],
+    contact: "Contact team",
+    benefits: {
+      client: "Reduce queuing time and operating costs.",
+      consumer: "Instant checkout experience.",
+      sodexo: "Low-maintenance, iPad-based deployment at scale.",
+    },
+    areas: ['work', 'learn'] as Area[],
   },
 ];

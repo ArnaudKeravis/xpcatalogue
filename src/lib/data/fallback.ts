@@ -1,8 +1,15 @@
 // Static fallback used when Notion is unavailable + static area/module/journey config
 
-import type { Area, AreaConfig, CatalogueData, JourneyStep, Module } from './types';
+import type { Area, AreaConfig, CatalogueData, JourneyStep, Module, Persona } from './types';
 import { CATALOGUE_PERSONAS } from './personaDefinitions';
 import { SOLUTIONS_CATALOG } from './solutionsCatalog';
+import { PERSONA_JOURNEYS, hotspotsFromJourney } from './personaJourneys';
+import {
+  buildExcelModules,
+  buildOperatorJourneySteps,
+  consumerModuleNamesByMoment,
+  CONSUMER_MOMENT_TO_STEP,
+} from './xpFlowAdapter';
 
 export const AREA_CONFIGS: Record<Area, AreaConfig> = {
   work: {
@@ -13,7 +20,7 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
     tagline: 'Every workday more inspiring and fulfilling',
     description:
       'Sodexo makes <strong>every workday more inspiring and fulfilling</strong>, with spaces & services that support your well-being, connection & productivity.',
-    isometricUrl: '/images/catalogue/figma/work-area-info-iso.png',
+    isometricUrl: '/images/catalogue/assets/areas/work-area-info-iso.png',
     personaIds: ['client-work', 'white-collar', 'blue-collar', 'grey-collar', 'military', 'operator-work'],
   },
   learn: {
@@ -24,7 +31,7 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
     tagline: 'Helping students thrive',
     description:
       'Sodexo helps <strong>students thrive</strong> by creating healthy, welcoming, and motivating places to learn, grow, and connect.',
-    isometricUrl: '/images/catalogue/figma/learn-area-info-iso.png',
+    isometricUrl: '/images/catalogue/assets/areas/learn-area-info-iso.png',
     personaIds: ['client-learn', 'student', 'parent', 'schoolchild', 'teacher', 'operator-learn'],
   },
   heal: {
@@ -35,7 +42,7 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
     tagline: 'Care for every moment of life',
     description:
       'Sodexo <strong>cares for every moment of life</strong>, ensuring comfort, nutrition, and safety for patients, residents, and caregivers alike.',
-    isometricUrl: '/images/catalogue/figma/heal-area-info-iso.png',
+    isometricUrl: '/images/catalogue/assets/areas/heal-area-info-iso.png',
     personaIds: ['client-heal', 'doctor', 'nurse', 'patient', 'senior', 'operator-heal'],
   },
   play: {
@@ -46,7 +53,7 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
     tagline: 'Unforgettable experiences',
     description:
       'Sodexo Live! transforms every event into an <strong>unforgettable experience</strong>, where great food, hospitality, and emotion come together.',
-    isometricUrl: '/images/catalogue/figma/play-area-info-iso.png',
+    isometricUrl: '/images/catalogue/assets/areas/play-area-info-iso.png',
     personaIds: ['client-play', 'sport-fan', 'participant', 'vip-guest', 'tourist', 'operator-play'],
   },
 };
@@ -459,17 +466,85 @@ export const JOURNEY_STEPS: Record<string, JourneyStep> = {
   },
 };
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Excel-sourced flow enrichment (`Catalogue_XP_solutions.xlsx` → xpCatalogueFlow.ts)
+// Adds the authoritative module catalogue + wires the operator journey steps.
+// `MODULE_CONFIGS_WITH_FLOW` keeps existing modules, backfills solutionIds from
+// the Excel mapping, then adds any Excel module missing from the app.
+// ─────────────────────────────────────────────────────────────────────────────
+const EXCEL_MODULES = buildExcelModules();
+const OPERATOR_JOURNEY_STEPS = buildOperatorJourneySteps();
+const CONSUMER_MOMENT_MODULES = consumerModuleNamesByMoment();
+
+// Merge Excel solutionIds into existing app modules; then add any Excel
+// modules the app doesn't yet have (Parking Management, Display, Gym, …).
+const MERGED_MODULES: Record<string, Module> = { ...MODULE_CONFIGS };
+for (const [name, excelModule] of Object.entries(EXCEL_MODULES)) {
+  if (MERGED_MODULES[name]) {
+    const existing = MERGED_MODULES[name];
+    const unionIds = Array.from(new Set([...(existing.solutionIds ?? []), ...excelModule.solutionIds]));
+    MERGED_MODULES[name] = { ...existing, solutionIds: unionIds };
+  } else {
+    MERGED_MODULES[name] = excelModule;
+  }
+}
+
+// Update existing Work-Consumer journey steps with Excel-aligned module lists
+// (Commute / Welcome Area / F&B / WP / Wellbeing). Keeps all other steps as-is.
+const MERGED_JOURNEY_STEPS: Record<string, JourneyStep> = { ...JOURNEY_STEPS };
+for (const [momentName, stepId] of Object.entries(CONSUMER_MOMENT_TO_STEP)) {
+  const step = MERGED_JOURNEY_STEPS[stepId];
+  const excelModules = CONSUMER_MOMENT_MODULES[momentName] ?? [];
+  if (step && excelModules.length > 0) {
+    const merged = Array.from(new Set([...excelModules, ...step.modules]));
+    MERGED_JOURNEY_STEPS[stepId] = { ...step, modules: merged };
+  }
+}
+// Add operator-specific moments (FM round / Kick off / Office time / Order / F&B ops).
+for (const [id, step] of Object.entries(OPERATOR_JOURNEY_STEPS)) {
+  MERGED_JOURNEY_STEPS[id] = step;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Per-persona journey artwork (`personaJourneys.ts`). For every pill declared
+// on a persona's map we ensure a matching JourneyStep exists and override the
+// persona's `steps` + `journeyHotspots` so the click-through routes correctly.
+// ─────────────────────────────────────────────────────────────────────────────
+for (const [, def] of Object.entries(PERSONA_JOURNEYS)) {
+  for (const moment of def.moments) {
+    if (!MERGED_JOURNEY_STEPS[moment.id]) {
+      MERGED_JOURNEY_STEPS[moment.id] = {
+        id: moment.id,
+        label: moment.label,
+        icon: '📍',
+        modules: [],
+      };
+    }
+  }
+}
+
+const MERGED_PERSONAS: Persona[] = CATALOGUE_PERSONAS.map((p) => {
+  const def = PERSONA_JOURNEYS[p.id];
+  if (!def) return p;
+  return {
+    ...p,
+    journeyMapImage: def.image,
+    journeyHotspots: hotspotsFromJourney(def),
+    steps: def.moments.map((m) => m.id),
+  };
+});
+
 // Map step id → step label for display
 export const STEP_LABEL: Record<string, string> = Object.fromEntries(
-  Object.values(JOURNEY_STEPS).map((s) => [s.id, s.label])
+  Object.values(MERGED_JOURNEY_STEPS).map((s) => [s.id, s.label])
 );
 
-// Solutions mirror `static-home/catalog-solutions.js` (see `solutionsCatalog.ts`).
+// Solutions mirror `reference/static-home/catalog-solutions.js` (see `solutionsCatalog.ts`).
 export const FALLBACK_DATA: CatalogueData = {
   solutions: SOLUTIONS_CATALOG,
-  personas: CATALOGUE_PERSONAS,
-  modules: MODULE_CONFIGS,
+  personas: MERGED_PERSONAS,
+  modules: MERGED_MODULES,
   areas: AREA_CONFIGS,
-  journeySteps: JOURNEY_STEPS,
+  journeySteps: MERGED_JOURNEY_STEPS,
   lastUpdated: new Date().toISOString(),
 };

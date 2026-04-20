@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { JourneyMap } from '@/components/catalogue/JourneyMap';
-import { PersonaProfileFigma } from '@/components/catalogue/PersonaProfileFigma';
+import { PersonaProfile } from '@/components/catalogue/PersonaProfile';
 import { Navbar } from '@/components/layout/Navbar';
-import { getMomentsForModuleName } from '@/lib/catalogue/journey';
+import { getMomentsForModuleName } from '@/lib/queries/journey';
 import { getCatalogueData } from '@/lib/notion';
 import type { Area, JourneyStep } from '@/lib/data/types';
 
@@ -29,7 +29,14 @@ export default async function PersonaPage({ params }: Props) {
     .map((sid) => journeySteps[sid])
     .filter((s): s is JourneyStep => Boolean(s));
 
-  const modulesSorted = [...Object.values(modules)].sort((a, b) => a.name.localeCompare(b.name));
+  // Only show modules that actually apply to this persona's journey — not the full 25.
+  // A module is "relevant" when at least one moment in the persona's day references it.
+  const journeyModuleNames = new Set(steps.flatMap((s) => s.modules));
+  const allModules = Object.values(modules);
+  const relevantModules = allModules
+    .filter((m) => journeyModuleNames.has(m.name))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const totalModuleCount = allModules.length;
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f4f6fb]">
@@ -43,72 +50,89 @@ export default async function PersonaPage({ params }: Props) {
         ]}
       />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
 
         {/* ── 1. Persona profile hero ────────────────────────────────── */}
-        <PersonaProfileFigma persona={persona} />
+        <PersonaProfile persona={persona} />
 
-        {/* ── 2. Experience Modules (modular explanation) ────────────── */}
+        {/* ── 2. Experience Modules (filtered to this persona's journey) ─ */}
         <section
           className="mx-4 mb-0 mt-10 rounded-[25px] px-4 py-8 md:mx-10 md:px-8 md:py-10 lg:mx-14"
           style={{ background: '#e0e6f9' }}
           aria-labelledby="section-experience-modules"
         >
-          <h3
-            id="section-experience-modules"
-            className="mb-1 text-xl font-extrabold text-[var(--blue)]"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            Experience Modules
-          </h3>
-          <p
-            className="mb-6 max-w-2xl text-sm leading-relaxed text-[var(--blue)]/70"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            Our solutions are organised in modules. Each module groups related digital and physical
-            experiences — tap a module to browse all implementations, or select a moment in the
-            journey below to see which modules apply.
-          </p>
+          <div className="mb-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <div>
+              <h2
+                id="section-experience-modules"
+                className="mb-1 text-xl font-extrabold text-[var(--blue)]"
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                Modules that apply to {persona.name}&rsquo;s day
+              </h2>
+              <p
+                className="max-w-2xl text-sm leading-relaxed text-[var(--blue)]/70"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                {relevantModules.length === 0
+                  ? `No modules are currently mapped to ${persona.name}'s journey. Browse the full catalogue to explore all ${totalModuleCount} modules.`
+                  : `${relevantModules.length} of ${totalModuleCount} modules in the catalogue show up across ${persona.name}'s day. Tap a module to see every solution inside it, or pick a moment in the journey below.`}
+              </p>
+            </div>
+            {relevantModules.length > 0 ? (
+              <Link
+                href="/solutions"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--grey-border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--blue)] transition-colors hover:bg-[var(--icon-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
+              >
+                See all {totalModuleCount} modules
+              </Link>
+            ) : null}
+          </div>
 
-          <ul
-            className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-            aria-label="Experience modules"
-          >
-            {modulesSorted.map((mod) => {
-              const momentLinks = getMomentsForModuleName(mod.name, steps);
-              return (
-                <li key={mod.id}>
-                  <div className="flex h-full flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-md">
-                    {/* Gradient top bar */}
-                    <div className="h-1.5 w-full" style={{ background: mod.gradient }} />
-                    <div className="flex flex-1 flex-col p-3">
-                      <span className="mb-1.5 text-2xl" aria-hidden>{mod.icon}</span>
-                      <Link
-                        href={`/solutions?module=${encodeURIComponent(mod.name)}`}
-                        className="mb-2 text-sm font-extrabold leading-tight text-[var(--blue)] hover:text-[var(--blue-primary)]"
-                        style={{ fontFamily: 'var(--font-heading)' }}
-                      >
-                        {mod.name}
-                      </Link>
-                      {momentLinks.length > 0 ? (
-                        <div className="mt-auto flex flex-wrap gap-1 border-t border-[var(--grey-border)] pt-2">
-                          {momentLinks.map((m) => (
-                            <Link
-                              key={m.id}
-                              href={`/${params.area}/${params.persona}/moment/${m.id}`}
-                              className="rounded-full bg-[#f0f4ff] px-2 py-0.5 text-[9px] font-semibold text-[var(--blue-solid)] ring-1 ring-[var(--grey-border)] transition-colors hover:bg-[var(--blue)] hover:text-white hover:ring-[var(--blue)]"
-                            >
-                              {m.label}
-                            </Link>
-                          ))}
-                        </div>
-                      ) : null}
+          {relevantModules.length > 0 ? (
+            <ul
+              className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+              aria-label={`Modules relevant to ${persona.name}'s journey`}
+            >
+              {relevantModules.map((mod) => {
+                const momentLinks = getMomentsForModuleName(mod.name, steps);
+                const moduleHref = `/modules/${mod.id}?area=${params.area}&persona=${params.persona}`;
+                return (
+                  <li key={mod.id}>
+                    <div className="flex h-full flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-md">
+                      <div className="h-1.5 w-full" style={{ background: mod.gradient }} aria-hidden />
+                      <div className="flex flex-1 flex-col p-3">
+                        <span className="mb-1.5 text-2xl" aria-hidden>{mod.icon}</span>
+                        <Link
+                          href={moduleHref}
+                          className="mb-2 text-sm font-extrabold leading-tight text-[var(--blue)] hover:text-[var(--blue-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
+                          style={{ fontFamily: 'var(--font-heading)' }}
+                        >
+                          {mod.name}
+                        </Link>
+                        {momentLinks.length > 0 ? (
+                          <div
+                            className="mt-auto flex flex-wrap gap-1 border-t border-[var(--grey-border)] pt-2"
+                            aria-label={`Applies at ${momentLinks.length} moment${momentLinks.length === 1 ? '' : 's'} of the day`}
+                          >
+                            {momentLinks.map((m) => (
+                              <Link
+                                key={m.id}
+                                href={`/${params.area}/${params.persona}/moment/${m.id}`}
+                                className="rounded-full bg-[#f0f4ff] px-2 py-0.5 text-[9px] font-semibold text-[var(--blue-solid)] ring-1 ring-[var(--grey-border)] transition-colors hover:bg-[var(--blue)] hover:text-white hover:ring-[var(--blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
+                              >
+                                {m.label}
+                              </Link>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
         </section>
 
         {/* ── 3. Consumer journey map ────────────────────────────────── */}

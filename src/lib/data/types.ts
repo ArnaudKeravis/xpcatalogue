@@ -33,7 +33,7 @@ export interface Solution {
   hashtags: string[];
   flags: string[];
   img: string;            // emoji fallback (module tile)
-  /** Optional hero visual (e.g. exported Figma / catalogue PNG). */
+  /** Optional hero visual (local catalogue asset). */
   heroImage?: string;
   context: string;
   description: string;
@@ -57,25 +57,13 @@ export interface JourneyStep {
   };
 }
 
-/** Percent positions on the isometric journey image (Figma Labs — Iso Journey Work White Collar). */
+/** Percent positions on the isometric journey image. */
 export interface JourneyHotspot {
   stepId: string;
   left: number;
   top: number;
   w: number;
   h: number;
-}
-
-/** Figma hand-off URLs from journey CSV (Labs + Master Catalogue). */
-export interface PersonaFigmaLinks {
-  /** Labs — persona description frame */
-  personaDescription: string;
-  /** Master — screen between profile and journey */
-  journeyBridge: string;
-  /** Labs — isometric journey map */
-  personaJourney: string;
-  /** Labs — modular approach explainer */
-  modularApproach: string;
 }
 
 export interface Persona {
@@ -87,16 +75,17 @@ export interface Persona {
   quote: string;
   emoji: string;
   color: string;
-  photo?: string; // URL (from Notion file or Figma asset)
-  /** Figma profile strip — e.g. "Consumer" */
+  /** Local portrait path under `/images/catalogue/assets/` (falls back to Notion URL). */
+  photo?: string;
+  /** Profile strip eyebrow — e.g. "Consumer" */
   profileEyebrow?: string;
   /** Teal segment in "Modular Experience Platform: …" (defaults to profileEyebrow or name) */
   platformSegmentLabel?: string;
-  /** Dark blue workplace / context stats (left column, Figma) */
+  /** Dark blue workplace / context stats (left column) */
   workplaceStats?: string[];
-  /** Yellow goals panel (left column, Figma) */
+  /** Yellow goals panel (left column) */
   professionalGoals?: string[];
-  /** Full-bleed isometric map (e.g. Figma node 1667:44064). */
+  /** Full-bleed isometric map stored locally under `/images/catalogue/assets/`. */
   journeyMapImage?: string;
   /** Click targets on `journeyMapImage` — same order as journey steps. */
   journeyHotspots?: JourneyHotspot[];
@@ -105,9 +94,7 @@ export interface Persona {
   needs: string[];
   steps: string[]; // JourneyStep ids
   notionId?: string;
-  /** CSV / Figma source links for this persona flow */
-  figmaLinks?: PersonaFigmaLinks;
-  /** Rich HTML under “Our Modular Experience Platform” (optional) */
+  /** Rich HTML under "Our Modular Experience Platform" (optional) */
   modularPlatformIntroHtml?: string;
   /** Optional puzzle / diagram above journey (export into `public/images/…`) */
   modularPuzzleImage?: string;

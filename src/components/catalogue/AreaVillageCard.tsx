@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils/cn';
 import type { AreaConfig } from '@/lib/data/types';
 
 /** Local line asset — see `public/images/catalogue/placeholder-line.svg`. */
-const DIVIDER_SRC = '/images/catalogue/figma/ui-card-divider-line.png';
+const DIVIDER_SRC = '/images/catalogue/assets/ui/ui-card-divider-line.png';
 
 interface Props {
   area: AreaConfig;
