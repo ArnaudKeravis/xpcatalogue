@@ -21,6 +21,7 @@ import type { Icon, IconWeight } from '@phosphor-icons/react';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
+import { MomentScene } from '@/components/catalogue/MomentScene';
 import { getCatalogueData } from '@/lib/notion';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import type { Area, Module } from '@/lib/data/types';
@@ -94,6 +95,15 @@ export default async function MomentPage({ params }: Props) {
   const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
   const eyebrow = persona.profileEyebrow ?? 'Consumer';
 
+  // Locate this moment's hotspot on the journey artwork. We use it to (a) draw
+  // a focus ring on the full-width journey hero and (b) feed a zoomed crop
+  // into the persona mini-card so each moment gets its own "scene" from the
+  // same source art, without needing per-moment assets.
+  const hotspot = persona.journeyHotspots?.find((h) => h.stepId === step.id);
+  const hotspotCenter = hotspot
+    ? { left: hotspot.left + (hotspot.w ?? 0) / 2, top: hotspot.top + (hotspot.h ?? 0) / 2 }
+    : null;
+
   const solutionsCountFor = (moduleName: string) =>
     solutions.filter((s) => s.module === moduleName).length;
 
@@ -112,7 +122,11 @@ export default async function MomentPage({ params }: Props) {
 
   return (
     <div className="relative flex flex-1 flex-col bg-[#E8EEFB]">
-      {/* ── Journey image (background) ───────────────────────────── */}
+      {/* ── Journey image (background) ─────────────────────────────
+          The full isometric sets context; a soft focus-halo centered on the
+          current moment's hotspot tells the eye "you are here". A thin white
+          ring plus an accent bloom reads as a cinematographer's spotlight
+          rather than a UI hotspot pin. */}
       <div className="relative z-0 h-[36vh] w-full overflow-hidden sm:h-[40vh] md:h-[44vh] lg:h-[46vh]">
         {mapImage ? (
           <img
@@ -126,6 +140,36 @@ export default async function MomentPage({ params }: Props) {
             style={{ background: `linear-gradient(135deg, ${areaConfig.color}22 0%, #E8EEFB 70%)` }}
           />
         )}
+
+        {/* Focus halo — radial spotlight centered on the moment hotspot.
+            Darkens the periphery, brightens the moment's region. */}
+        {mapImage && hotspotCenter ? (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background: `radial-gradient(circle at ${hotspotCenter.left}% ${hotspotCenter.top}%, transparent 0%, transparent 12%, rgba(0, 12, 60, 0.18) 38%, rgba(0, 12, 60, 0.32) 70%)`,
+            }}
+          />
+        ) : null}
+
+        {/* Accent bloom — a soft colored glow in the moment's neighbourhood */}
+        {mapImage && hotspotCenter ? (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute"
+            style={{
+              left: `calc(${hotspotCenter.left}% - 80px)`,
+              top: `calc(${hotspotCenter.top}% - 80px)`,
+              width: 160,
+              height: 160,
+              borderRadius: '9999px',
+              background: `radial-gradient(circle, ${areaConfig.color}55, transparent 65%)`,
+              filter: 'blur(8px)',
+            }}
+          />
+        ) : null}
+
         {/* Fade out toward the card to keep focus below */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[#E8EEFB]" />
       </div>
@@ -199,18 +243,32 @@ export default async function MomentPage({ params }: Props) {
                 {step.label}
               </p>
 
-              {/* Moment isometric tile — Phosphor icon on tinted tile (placeholder until per-moment art exists) */}
-              <div
-                className="mt-1 flex aspect-[4/3] w-full items-center justify-center rounded-xl"
-                style={{ background: `${areaConfig.color}1a` }}
-                aria-hidden
-              >
-                <MomentIcon
-                  momentId={step.id}
-                  weight="duotone"
-                  className="h-20 w-20"
-                />
-              </div>
+              {/* Moment scene — a zoomed crop of the journey artwork at this
+                  moment's hotspot. Gives every moment a bespoke illustration
+                  derived from the same isometric source, keeping thematic
+                  continuity with the journey map. Falls back to the plain
+                  tinted icon tile when we don't have a journey image or
+                  hotspot for this moment. */}
+              {mapImage && hotspotCenter ? (
+                <div className="mt-1 w-full">
+                  <MomentScene
+                    imageSrc={mapImage}
+                    hotspotLeftPct={hotspotCenter.left}
+                    hotspotTopPct={hotspotCenter.top}
+                    accent={areaConfig.color}
+                    label={step.label}
+                    aspect="4 / 3"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="mt-1 flex aspect-[4/3] w-full items-center justify-center rounded-xl"
+                  style={{ background: `${areaConfig.color}1a` }}
+                  aria-hidden
+                >
+                  <MomentIcon momentId={step.id} weight="duotone" className="h-20 w-20" />
+                </div>
+              )}
             </aside>
 
             {/* Moment description */}
