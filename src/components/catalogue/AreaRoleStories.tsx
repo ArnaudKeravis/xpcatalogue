@@ -1,5 +1,12 @@
 import type { ElementType } from 'react';
-import { Confetti, Handshake, Heart, UserCircle, Wrench } from '@phosphor-icons/react/dist/ssr';
+import {
+  Confetti,
+  GraduationCap,
+  Handshake,
+  Heart,
+  UserCircle,
+  Wrench,
+} from '@phosphor-icons/react/dist/ssr';
 import type { Area, AreaConfig, AreaRoleStories as Stories } from '@/lib/data/types';
 
 interface Props {
@@ -31,14 +38,15 @@ const DEFAULT_LABELS: Record<RoleKey, string> = {
 /**
  * Picks the icon for the end-user ("employee") voice based on area, so the
  * glyph reflects the actual person speaking:
- *   HEAL  → Heart      (patient recovery, emotional care)
- *   PLAY  → Confetti   (guest at an event, celebration, emotion)
- *   WORK  → UserCircle (default — an employee at the workplace)
- *   LEARN → UserCircle (default until a more specific icon is chosen)
+ *   HEAL  → Heart          (patient recovery, emotional care)
+ *   PLAY  → Confetti       (guest at an event, celebration, emotion)
+ *   LEARN → GraduationCap  (student, learning, growth)
+ *   WORK  → UserCircle     (default — an employee at the workplace)
  */
 function getEmployeeIcon(area: Area): ElementType {
   if (area === 'heal') return Heart;
   if (area === 'play') return Confetti;
+  if (area === 'learn') return GraduationCap;
   return UserCircle;
 }
 

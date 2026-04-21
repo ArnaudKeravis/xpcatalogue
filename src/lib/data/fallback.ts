@@ -42,6 +42,18 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
       'Sodexo helps <strong>students thrive</strong> by creating healthy, welcoming, and motivating places to learn, grow, and connect.',
     isometricUrl: '/images/catalogue/assets/areas/learn-area-info-iso.png',
     personaIds: ['client-learn', 'student', 'parent', 'schoolchild', 'teacher', 'operator-learn'],
+    roleStories: {
+      intro:
+        'In schools and universities, Sodexo helps learning come to life — nourishing both minds and bodies.',
+      client: 'I see spaces that inspire focus, belonging, and community.',
+      employee:
+        'I feel safe, included, and motivated, surrounded by fresh food, dynamic spaces, and sustainable practices that reflect my values.',
+      operator:
+        'I know that each meal, each smile, each service moment builds a better future — one student, one day at a time.',
+      labels: {
+        employee: 'As a Student',
+      },
+    },
   },
   heal: {
     id: 'heal',
