@@ -85,11 +85,15 @@ export default async function HomePage() {
             style={{ fontFamily: 'var(--font-heading)', animationDelay: '160ms' }}
           >
             Where does tomorrow&rsquo;s day{' '}
-            <em
-              className="bg-gradient-to-r from-white via-white to-[var(--teal)] bg-clip-text not-italic text-transparent"
+            <span
+              className="relative inline-block not-italic text-[var(--teal)]"
             >
               change?
-            </em>
+              <span
+                aria-hidden
+                className="absolute inset-x-0 -bottom-1 h-[6px] rounded-full bg-[var(--teal)]/30"
+              />
+            </span>
           </h1>
           <p
             className="motion-fade-up max-w-2xl text-[clamp(1rem,1.6vw,1.25rem)] font-medium leading-relaxed text-white/85"
@@ -226,13 +230,21 @@ function EntryCard({
   return (
     <Link
       href={href}
-      className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-6 text-white backdrop-blur-xl transition-all duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:bg-white/15 hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      className="group relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[var(--surface-on-hero)] p-6 text-white shadow-[var(--shadow-panel)] transition-[transform,box-shadow,border-color] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:border-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
     >
+      {/* Brand accent rail — replaces decorative glass tint with a purposeful signal */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[var(--teal)] via-[var(--blue-primary)] to-[var(--teal)] opacity-80"
+      />
       <div className="flex items-start justify-between gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15">
+        <div
+          className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 text-white"
+          style={{ background: 'rgba(255,255,255,0.08)' }}
+        >
           {icon}
         </div>
-        <span className="rounded-full bg-black/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em]">
+        <span className="rounded-full border border-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80">
           {tag}
         </span>
       </div>
@@ -242,14 +254,14 @@ function EntryCard({
       >
         {title}
       </h2>
-      <p className="mt-2 text-sm leading-relaxed text-white/80" style={{ fontFamily: 'var(--font-body)' }}>
+      <p className="mt-2 text-sm leading-relaxed text-white/85" style={{ fontFamily: 'var(--font-body)' }}>
         {body}
       </p>
       <div className="mt-6 flex items-center justify-between text-[11px]">
-        <span className="font-semibold uppercase tracking-[0.14em] text-white/60">
+        <span className="font-semibold uppercase tracking-[0.14em] text-white/70">
           {hint ?? footer}
         </span>
-        <span className="inline-flex items-center gap-1.5 font-bold text-white transition-all group-hover:gap-2.5">
+        <span className="inline-flex items-center gap-1.5 font-bold text-white transition-transform duration-[var(--motion-base)] ease-[var(--ease-hover)] group-hover:translate-x-0.5">
           Explore <ArrowRight size={14} weight="bold" aria-hidden />
         </span>
       </div>

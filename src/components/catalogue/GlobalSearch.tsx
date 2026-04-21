@@ -253,7 +253,7 @@ export function GlobalSearch() {
           ref={listRef}
           role="listbox"
           aria-label="Search results"
-          className="absolute left-0 right-0 top-full z-40 mt-2 max-h-[70vh] overflow-y-auto rounded-2xl border border-[var(--grey-border)] bg-white shadow-[0_12px_48px_rgba(10,22,70,0.12)]"
+          className="absolute left-0 right-0 top-full z-40 mt-2 max-h-[70vh] overflow-y-auto rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] shadow-[var(--shadow-popover)] backdrop-blur-xl"
           style={{ fontFamily: 'var(--font-body)' }}
         >
           {noResults ? (

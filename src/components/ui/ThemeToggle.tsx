@@ -52,7 +52,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label="Theme"
       className={
         className ??
-        'inline-flex items-center rounded-full border border-[var(--grey-border)] bg-[var(--surface-card)] p-0.5'
+        'inline-flex items-center rounded-full border border-[var(--grey-border)] bg-[var(--surface-card)]'
       }
     >
       {OPTIONS.map(({ value, label, Icon }) => {
@@ -66,13 +66,20 @@ export function ThemeToggle({ className }: { className?: string }) {
             aria-label={label}
             title={`${label} theme`}
             onClick={() => setTheme(value)}
-            className={
-              active
-                ? 'flex h-7 w-7 items-center justify-center rounded-full bg-[var(--blue-primary)] text-white transition-all'
-                : 'flex h-7 w-7 items-center justify-center rounded-full text-[var(--blue)]/60 transition-all hover:text-[var(--blue)]'
-            }
+            style={{ touchAction: 'manipulation' }}
+            className="group relative flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-[var(--motion-base)] ease-[var(--ease-out-quint)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--blue-primary)]"
           >
-            <Icon size={14} weight={active ? 'fill' : 'regular'} aria-hidden />
+            {/* Inner chip — 28px visual, whole button is the 44pt hit target. */}
+            <span
+              aria-hidden
+              className={
+                active
+                  ? 'flex h-7 w-7 items-center justify-center rounded-full bg-[var(--blue-primary)] text-white transition-colors'
+                  : 'flex h-7 w-7 items-center justify-center rounded-full text-[var(--blue)]/60 transition-colors group-hover:bg-[var(--icon-bg-muted)] group-hover:text-[var(--blue)]'
+              }
+            >
+              <Icon size={14} weight={active ? 'fill' : 'regular'} aria-hidden />
+            </span>
           </button>
         );
       })}

@@ -16,6 +16,9 @@
   --surface: #f4f7ff;
   --surface-card: rgba(255, 255, 255, 0.93);
   --surface-glass: rgba(255, 255, 255, 0.3);
+  /* Solid card used on the dark home hero — deeper than the hero itself so
+     cards read as stepped-forward surfaces, not glass overlays. */
+  --surface-on-hero: #0e2a8a;
   --icon-bg: #dbe2fa;
   --icon-bg-muted: #d7e4fe;
 
@@ -30,6 +33,10 @@
   --font-heading: var(--font-open-sans), 'Open Sans', system-ui, -apple-system, sans-serif;
   --font-body: var(--font-open-sans), 'Open Sans', system-ui, -apple-system, sans-serif;
 
+  /* Eyebrow / micro-label sizes — for uppercase tracking-wider labels only,
+     never for body copy. Body copy floor remains 16px (--text-md). */
+  --text-3xs: 0.5625rem;    /* 9px — section counters next to titles */
+  --text-2xs: 0.625rem;     /* 10px — eyebrow labels, footer fine print */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-md: 1rem;
@@ -64,6 +71,10 @@
   --shadow-nav: 0 2px 16px rgba(41, 56, 150, 0.1);
   --shadow-sm: 0 2px 8px rgba(41, 56, 150, 0.06);
   --shadow-benefits: 12px 17px 24.3px rgba(0, 0, 0, 0.1);
+  /* Interaction shadows — hovered cards, floating popovers, persona tile rest. */
+  --shadow-hover: 0 20px 50px rgba(10, 22, 70, 0.25);
+  --shadow-popover: 0 12px 48px rgba(10, 22, 70, 0.12);
+  --shadow-tile: 0 4px 20px rgba(41, 56, 150, 0.1);
 
   /* Motion — easings (Emil Kowalski / Framer Motion course) + durations.
      GPU-accelerated transform + opacity only. prefers-reduced-motion guard
@@ -91,6 +102,7 @@
   --surface: #0a1230;
   --surface-card: rgba(22, 34, 72, 0.72);
   --surface-glass: rgba(22, 34, 72, 0.5);
+  --surface-on-hero: #05122e;
   --home-hero-bg: #0a1230;
 
   /* Text: inverse scale — was #293896, now lifted near-white-blue */
@@ -117,6 +129,9 @@
   --shadow-nav: 0 1px 0 rgba(255, 255, 255, 0.06);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
   --shadow-benefits: 0 18px 30px rgba(0, 0, 0, 0.45);
+  --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.55);
+  --shadow-popover: 0 12px 48px rgba(0, 0, 0, 0.5);
+  --shadow-tile: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 body {

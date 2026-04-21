@@ -33,8 +33,8 @@ function PersonaPortraitCard({
 
   return (
     <div
-      className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-[20px] bg-white transition-all duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 hover:shadow-xl"
-      style={{ boxShadow: '0 4px 20px rgba(41,56,150,0.10)' }}
+      className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-3xl bg-[var(--surface-card)] transition-[transform,box-shadow] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:shadow-[var(--shadow-hover)]"
+      style={{ boxShadow: 'var(--shadow-tile)' }}
     >
       <Link
         href={href}

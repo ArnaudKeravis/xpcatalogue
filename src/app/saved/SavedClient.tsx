@@ -123,7 +123,7 @@ export function SavedClient() {
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {grouped[kind].map((f) => (
                 <li key={`${f.kind}-${f.id}`}>
-                  <div className="group relative flex h-full flex-col gap-2 rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-panel)]">
+                  <div className="group relative flex h-full flex-col gap-2 rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-4 shadow-[var(--shadow-sm)] transition-[transform,box-shadow] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-hover)]">
                     <Link
                       href={f.href}
                       className="absolute inset-0 rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--blue-primary)]"
