@@ -1,17 +1,41 @@
 import type { ElementType } from 'react';
-import { Handshake, UserCircle, Wrench } from '@phosphor-icons/react/dist/ssr';
-import type { AreaConfig, AreaRoleStories as Stories } from '@/lib/data/types';
+import { Handshake, Heart, UserCircle, Wrench } from '@phosphor-icons/react/dist/ssr';
+import type { Area, AreaConfig, AreaRoleStories as Stories } from '@/lib/data/types';
 
 interface Props {
   areaConfig: AreaConfig;
   stories: Stories;
 }
 
+type RoleKey = 'client' | 'employee' | 'operator';
+
 interface RoleRow {
-  key: keyof Stories;
+  key: RoleKey;
   label: string;
   icon: ElementType;
   quote: string;
+}
+
+/**
+ * Default first-person labels, shown unless overridden via
+ * `AreaRoleStories.labels`. `employee` is the end-user bucket — in WORK
+ * that's literally an employee, but in HEAL/LEARN/PLAY it becomes patient,
+ * student, or guest.
+ */
+const DEFAULT_LABELS: Record<RoleKey, string> = {
+  client: 'As a Client',
+  employee: 'As an Employee',
+  operator: 'As an Operator',
+};
+
+/**
+ * Picks the icon for the end-user ("employee") voice based on area, so the
+ * glyph reflects the actual person speaking: Heart for patients/residents in
+ * HEAL, UserCircle elsewhere until LEARN/PLAY supply their own copy.
+ */
+function getEmployeeIcon(area: Area): ElementType {
+  if (area === 'heal') return Heart;
+  return UserCircle;
 }
 
 /**
@@ -28,10 +52,16 @@ interface RoleRow {
  * above each column so the band feels native to the area it describes.
  */
 export function AreaRoleStories({ areaConfig, stories }: Props) {
+  const labels = { ...DEFAULT_LABELS, ...(stories.labels ?? {}) };
   const rows: RoleRow[] = [
-    { key: 'client', label: 'As a Client', icon: Handshake, quote: stories.client },
-    { key: 'employee', label: 'As an Employee', icon: UserCircle, quote: stories.employee },
-    { key: 'operator', label: 'As an Operator', icon: Wrench, quote: stories.operator },
+    { key: 'client', label: labels.client, icon: Handshake, quote: stories.client },
+    {
+      key: 'employee',
+      label: labels.employee,
+      icon: getEmployeeIcon(areaConfig.id),
+      quote: stories.employee,
+    },
+    { key: 'operator', label: labels.operator, icon: Wrench, quote: stories.operator },
   ];
 
   return (

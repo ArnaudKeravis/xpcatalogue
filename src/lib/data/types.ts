@@ -113,16 +113,27 @@ export interface Module {
  * Three-role narrative for a given area. Each voice is written in first person
  * ("As a client, I see…") and renders on the single-area page below the
  * persona grid. Optional — when absent, the section is simply not shown.
+ *
+ * The role *keys* are abstract (client / employee / operator) so the data
+ * model stays uniform across areas. The *labels* can be overridden per area
+ * because the end-user isn't always an "employee" — it's a patient or resident
+ * in HEAL, a student in LEARN, a guest in PLAY.
  */
 export interface AreaRoleStories {
   /** One-sentence thesis for the whole area, editorial tone. */
   intro: string;
   /** The decision-maker who commissions the experience. */
   client: string;
-  /** The end-user who lives it every day. */
+  /** The end-user who lives it every day (employee / patient / student / guest). */
   employee: string;
   /** The Sodexo person who delivers it. */
   operator: string;
+  /** Optional per-role label overrides; default to "As a Client / Employee / Operator". */
+  labels?: Partial<{
+    client: string;
+    employee: string;
+    operator: string;
+  }>;
 }
 
 export interface AreaConfig {

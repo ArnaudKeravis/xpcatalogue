@@ -53,6 +53,19 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
       'Sodexo <strong>cares for every moment of life</strong>, ensuring comfort, nutrition, and safety for patients, residents, and caregivers alike.',
     isometricUrl: '/images/catalogue/assets/areas/heal-area-info-iso.png',
     personaIds: ['client-heal', 'doctor', 'nurse', 'patient', 'senior', 'operator-heal'],
+    roleStories: {
+      intro:
+        'Across hospitals and care homes, Sodexo brings comfort, dignity, and trust to every touchpoint.',
+      client:
+        'I see a partner who understands the delicate balance between efficiency and empathy — ensuring safety, hygiene, and emotional care coexist.',
+      employee:
+        'I feel nurtured and respected, my recovery supported by comforting meals, warm words, and reassuring routines.',
+      operator:
+        'I am proud to stand behind a service that heals beyond the clinical, creating environments where every act of care becomes a gesture of humanity.',
+      labels: {
+        employee: 'As a Patient or Resident',
+      },
+    },
   },
   play: {
     id: 'play',
