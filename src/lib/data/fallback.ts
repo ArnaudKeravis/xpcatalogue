@@ -77,6 +77,18 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
       'Sodexo Live! transforms every event into an <strong>unforgettable experience</strong>, where great food, hospitality, and emotion come together.',
     isometricUrl: '/images/catalogue/assets/areas/play-area-info-iso.png',
     personaIds: ['client-play', 'sport-fan', 'participant', 'vip-guest', 'tourist', 'operator-play'],
+    roleStories: {
+      intro: 'From stadiums to museums, Sodexo Live! turns emotion into experience.',
+      client:
+        'I see my venue transformed — food, service, and storytelling merging into a living brand experience.',
+      employee:
+        'I feel the thrill of belonging, tasting creativity, joy, and excellence in every moment — from the first bite to the final applause.',
+      operator:
+        'I am part of the magic, orchestrating the unseen details that make every event vibrant, memorable, and unforgettable.',
+      labels: {
+        employee: 'As a Guest',
+      },
+    },
   },
 };
 
