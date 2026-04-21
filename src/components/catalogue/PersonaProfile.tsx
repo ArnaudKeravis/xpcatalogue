@@ -98,7 +98,13 @@ export function PersonaProfile({ persona, className }: Props) {
         </div>
 
         {hasRichLeft ? (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,1.4fr)_minmax(0,1.2fr)] lg:gap-8">
+          /*
+           * Grid weighting rebalanced to let the portrait carry the hero.
+           * Side columns use `minmax(0,0.9fr)` so they shrink first when the
+           * viewport narrows; the portrait column gets `minmax(420px,1.8fr)`
+           * so it dominates on wide screens without collapsing on medium ones.
+           */
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1.8fr)_minmax(0,1.1fr)] lg:gap-8">
             {/* Left: workplace + goals + quote */}
             <div className="flex flex-col gap-5">
               <div
@@ -147,7 +153,7 @@ export function PersonaProfile({ persona, className }: Props) {
             </div>
 
             {/* Center: portrait on dotted art */}
-            <div className="relative flex min-h-[420px] items-end justify-center overflow-hidden rounded-brand-xl">
+            <div className="relative flex min-h-[520px] items-end justify-center overflow-hidden rounded-brand-xl lg:min-h-[680px]">
               <div
                 className="absolute inset-0 opacity-90"
                 style={{
@@ -157,15 +163,15 @@ export function PersonaProfile({ persona, className }: Props) {
                 }}
                 aria-hidden
               />
-              <div className="relative z-[1] flex w-full items-end justify-center pb-0 pt-6">
+              <div className="relative z-[1] flex w-full items-end justify-center pb-0 pt-4">
                 {portraitSrc ? (
                   <img
                     src={portraitSrc}
                     alt={persona.fullName}
-                    className="h-auto w-full max-w-[560px] object-contain object-bottom lg:max-h-[min(780px,85vh)] lg:min-h-[560px]"
+                    className="h-auto w-full max-w-[720px] object-contain object-bottom lg:max-h-[min(880px,88vh)] lg:min-h-[640px]"
                   />
                 ) : (
-                  <span className="text-[160px] leading-none">{persona.emoji}</span>
+                  <span className="text-[min(22vw,220px)] leading-none">{persona.emoji}</span>
                 )}
               </div>
             </div>
@@ -182,8 +188,8 @@ export function PersonaProfile({ persona, className }: Props) {
             </div>
           </div>
         ) : (
-          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-            <div className="relative flex min-h-[420px] items-end justify-center overflow-hidden rounded-brand-xl">
+          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+            <div className="relative flex min-h-[520px] items-end justify-center overflow-hidden rounded-brand-xl lg:min-h-[640px]">
               <div
                 className="absolute inset-0 opacity-90"
                 style={{
@@ -193,15 +199,15 @@ export function PersonaProfile({ persona, className }: Props) {
                 }}
                 aria-hidden
               />
-              <div className="relative z-[1] flex w-full items-end justify-center pb-0 pt-6">
+              <div className="relative z-[1] flex w-full items-end justify-center pb-0 pt-4">
                 {portraitSrc ? (
                   <img
                     src={portraitSrc}
                     alt={persona.fullName}
-                    className="h-auto w-full max-w-[560px] object-contain object-bottom lg:max-h-[min(720px,80vh)] lg:min-h-[500px]"
+                    className="h-auto w-full max-w-[720px] object-contain object-bottom lg:max-h-[min(820px,85vh)] lg:min-h-[600px]"
                   />
                 ) : (
-                  <span className="text-[140px] leading-none">{persona.emoji}</span>
+                  <span className="text-[min(22vw,200px)] leading-none">{persona.emoji}</span>
                 )}
               </div>
             </div>
