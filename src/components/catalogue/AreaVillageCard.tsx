@@ -16,7 +16,7 @@ export function AreaVillageCard({ area, className }: Props) {
     <Link
       href={`/${area.id}`}
       className={cn(
-        'group flex max-w-[282px] flex-col gap-2.5 rounded-[25px] border border-white/40 bg-[rgba(255,255,255,0.3)] px-[18px] py-4 shadow-[0px_4px_25px_0px_rgba(0,0,128,0.15)] backdrop-blur-[7.9px] transition-transform hover:-translate-y-1 hover:shadow-[0px_8px_28px_0px_rgba(0,0,128,0.18)]',
+        'group flex max-w-[282px] flex-col gap-2.5 rounded-brand-xl border border-white/40 bg-[rgba(255,255,255,0.3)] px-[18px] py-4 shadow-[0px_4px_25px_0px_rgba(0,0,128,0.15)] backdrop-blur-[7.9px] transition-transform hover:-translate-y-1 hover:shadow-[0px_8px_28px_0px_rgba(0,0,128,0.18)]',
         className
       )}
     >

@@ -133,7 +133,7 @@ export default async function MomentPage({ params }: Props) {
       {/* ── Moment overlay card ─────────────────────────────────── */}
       <div className="relative z-10 -mt-16 flex-1 px-4 pb-10 md:-mt-24 md:px-8 lg:-mt-32 lg:px-12">
         <article
-          className="mx-auto flex w-full max-w-[1280px] flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_20px_60px_rgba(41,56,150,0.18)]"
+          className="mx-auto flex w-full max-w-[1280px] flex-col overflow-hidden rounded-brand-2xl bg-white shadow-[0_20px_60px_rgba(41,56,150,0.18)]"
         >
           {/* ── Top: persona mini-card + moment description ─────── */}
           <div className="grid gap-6 p-5 md:grid-cols-[260px_minmax(0,1fr)] md:gap-8 md:p-7 lg:grid-cols-[300px_minmax(0,1fr)]">

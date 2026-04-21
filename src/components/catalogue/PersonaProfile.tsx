@@ -26,7 +26,7 @@ function ListCard({
 }) {
   return (
     <div
-      className="flex flex-col rounded-[40px] bg-white px-6 py-5 text-[var(--blue)]"
+      className="flex flex-col rounded-brand-3xl bg-white px-6 py-5 text-[var(--blue)]"
       style={{ boxShadow: 'var(--shadow-benefits)' }}
     >
       <div className="mb-3 flex items-center gap-2.5">
@@ -59,7 +59,7 @@ export function PersonaProfile({ persona, className }: Props) {
 
   return (
     <section
-      className={cn('relative overflow-hidden rounded-[25px] pb-16 md:pb-20', className)}
+      className={cn('relative overflow-hidden rounded-brand-xl pb-16 md:pb-20', className)}
       data-persona={persona.id}
       data-layout={hasRichLeft ? 'rich' : 'simple'}
       style={{ background: HERO_GRADIENT }}
@@ -102,7 +102,7 @@ export function PersonaProfile({ persona, className }: Props) {
             {/* Left: workplace + goals + quote */}
             <div className="flex flex-col gap-5">
               <div
-                className="rounded-[20px] px-4 py-5 text-white"
+                className="rounded-brand-lg px-4 py-5 text-white"
                 style={{ background: 'var(--blue)', boxShadow: 'var(--shadow-benefits)' }}
               >
                 <p className="mb-3 text-base font-bold leading-snug" style={{ fontFamily: 'var(--font-body)' }}>
@@ -115,7 +115,7 @@ export function PersonaProfile({ persona, className }: Props) {
                 </ul>
               </div>
               <div
-                className="rounded-[20px] px-4 py-5 text-[var(--blue)]"
+                className="rounded-brand-lg px-4 py-5 text-[var(--blue)]"
                 style={{ background: '#ffd05e', boxShadow: 'var(--shadow-benefits)' }}
               >
                 <div className="mb-3 flex items-center gap-2.5">
@@ -139,7 +139,7 @@ export function PersonaProfile({ persona, className }: Props) {
                 </ul>
               </div>
               <blockquote
-                className="rounded-[40px] border border-[var(--grey-border)] bg-white px-7 py-8 text-xl italic leading-normal text-[var(--blue)]"
+                className="rounded-brand-3xl border border-[var(--grey-border)] bg-white px-7 py-8 text-xl italic leading-normal text-[var(--blue)]"
                 style={{ fontFamily: 'var(--font-body)', boxShadow: 'var(--shadow-benefits)' }}
               >
                 &ldquo;{persona.quote}&rdquo;
@@ -147,7 +147,7 @@ export function PersonaProfile({ persona, className }: Props) {
             </div>
 
             {/* Center: portrait on dotted art */}
-            <div className="relative flex min-h-[420px] items-end justify-center overflow-hidden rounded-[25px]">
+            <div className="relative flex min-h-[420px] items-end justify-center overflow-hidden rounded-brand-xl">
               <div
                 className="absolute inset-0 opacity-90"
                 style={{
@@ -183,7 +183,7 @@ export function PersonaProfile({ persona, className }: Props) {
           </div>
         ) : (
           <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-            <div className="relative flex min-h-[420px] items-end justify-center overflow-hidden rounded-[25px]">
+            <div className="relative flex min-h-[420px] items-end justify-center overflow-hidden rounded-brand-xl">
               <div
                 className="absolute inset-0 opacity-90"
                 style={{
@@ -207,7 +207,7 @@ export function PersonaProfile({ persona, className }: Props) {
             </div>
             <div className="flex flex-col gap-5">
               <blockquote
-                className="rounded-[40px] border border-[var(--grey-border)] bg-white px-6 py-6 text-lg italic leading-relaxed text-[var(--blue)]"
+                className="rounded-brand-3xl border border-[var(--grey-border)] bg-white px-6 py-6 text-lg italic leading-relaxed text-[var(--blue)]"
                 style={{ fontFamily: 'var(--font-body)', boxShadow: 'var(--shadow-benefits)' }}
               >
                 &ldquo;{persona.quote}&rdquo;

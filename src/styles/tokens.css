@@ -58,12 +58,16 @@
   --space-lg: 1.5rem;
   --space-xl: 2.5rem;
 
-  --radius-xs: 0.25rem;
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1.25rem;
-  --radius-xl: 1.5625rem;
-  --radius-pill: 6.25rem;
+  /* Brand radii — pulled from Figma source of truth. Use these instead of
+     arbitrary rounded-[Npx] values so a future brand refresh is a one-file edit. */
+  --radius-xs: 0.25rem;      /* 4  — micro UI (badges, input borders) */
+  --radius-sm: 0.5rem;       /* 8  — chips, small buttons */
+  --radius-md: 0.75rem;      /* 12 — inline tiles */
+  --radius-lg: 1.25rem;      /* 20 — module tiles, small cards */
+  --radius-xl: 1.5625rem;    /* 25 — hero cards, map frame */
+  --radius-2xl: 1.75rem;     /* 28 — moment panel */
+  --radius-3xl: 2.5rem;      /* 40 — quote plaque, persona profile */
+  --radius-pill: 6.25rem;    /* 100 — full-pill buttons and eyebrows */
 
   --shadow-card: 0 4px 10.8px 0 rgba(0, 28, 122, 0.35);
   --shadow-panel: 6px 12px 38.4px 0 rgba(41, 56, 150, 0.29);

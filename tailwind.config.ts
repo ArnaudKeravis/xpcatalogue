@@ -17,8 +17,17 @@ const config: Config = {
         teal: '#00d1c7',
         surface: '#f4f7ff',
       },
+      /* Brand radii — single source of truth shared with tokens.css so `rounded-brand-*`
+         utilities stop us from writing arbitrary `rounded-[Npx]` values. */
       borderRadius: {
+        'brand-xs': '0.25rem',
+        'brand-sm': '0.5rem',
+        'brand-md': '0.75rem',
+        'brand-lg': '1.25rem',
         xl: '1.5625rem',
+        'brand-xl': '1.5625rem',
+        'brand-2xl': '1.75rem',
+        'brand-3xl': '2.5rem',
         pill: '6.25rem',
       },
       boxShadow: {

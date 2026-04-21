@@ -118,7 +118,7 @@ export default async function PersonaPage({ params }: Props) {
               Parked at the bottom for now — we're still evaluating whether
               this grid earns its space alongside the journey + moment pages. */}
         <section
-          className="mx-4 mb-16 mt-6 rounded-[25px] px-4 py-8 md:mx-10 md:px-8 md:py-10 lg:mx-14"
+          className="mx-4 mb-16 mt-6 rounded-brand-xl px-4 py-8 md:mx-10 md:px-8 md:py-10 lg:mx-14"
           style={{ background: '#e0e6f9' }}
           aria-labelledby="section-experience-modules"
         >

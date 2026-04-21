@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft } from '@phosphor-icons/react/dist/ssr';
+import { ArrowLeft, ArrowRight, CaretRight } from '@phosphor-icons/react/dist/ssr';
 import { SolutionCard } from '@/components/catalogue/SolutionCard';
+import { PillLink } from '@/components/ui/PillLink';
 import { getCatalogueData } from '@/lib/notion';
 import type { Area, Module, Solution } from '@/lib/data/types';
 
@@ -73,53 +74,165 @@ export default async function ModulePage({ params, searchParams }: Props) {
   // Primary solution: the first (preserves deep-link stability for now).
   const [primary, ...siblings] = moduleSolutions;
 
+  // Sibling modules: 4 others from the same catalogue, excluding this one.
+  // We prefer modules with the highest solution count so the peek feels rich.
+  const siblingModules = Object.values(modules)
+    .filter((m) => m.id !== mod.id && (m.solutionIds?.length ?? 0) > 0)
+    .sort((a, b) => (b.solutionIds?.length ?? 0) - (a.solutionIds?.length ?? 0))
+    .slice(0, 4);
+
   return (
     <div className="flex flex-1 flex-col bg-[var(--surface)]">
       {/* Module header strip */}
       <header
-        className="flex flex-col gap-3 border-b border-[var(--grey-border)] bg-white px-6 py-5 md:flex-row md:items-center md:gap-5 md:px-8"
+        className="flex flex-col gap-3 border-b border-[var(--grey-border)] bg-[var(--surface-card)] px-6 py-5 md:px-8"
       >
-        <div
-          className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl text-3xl shadow-[var(--shadow-sm)]"
-          style={{ background: mod.gradient }}
-          aria-hidden
-        >
-          <span>{mod.icon}</span>
-        </div>
-        <div className="min-w-0 flex-1">
-          <p
-            className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/60"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            Module
-          </p>
-          <h1
-            className="truncate text-2xl font-extrabold text-[var(--blue)] md:text-3xl"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            {mod.name}
-          </h1>
-          <p
-            className="mt-1 max-w-3xl text-sm leading-relaxed text-gray-600"
+        {/* Contextual breadcrumb — surfaces the journey the user took to land here */}
+        {breadcrumb.length > 1 ? (
+          <nav
+            aria-label="Context"
+            className="flex flex-wrap items-center gap-1 text-[11px] font-semibold text-[var(--blue)]/60"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            {mod.description}
-          </p>
-        </div>
+            {breadcrumb.map((b, i) => {
+              const isLast = i === breadcrumb.length - 1;
+              return (
+                <span key={`${b.label}-${i}`} className="inline-flex items-center gap-1">
+                  {b.href && !isLast ? (
+                    <Link
+                      href={b.href}
+                      className="rounded px-1 text-[var(--blue)]/70 transition-colors duration-[var(--motion-base)] hover:text-[var(--blue-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--blue-primary)]"
+                    >
+                      {b.label}
+                    </Link>
+                  ) : (
+                    <span className={isLast ? 'px-1 text-[var(--blue)]' : 'px-1'}>{b.label}</span>
+                  )}
+                  {!isLast ? (
+                    <CaretRight
+                      size={10}
+                      weight="bold"
+                      className="text-[var(--blue)]/30"
+                      aria-hidden
+                    />
+                  ) : null}
+                </span>
+              );
+            })}
+          </nav>
+        ) : null}
 
-        <Link
-          href={backHref}
-          className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-[var(--grey-border)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--blue)] hover:bg-[#f0f4ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
-          style={{ fontFamily: 'var(--font-body)' }}
-        >
-          <ArrowLeft size={14} weight="bold" aria-hidden />
-          Back
-        </Link>
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-5">
+          <div
+            className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl text-3xl shadow-[var(--shadow-sm)]"
+            style={{ background: mod.gradient }}
+            aria-hidden
+          >
+            <span>{mod.icon}</span>
+          </div>
+          <div className="min-w-0 flex-1">
+            <p
+              className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/60"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              Module · {moduleSolutions.length} solution{moduleSolutions.length === 1 ? '' : 's'}
+            </p>
+            <h1
+              className="truncate text-2xl font-extrabold text-[var(--blue)] md:text-3xl"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              {mod.name}
+            </h1>
+            <p
+              className="mt-1 max-w-3xl text-sm leading-relaxed text-[var(--blue)]/70"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              {mod.description}
+            </p>
+          </div>
+
+          <PillLink
+            href={backHref}
+            className="shrink-0 self-start"
+            leading={<ArrowLeft size={14} weight="bold" />}
+          >
+            Back
+          </PillLink>
+        </div>
       </header>
 
       <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <SolutionCard solution={primary} siblings={siblings} module={mod} />
       </main>
+
+      {/* ── Sibling modules peek ───────────────────────────────────
+         A "you might also look at" rail at the foot of the page, so
+         a user landing on a specific module doesn't hit a dead-end. */}
+      {siblingModules.length > 0 ? (
+        <aside
+          aria-label="Other modules"
+          className="border-t border-[var(--grey-border)] bg-[var(--surface)] px-6 py-8 md:px-10 md:py-10 print:hidden"
+        >
+          <div className="mx-auto max-w-[1280px]">
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <p
+                  className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/60"
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                >
+                  Other modules
+                </p>
+                <h2
+                  className="text-xl font-extrabold text-[var(--blue)]"
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                >
+                  Keep exploring
+                </h2>
+              </div>
+              <Link
+                href="/solutions"
+                className="inline-flex items-center gap-1 text-xs font-bold text-[var(--blue-primary)] transition-transform duration-[var(--motion-base)] ease-[var(--ease-hover)] hover:translate-x-0.5 hover:underline"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                All solutions <ArrowRight size={11} weight="bold" aria-hidden />
+              </Link>
+            </div>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {siblingModules.map((m) => (
+                <li key={m.id}>
+                  <Link
+                    href={`/modules/${m.id}`}
+                    className="group flex h-full items-start gap-3 rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-4 transition-[transform,border-color,box-shadow] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
+                  >
+                    <span
+                      aria-hidden
+                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-xl shadow-[var(--shadow-sm)]"
+                      style={{ background: m.gradient }}
+                    >
+                      {m.icon}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p
+                        className="truncate text-sm font-extrabold text-[var(--blue)]"
+                        style={{ fontFamily: 'var(--font-heading)' }}
+                      >
+                        {m.name}
+                      </p>
+                      <p
+                        className="mt-0.5 tabular text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--blue)]/55"
+                        style={{ fontFamily: 'var(--font-body)' }}
+                      >
+                        {m.solutionIds?.length ?? 0} solution
+                        {(m.solutionIds?.length ?? 0) === 1 ? '' : 's'}
+                      </p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      ) : null}
     </div>
   );
 }

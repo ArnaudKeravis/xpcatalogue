@@ -93,7 +93,7 @@ export function JourneyMap({
     <div className="space-y-0" data-area={area} data-persona={persona}>
       <div
         className={cn(
-          'relative overflow-hidden rounded-[25px] border border-white/80 shadow-[var(--shadow-soft)]'
+          'relative overflow-hidden rounded-brand-xl border border-white/80 shadow-[var(--shadow-soft)]'
         )}
         style={{
           backgroundColor: '#E8EEFB',

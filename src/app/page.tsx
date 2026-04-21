@@ -2,7 +2,7 @@ import { ArrowRight, Buildings, Compass, UsersThree } from '@phosphor-icons/reac
 import Link from 'next/link';
 import { getCatalogueData } from '@/lib/notion';
 import { TodayWidget, type BucketIconKey } from '@/components/home/TodayWidget';
-import { CountryLens } from '@/components/home/CountryLens';
+import { CatalogueSnapshot } from '@/components/home/CatalogueSnapshot';
 import { FeaturedPersona } from '@/components/home/FeaturedPersona';
 import type { Area } from '@/lib/data/types';
 
@@ -72,13 +72,17 @@ export default async function HomePage() {
       <HeroDecor />
 
       {/* ── Hero band ─────────────────────────────────────────── */}
-      <section className="relative z-10 px-6 pb-10 pt-12 md:px-12 md:pt-16 lg:pt-20">
-        <div className="mx-auto flex max-w-[1600px] flex-col items-start gap-6 text-white">
+      <section className="relative z-10 px-6 pb-12 pt-14 md:px-12 md:pt-20 lg:pt-24">
+        <div className="mx-auto flex max-w-[1600px] flex-col items-start gap-5 text-white">
           <span
-            className="motion-fade-up rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] backdrop-blur"
+            className="motion-fade-up inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/70"
             style={{ animationDelay: '60ms' }}
           >
-            Digital · AI · Innovation — Experience Catalogue
+            <span
+              aria-hidden
+              className="h-px w-8 bg-[var(--teal)]"
+            />
+            Digital · AI · Innovation
           </span>
           <h1
             className="motion-fade-up max-w-[16ch] text-[clamp(2.75rem,6.5vw,6.5rem)] font-extrabold leading-[0.98] tracking-tight"
@@ -170,38 +174,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Country lens ──────────────────────────────────────── */}
+      {/* ── Catalogue snapshot (stats + country lens, unified) ─── */}
       <section className="relative z-10 bg-[var(--surface)] px-6 pb-16 md:px-12">
         <div className="mx-auto max-w-[1600px]">
-          <CountryLens countries={topCountries} totalCountries={counts.countries} />
-        </div>
-      </section>
-
-      {/* ── Live stat band ───────────────────────────────────── */}
-      <section className="relative z-10 border-t border-[var(--grey-border)] bg-[var(--surface)] px-6 py-10 md:px-12">
-        <div className="mx-auto grid max-w-[1600px] grid-cols-2 gap-4 md:grid-cols-5">
-          {[
-            { v: counts.areas, l: 'Areas of life' },
-            { v: counts.personas, l: 'Personas' },
-            { v: counts.modules, l: 'Experience modules' },
-            { v: counts.solutions, l: 'Solutions' },
-            { v: counts.countries, l: 'Countries' },
-          ].map((s) => (
-            <div
-              key={s.l}
-              className="rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-5 text-center transition-transform hover:-translate-y-0.5"
-            >
-              <p
-                className="tabular text-[clamp(1.75rem,3vw,2.5rem)] font-extrabold leading-none text-[var(--blue)]"
-                style={{ fontFamily: 'var(--font-heading)' }}
-              >
-                {s.v}
-              </p>
-              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--blue)]/60">
-                {s.l}
-              </p>
-            </div>
-          ))}
+          <CatalogueSnapshot
+            stats={[
+              { value: counts.areas, label: 'Areas of life' },
+              { value: counts.personas, label: 'Personas' },
+              { value: counts.modules, label: 'Experience modules' },
+              { value: counts.solutions, label: 'Solutions' },
+              { value: counts.countries, label: 'Countries' },
+            ]}
+            countries={topCountries}
+            totalCountries={counts.countries}
+          />
         </div>
       </section>
     </div>
@@ -270,18 +256,20 @@ function EntryCard({
 }
 
 function HeroDecor() {
+  /*
+   * Decor restraint: two bokeh layers + a single soft sparkle. Four overlapping
+   * images was too busy; the catalogue is about clarity, not smoke. The bokeh
+   * is anchored to the lower half so it doesn't fight the headline.
+   */
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div className="absolute -left-[40%] top-[18%] h-[min(120vh,900px)] w-[min(140vw,900px)] opacity-[0.55] mix-blend-screen md:-left-[25%] md:top-[22%]">
+      <div className="absolute -right-[20%] top-[35%] h-[min(90vh,720px)] w-[min(120vw,720px)] opacity-50 mix-blend-screen md:-right-[10%] md:top-[28%]">
         <img src={ASSETS.bokeh} alt="" className="h-full w-full object-cover" />
       </div>
-      <div className="absolute -right-[35%] top-[8%] h-[min(120vh,900px)] w-[min(140vw,900px)] opacity-[0.5] mix-blend-screen md:-right-[20%]">
+      <div className="absolute -left-[25%] top-[55%] hidden h-[min(80vh,640px)] w-[min(110vw,640px)] opacity-35 mix-blend-screen md:block">
         <img src={ASSETS.bokeh} alt="" className="h-full w-full object-cover" />
       </div>
-      <div className="absolute -right-[20%] -top-[45%] hidden h-[min(90vh,700px)] w-[min(100vw,650px)] opacity-40 md:block">
-        <img src={ASSETS.sparkle} alt="" className="h-full w-full object-cover" />
-      </div>
-      <div className="absolute -left-[25%] -top-[55%] hidden h-[min(90vh,700px)] w-[min(100vw,650px)] opacity-35 md:block">
+      <div className="absolute -right-[25%] -top-[30%] hidden h-[min(70vh,560px)] w-[min(80vw,520px)] opacity-25 md:block">
         <img src={ASSETS.sparkle} alt="" className="h-full w-full object-cover" />
       </div>
     </div>
