@@ -4,6 +4,7 @@ import { getCatalogueData } from '@/lib/notion';
 import { TodayWidget, type BucketIconKey } from '@/components/home/TodayWidget';
 import { CatalogueSnapshot } from '@/components/home/CatalogueSnapshot';
 import { FeaturedPersona } from '@/components/home/FeaturedPersona';
+import { HeroCollage } from '@/components/home/HeroCollage';
 import type { Area } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -73,47 +74,57 @@ export default async function HomePage() {
 
       {/* ── Hero band ─────────────────────────────────────────── */}
       <section className="relative z-10 px-6 pb-12 pt-14 md:px-12 md:pt-20 lg:pt-24">
-        <div className="mx-auto flex max-w-[1600px] flex-col items-start gap-5 text-white">
-          <span
-            className="motion-fade-up inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/70"
-            style={{ animationDelay: '60ms' }}
-          >
+        {/*
+         * Two-column hero at lg+: editorial text on the left, illustrative
+         * collage (Persona · Journey · Solution) on the right. At smaller
+         * widths the collage flows below the paragraph so it never crowds
+         * the headline on mobile.
+         */}
+        <div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
+          <div className="flex flex-col items-start gap-5 text-white">
             <span
-              aria-hidden
-              className="h-px w-8 bg-[var(--teal)]"
-            />
-            Digital · AI · Innovation
-          </span>
-          <h1
-            className="motion-fade-up max-w-[16ch] text-[clamp(2.75rem,6.5vw,6.5rem)] font-extrabold leading-[0.98] tracking-tight"
-            style={{ fontFamily: 'var(--font-heading)', animationDelay: '160ms' }}
-          >
-            Where does tomorrow&rsquo;s day{' '}
-            <span
-              className="relative inline-block not-italic text-[var(--teal)]"
+              className="motion-fade-up inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/70"
+              style={{ animationDelay: '60ms' }}
             >
-              change?
               <span
                 aria-hidden
-                className="absolute inset-x-0 -bottom-1 h-[6px] rounded-full bg-[var(--teal)]/30"
+                className="h-px w-8 bg-[var(--teal)]"
               />
+              Digital · AI · Innovation
             </span>
-          </h1>
-          <p
-            className="motion-fade-up max-w-2xl text-[clamp(1rem,1.6vw,1.25rem)] font-medium leading-relaxed text-white/85"
-            style={{ animationDelay: '280ms' }}
-          >
-            Every Sodexo solution sits inside someone&rsquo;s real day — a nurse on morning rounds, a
-            white-collar worker hunting for lunch, a learner arriving on campus. Start with a{' '}
-            <strong className="text-white">place</strong>, a <strong className="text-white">person</strong>, or a{' '}
-            <strong className="text-white">moment</strong>.
-          </p>
+            <h1
+              className="motion-fade-up max-w-[16ch] text-[clamp(2.5rem,5.5vw,5.5rem)] font-extrabold leading-[0.98] tracking-tight"
+              style={{ fontFamily: 'var(--font-heading)', animationDelay: '160ms' }}
+            >
+              Where does tomorrow&rsquo;s day{' '}
+              <span
+                className="relative inline-block not-italic text-[var(--teal)]"
+              >
+                change?
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 -bottom-1 h-[6px] rounded-full bg-[var(--teal)]/30"
+                />
+              </span>
+            </h1>
+            <p
+              className="motion-fade-up max-w-xl text-[clamp(1rem,1.4vw,1.125rem)] font-medium leading-relaxed text-white/85"
+              style={{ animationDelay: '280ms' }}
+            >
+              Every Sodexo solution sits inside someone&rsquo;s real day — a nurse on morning rounds, a
+              white-collar worker hunting for lunch, a learner arriving on campus. Start with a{' '}
+              <strong className="text-white">place</strong>, a <strong className="text-white">person</strong>, or a{' '}
+              <strong className="text-white">moment</strong>.
+            </p>
+          </div>
+
+          <HeroCollage className="w-full" />
         </div>
 
         {/* Three entry points */}
         <div
-          className="motion-fade-up mx-auto mt-10 grid max-w-[1600px] gap-4 md:grid-cols-3"
-          style={{ animationDelay: '400ms' }}
+          className="motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-3"
+          style={{ animationDelay: '560ms' }}
         >
           <EntryCard
             href="/areas"
