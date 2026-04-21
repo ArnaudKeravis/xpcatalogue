@@ -109,6 +109,22 @@ export interface Module {
   solutionIds: string[];
 }
 
+/**
+ * Three-role narrative for a given area. Each voice is written in first person
+ * ("As a client, I see…") and renders on the single-area page below the
+ * persona grid. Optional — when absent, the section is simply not shown.
+ */
+export interface AreaRoleStories {
+  /** One-sentence thesis for the whole area, editorial tone. */
+  intro: string;
+  /** The decision-maker who commissions the experience. */
+  client: string;
+  /** The end-user who lives it every day. */
+  employee: string;
+  /** The Sodexo person who delivers it. */
+  operator: string;
+}
+
 export interface AreaConfig {
   id: Area;
   label: string;
@@ -118,6 +134,7 @@ export interface AreaConfig {
   description: string;
   isometricUrl?: string;
   personaIds: string[];
+  roleStories?: AreaRoleStories;
 }
 
 export interface CatalogueData {

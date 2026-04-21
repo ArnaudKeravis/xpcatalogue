@@ -22,6 +22,15 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
       'Sodexo makes <strong>every workday more inspiring and fulfilling</strong>, with spaces & services that support your well-being, connection & productivity.',
     isometricUrl: '/images/catalogue/assets/areas/work-area-info-iso.png',
     personaIds: ['client-work', 'white-collar', 'blue-collar', 'grey-collar', 'military', 'operator-work'],
+    roleStories: {
+      intro: 'In every workplace, Sodexo transforms routine into experience.',
+      client:
+        'I see how well-being and productivity grow side by side — spaces are alive, employees connect, ideas flow.',
+      employee:
+        'I feel energized, valued, and cared for — enjoying healthy food, inspiring spaces, and digital simplicity that supports my day.',
+      operator:
+        'I take pride in delivering a human, seamless rhythm in every service — every interaction designed to make work feel better, smarter, and more meaningful.',
+    },
   },
   learn: {
     id: 'learn',

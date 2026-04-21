@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
+import { AreaRoleStories } from '@/components/catalogue/AreaRoleStories';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { getCatalogueData } from '@/lib/notion';
@@ -208,6 +209,14 @@ export default async function AreaPage({ params }: Props) {
           </section>
         </div>
       </div>
+
+      {/* ── Three voices · one experience ─────────────────────────
+         Editorial band that tells the area's story from three perspectives
+         (client · employee · operator). Renders only when the area has copy
+         — other areas stay clean until the content is provided. */}
+      {areaConfig.roleStories ? (
+        <AreaRoleStories areaConfig={areaConfig} stories={areaConfig.roleStories} />
+      ) : null}
     </div>
   );
 }
