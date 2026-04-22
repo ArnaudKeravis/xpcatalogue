@@ -140,11 +140,17 @@ export default async function HomePage() {
             tag="Person"
             icon={
               featured ? (
-                <span className="text-3xl leading-none" aria-hidden>{featured.emoji}</span>
+                <PersonaAvatar
+                  photo={featured.photo}
+                  emoji={featured.emoji}
+                  color={featured.color}
+                  name={featured.fullName}
+                />
               ) : (
                 <UsersThree size={28} weight="duotone" aria-hidden />
               )
             }
+            iconShape={featured ? 'persona' : 'tile'}
             title={featured ? `Meet ${featured.fullName.split(' ')[0]}` : 'Meet a persona'}
             body={
               featured
@@ -221,6 +227,7 @@ function EntryCard({
   body,
   footer,
   hint,
+  iconShape = 'tile',
 }: {
   href: string;
   tag: string;
@@ -229,7 +236,14 @@ function EntryCard({
   body: string;
   footer: string;
   hint?: string;
+  /**
+   * `tile` = neutral glass square (default, for pure-icon entries).
+   * `persona` = full-bleed circular avatar that provides its own background
+   * (the persona's brand colour + portrait), so we suppress the tile chrome.
+   */
+  iconShape?: 'tile' | 'persona';
 }) {
+  const isPersona = iconShape === 'persona';
   return (
     <Link
       href={href}
@@ -242,8 +256,12 @@ function EntryCard({
       />
       <div className="flex items-start justify-between gap-4">
         <div
-          className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 text-white"
-          style={{ background: 'rgba(255,255,255,0.08)' }}
+          className={
+            isPersona
+              ? 'relative h-14 w-14 overflow-hidden rounded-full ring-2 ring-white/25 ring-offset-2 ring-offset-[var(--surface-on-hero)] shadow-[var(--shadow-sm)]'
+              : 'flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 text-white'
+          }
+          style={isPersona ? undefined : { background: 'rgba(255,255,255,0.08)' }}
         >
           {icon}
         </div>
@@ -269,6 +287,51 @@ function EntryCard({
         </span>
       </div>
     </Link>
+  );
+}
+
+/**
+ * Circular persona avatar for the home "Featured today" entry card.
+ * Matches the FeaturedPersona treatment below: a persona-coloured disc with
+ * the portrait filling it, and a graceful emoji fallback when no photo.
+ */
+function PersonaAvatar({
+  photo,
+  emoji,
+  color,
+  name,
+}: {
+  photo?: string;
+  emoji: string;
+  color: string;
+  name: string;
+}) {
+  if (photo) {
+    return (
+      <>
+        <span
+          aria-hidden
+          className="absolute inset-0"
+          style={{ background: color }}
+        />
+        <img
+          src={photo}
+          alt={name}
+          className="absolute inset-0 h-full w-full object-cover object-top"
+          loading="eager"
+          decoding="async"
+        />
+      </>
+    );
+  }
+  return (
+    <span
+      className="flex h-full w-full items-center justify-center text-3xl leading-none"
+      style={{ background: color }}
+      aria-hidden
+    >
+      {emoji}
+    </span>
   );
 }
 
