@@ -26,7 +26,8 @@ import { MomentScene } from '@/components/catalogue/MomentScene';
 import { getCatalogueData } from '@/lib/notion';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
-import type { Area, Module } from '@/lib/data/types';
+import { pickFirstRealHero } from '@/lib/data/solutionHeroImage';
+import type { Area, Module, Solution } from '@/lib/data/types';
 
 export const revalidate = 3600;
 
@@ -106,8 +107,9 @@ export default async function MomentPage({ params }: Props) {
     ? { left: hotspot.left + (hotspot.w ?? 0) / 2, top: hotspot.top + (hotspot.h ?? 0) / 2 }
     : null;
 
-  const solutionsCountFor = (moduleName: string) =>
-    solutions.filter((s) => s.module === moduleName).length;
+  const solutionsByModule = (moduleName: string): Solution[] =>
+    solutions.filter((s) => s.module === moduleName);
+  const solutionsCountFor = (moduleName: string) => solutionsByModule(moduleName).length;
 
   // Position in journey → Before / During / After framing
   const stepIdx = persona.steps.indexOf(step.id);
@@ -377,8 +379,12 @@ export default async function MomentPage({ params }: Props) {
               <Stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {moduleCards.map((mod) => {
                   const href = `/modules/${mod.id}?area=${params.area}&persona=${params.persona}&momentId=${encodeURIComponent(step.id)}`;
-                  const count = solutionsCountFor(mod.name);
+                  const modSolutions = solutionsByModule(mod.name);
+                  const count = modSolutions.length;
                   const { Icon: ModIcon, weight: modWeight } = pickModuleVisual(mod);
+                  // Prefer a real solution photo for this module; fall back to the
+                  // Phosphor-on-gradient starter tile when none has been uploaded yet.
+                  const heroSolution = pickFirstRealHero(modSolutions);
                   return (
                     <StaggerItem key={mod.id}>
                       <Link
@@ -390,19 +396,45 @@ export default async function MomentPage({ params }: Props) {
                           style={{ background: mod.gradient }}
                           aria-hidden
                         >
-                          <span
-                            className="pointer-events-none absolute inset-0"
-                            style={{
-                              background:
-                                'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
-                            }}
-                          />
-                          <ModIcon
-                            size={52}
-                            weight={modWeight}
-                            color="#ffffff"
-                            style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.2))' }}
-                          />
+                          {heroSolution ? (
+                            <>
+                              <img
+                                src={heroSolution.heroImage!}
+                                alt=""
+                                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[var(--motion-lg)] ease-[var(--ease-out-quint)] group-hover:scale-[1.04]"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                              <span
+                                className="pointer-events-none absolute inset-0"
+                                style={{
+                                  background:
+                                    'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%)',
+                                }}
+                              />
+                              <span
+                                className="absolute bottom-2 left-2 flex h-7 w-7 items-center justify-center rounded-lg bg-white/95 text-[var(--blue)] shadow-[0_4px_10px_rgba(0,0,0,0.18)] backdrop-blur-sm"
+                              >
+                                <ModIcon size={16} weight={modWeight} />
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span
+                                className="pointer-events-none absolute inset-0"
+                                style={{
+                                  background:
+                                    'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
+                                }}
+                              />
+                              <ModIcon
+                                size={52}
+                                weight={modWeight}
+                                color="#ffffff"
+                                style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.2))' }}
+                              />
+                            </>
+                          )}
                         </div>
                         <div className="flex flex-1 flex-col p-4">
                           <h3

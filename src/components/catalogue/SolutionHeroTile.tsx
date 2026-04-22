@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils/cn';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
+import { hasRealHeroImage } from '@/lib/data/solutionHeroImage';
 import type { Module, Solution } from '@/lib/data/types';
 
 interface Props {
@@ -33,7 +34,7 @@ export function SolutionHeroTile({
   const { Icon, weight } = pickModuleVisual(module ?? undefined);
   const gradient =
     module?.gradient ?? 'linear-gradient(135deg, var(--blue), var(--blue-primary))';
-  const hasImage = Boolean(solution.heroImage);
+  const hasImage = hasRealHeroImage(solution);
 
   return (
     <div
