@@ -1,4 +1,4 @@
-import type { Area, Solution, SolutionStatus, SolutionType } from '@/lib/data/types';
+import type { Area, Solution, SolutionCollection, SolutionStatus, SolutionType } from '@/lib/data/types';
 
 export interface SolutionFilterParams {
   q?: string;
@@ -17,6 +17,8 @@ export interface SolutionFilterParams {
   hashtags?: string[];
   /** Solution must carry ANY of these country flags (OR semantics). */
   flags?: string[];
+  /** Solution must belong to ANY of these curated collections (OR semantics). */
+  collections?: SolutionCollection[];
 }
 
 export function filterSolutions(solutions: Solution[], p: SolutionFilterParams): Solution[] {
@@ -58,6 +60,10 @@ export function filterSolutions(solutions: Solution[], p: SolutionFilterParams):
   if (p.flags && p.flags.length > 0) {
     const wanted = new Set(p.flags);
     list = list.filter((s) => s.flags.some((f) => wanted.has(f)));
+  }
+  if (p.collections && p.collections.length > 0) {
+    const wanted = new Set(p.collections);
+    list = list.filter((s) => (s.collections ?? []).some((c) => wanted.has(c)));
   }
 
   return list;

@@ -10,7 +10,8 @@ import {
   uniqueStatuses,
   uniqueTypes,
 } from '@/lib/queries/filterSolutions';
-import type { Area, SolutionStatus, SolutionType } from '@/lib/data/types';
+import { COLLECTION_META, parseCollectionKey } from '@/lib/data/collections';
+import type { Area, SolutionCollection, SolutionStatus, SolutionType } from '@/lib/data/types';
 
 export const revalidate = 3600;
 
@@ -105,6 +106,12 @@ export default async function SolutionsPage({ searchParams }: Props) {
   const hashtagFilter = many(searchParams.hashtag);
   const flagFilter = many(searchParams.flag);
 
+  // Curated collection filter — accepts ?collection=standard-offer or ?collection=blockbuster.
+  // Multiple values are supported (OR semantics) to allow future cross-collection views.
+  const collectionFilter = many(searchParams.collection)
+    .map(parseCollectionKey)
+    .filter((c): c is SolutionCollection => Boolean(c));
+
   const filtered = filterSolutions(solutions, {
     q,
     module: mod,
@@ -114,7 +121,17 @@ export default async function SolutionsPage({ searchParams }: Props) {
     type,
     hashtags: hashtagFilter,
     flags: flagFilter,
+    collections: collectionFilter.length > 0 ? collectionFilter : undefined,
   });
+
+  // When exactly one curated collection is selected and nothing else is filtering, we
+  // promote the collection to an editorial hero instead of a generic "Solutions — …" title.
+  const soloCollection =
+    collectionFilter.length === 1 &&
+    !mod && !area && !status && !type && !persona && !moment && !q &&
+    hashtagFilter.length === 0 && flagFilter.length === 0
+      ? COLLECTION_META[collectionFilter[0]]
+      : null;
 
   const titleParts: string[] = [];
   if (mod) titleParts.push(mod);
@@ -123,6 +140,8 @@ export default async function SolutionsPage({ searchParams }: Props) {
   if (type) titleParts.push(type);
   if (persona) titleParts.push(persona.name);
   if (moment) titleParts.push(`${moment.icon} ${moment.label}`);
+  if (collectionFilter.length > 0)
+    titleParts.push(collectionFilter.map((c) => COLLECTION_META[c].label).join(' · '));
   if (hashtagFilter.length > 0) titleParts.push(hashtagFilter.join(' · '));
   if (flagFilter.length > 0) titleParts.push(flagFilter.join(' '));
   if (q) titleParts.push(`“${q}”`);
@@ -136,12 +155,45 @@ export default async function SolutionsPage({ searchParams }: Props) {
   return (
     <div className="flex flex-1 flex-col bg-[var(--surface)]">
       <div className="px-4 py-6 md:px-8">
-        <h1
-          className="mb-4 text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold leading-tight text-[var(--blue)]"
-          style={{ fontFamily: 'var(--font-heading)' }}
-        >
-          {title}
-        </h1>
+        {soloCollection ? (
+          <div
+            className="mb-4 overflow-hidden rounded-brand-2xl p-6 text-white md:p-8"
+            style={{ backgroundImage: soloCollection.gradient }}
+          >
+            <span
+              className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/85"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              <span aria-hidden className="h-px w-8 bg-white/70" />
+              Curated collection
+            </span>
+            <h1
+              className="mt-3 max-w-[22ch] text-[clamp(1.75rem,3.6vw,2.75rem)] font-extrabold leading-[1.05]"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              {soloCollection.label}
+            </h1>
+            <p
+              className="mt-2 max-w-2xl text-sm leading-relaxed text-white/90 md:text-base"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              {soloCollection.description}
+            </p>
+            <p
+              className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              {filtered.length} {filtered.length === 1 ? 'solution' : 'solutions'} in this collection
+            </p>
+          </div>
+        ) : (
+          <h1
+            className="mb-4 text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold leading-tight text-[var(--blue)]"
+            style={{ fontFamily: 'var(--font-heading)' }}
+          >
+            {title}
+          </h1>
+        )}
       </div>
       <div className="flex-1 px-4 pb-10 md:px-8">
         {persona && moment ? (
@@ -219,6 +271,19 @@ export default async function SolutionsPage({ searchParams }: Props) {
 
                       {/* Badges */}
                       <div className="flex flex-wrap items-center gap-1.5">
+                        {(s.collections ?? []).map((c) => {
+                          const meta = COLLECTION_META[c];
+                          return (
+                            <span
+                              key={c}
+                              className="rounded-full px-2.5 py-0.5 text-[10px] font-bold text-white"
+                              style={{ backgroundImage: meta.gradient }}
+                              title={meta.tagline}
+                            >
+                              {meta.shortLabel}
+                            </span>
+                          );
+                        })}
                         <span
                           className="rounded-full px-2.5 py-0.5 text-[10px] font-bold"
                           style={{ background: sc.bg, color: sc.text }}

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getCatalogueData } from '@/lib/notion';
 import { TodayWidget, type BucketIconKey } from '@/components/home/TodayWidget';
 import { CatalogueSnapshot } from '@/components/home/CatalogueSnapshot';
+import { CuratedCollectionsBand } from '@/components/home/CuratedCollectionsBand';
 import { FeaturedPersona } from '@/components/home/FeaturedPersona';
 import { HeroCollage } from '@/components/home/HeroCollage';
 import type { Area } from '@/lib/data/types';
@@ -184,6 +185,11 @@ export default async function HomePage() {
           ) : null}
         </div>
       </section>
+
+      {/* ── Curated collections band (Standard Offer + Blockbusters) ─── */}
+      <div className="relative z-10 bg-[var(--surface)]">
+        <CuratedCollectionsBand solutions={data.solutions} />
+      </div>
 
       {/* ── Catalogue snapshot (stats + country lens, unified) ─── */}
       <section className="relative z-10 bg-[var(--surface)] px-6 pb-16 md:px-12">

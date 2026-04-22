@@ -3,6 +3,7 @@
 import type { Area, AreaConfig, CatalogueData, JourneyStep, Module, Persona } from './types';
 import { CATALOGUE_PERSONAS } from './personaDefinitions';
 import { SOLUTIONS_CATALOG } from './solutionsCatalog';
+import { enrichSolutionsWithCollections } from './collections';
 import { PERSONA_JOURNEYS, hotspotsFromJourney } from './personaJourneys';
 import {
   buildExcelModules,
@@ -587,7 +588,7 @@ export const STEP_LABEL: Record<string, string> = Object.fromEntries(
 
 // Solutions mirror `reference/static-home/catalog-solutions.js` (see `solutionsCatalog.ts`).
 export const FALLBACK_DATA: CatalogueData = {
-  solutions: SOLUTIONS_CATALOG,
+  solutions: enrichSolutionsWithCollections(SOLUTIONS_CATALOG),
   personas: MERGED_PERSONAS,
   modules: MERGED_MODULES,
   areas: AREA_CONFIGS,

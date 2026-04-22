@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, List, MapTrifold, SquaresFour, UsersThree, X } from '@phosphor-icons/react';
+import { Heart, List, MapTrifold, Rocket, SquaresFour, Trophy, UsersThree, X } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -13,8 +13,17 @@ interface NavItem {
   label: string;
   Icon: typeof MapTrifold;
   matches: (pathname: string) => boolean;
+  /** When set, rendered as a pill with the collection gradient. */
+  gradient?: string;
 }
 
+/*
+ * We intentionally rely only on `pathname` (not `useSearchParams`) so the
+ * header stays statically renderable — `useSearchParams` opts every page
+ * into CSR bail-out. Gradient pills always display their brand colour; the
+ * currently-selected collection is already visible via the sticky filter
+ * chip on the /solutions page itself.
+ */
 const NAV: NavItem[] = [
   {
     href: '/areas',
@@ -27,6 +36,20 @@ const NAV: NavItem[] = [
     label: 'Solutions',
     Icon: SquaresFour,
     matches: (p) => p.startsWith('/solutions'),
+  },
+  {
+    href: '/solutions?collection=standard-offer',
+    label: 'Standard Offer',
+    Icon: Trophy,
+    matches: () => false,
+    gradient: 'linear-gradient(135deg, #0b76b8 0%, #14b8a6 100%)',
+  },
+  {
+    href: '/solutions?collection=blockbuster',
+    label: 'Blockbusters',
+    Icon: Rocket,
+    matches: () => false,
+    gradient: 'linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f59e0b 100%)',
   },
   {
     href: '/saved',
@@ -92,9 +115,24 @@ export function Header() {
 
         {/* Desktop nav + controls */}
         <nav className="hidden items-center gap-0.5 md:flex" aria-label="Primary">
-          {NAV.map(({ href, label, Icon, matches }) => {
+          {NAV.map(({ href, label, Icon, matches, gradient }) => {
             const active = matches(pathname);
             const isFav = href === '/saved';
+            // Gradient pills (curated collections) always display their brand colour —
+            // the active collection is reinforced by the filter chip on /solutions.
+            if (gradient) {
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className="relative inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-[var(--shadow-sm)] transition-transform hover:-translate-y-0.5"
+                  style={{ backgroundImage: gradient, fontFamily: 'var(--font-body)' }}
+                >
+                  <Icon size={13} weight="fill" aria-hidden />
+                  {label}
+                </Link>
+              );
+            }
             return (
               <Link
                 key={href}
@@ -147,8 +185,21 @@ export function Header() {
           className="border-t border-[var(--grey-border)] bg-[var(--surface-card)] md:hidden"
         >
           <nav className="flex flex-col gap-1 p-3" aria-label="Primary (mobile)">
-            {NAV.map(({ href, label, Icon, matches }) => {
+            {NAV.map(({ href, label, Icon, matches, gradient }) => {
               const active = matches(pathname);
+              if (gradient) {
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-white shadow-[var(--shadow-sm)]"
+                    style={{ backgroundImage: gradient, fontFamily: 'var(--font-body)' }}
+                  >
+                    <Icon size={18} weight="fill" aria-hidden />
+                    {label}
+                  </Link>
+                );
+              }
               return (
                 <Link
                   key={href}

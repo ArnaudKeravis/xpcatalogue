@@ -1,9 +1,10 @@
 'use client';
 
-import { CaretDown, FunnelSimple, X } from '@phosphor-icons/react';
+import { CaretDown, FunnelSimple, Rocket, Trophy, X } from '@phosphor-icons/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
-import type { Area, SolutionStatus, SolutionType } from '@/lib/data/types';
+import { COLLECTION_META, COLLECTION_KEYS } from '@/lib/data/collections';
+import type { Area, SolutionCollection, SolutionStatus, SolutionType } from '@/lib/data/types';
 
 type AreaOption = { value: Area; label: string };
 type PersonaOption = { value: string; label: string; area: Area; areaLabel: string };
@@ -22,7 +23,7 @@ interface Props {
   filteredCount: number;
 }
 
-const MULTI_KEYS = ['hashtag', 'flag'] as const;
+const MULTI_KEYS = ['hashtag', 'flag', 'collection'] as const;
 const HASHTAG_COLLAPSED_COUNT = 14;
 
 /**
@@ -57,6 +58,10 @@ export function SolutionsFilterBar({
 
   const selectedHashtags = useMemo(() => sp.getAll('hashtag'), [sp]);
   const selectedFlags = useMemo(() => sp.getAll('flag'), [sp]);
+  const selectedCollections = useMemo(
+    () => sp.getAll('collection').filter((v): v is SolutionCollection => COLLECTION_KEYS.includes(v as SolutionCollection)),
+    [sp]
+  );
   const selectedPersona = sp.get('persona') ?? '';
 
   const activeFilterCount = useMemo(() => {
@@ -70,8 +75,9 @@ export function SolutionsFilterBar({
     if (sp.get('moment')) n++;
     n += selectedHashtags.length;
     n += selectedFlags.length;
+    n += selectedCollections.length;
     return n;
-  }, [sp, selectedHashtags.length, selectedFlags.length]);
+  }, [sp, selectedHashtags.length, selectedFlags.length, selectedCollections.length]);
 
   const pushParams = useCallback(
     (mutate: (p: URLSearchParams) => void) => {
@@ -151,6 +157,56 @@ export function SolutionsFilterBar({
         <div className="text-sm text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>
           Showing <strong>{filteredCount}</strong> of <strong>{totalCount}</strong>
         </div>
+      </div>
+
+      {/* Row 0: curated collections — high-signal shortcuts to scaled / AI-P&L shortlists */}
+      <div
+        className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-[var(--grey-border)] bg-[var(--icon-bg-muted)] px-3 py-2.5"
+        role="group"
+        aria-label="Curated collections"
+      >
+        <span
+          className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--blue)]/70"
+          style={{ fontFamily: 'var(--font-body)' }}
+        >
+          Curated
+        </span>
+        {COLLECTION_KEYS.map((key) => {
+          const meta = COLLECTION_META[key];
+          const active = selectedCollections.includes(key);
+          const Icon = key === 'blockbuster' ? Rocket : Trophy;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => toggleMulti('collection', key)}
+              aria-pressed={active}
+              title={meta.tagline}
+              className={
+                active
+                  ? 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white shadow-[var(--shadow-sm)] transition-transform hover:scale-[1.02]'
+                  : 'inline-flex items-center gap-1.5 rounded-full border border-[var(--grey-border)] bg-white px-3 py-1 text-xs font-semibold text-[var(--blue)] transition-colors hover:bg-[var(--icon-bg)]'
+              }
+              style={{
+                fontFamily: 'var(--font-body)',
+                ...(active ? { backgroundImage: meta.gradient } : {}),
+              }}
+            >
+              <Icon size={13} weight={active ? 'fill' : 'regular'} aria-hidden />
+              {meta.label}
+            </button>
+          );
+        })}
+        {selectedCollections.length > 0 ? (
+          <span
+            className="ml-auto text-[11px] text-[var(--blue)]/60"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            {selectedCollections.length === 1
+              ? COLLECTION_META[selectedCollections[0]].tagline
+              : `${selectedCollections.length} collections active`}
+          </span>
+        ) : null}
       </div>
 
       {/* Row A: free-text search + clear */}

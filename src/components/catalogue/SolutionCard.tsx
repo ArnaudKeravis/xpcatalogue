@@ -8,12 +8,16 @@ import {
   Info,
   LinkSimple,
   Phone,
+  Rocket,
   TrendUp,
+  Trophy,
   User,
 } from '@phosphor-icons/react';
+import Link from 'next/link';
 import { useState, type ReactNode } from 'react';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
+import { COLLECTION_META } from '@/lib/data/collections';
 import type { Module, Solution } from '@/lib/data/types';
 
 interface Props {
@@ -110,6 +114,33 @@ export function SolutionCard({ solution, siblings, module }: Props) {
             <h1 className="text-3xl font-extrabold text-[var(--blue)]" style={{ fontFamily: 'var(--font-heading)' }}>
               {current.name}
             </h1>
+
+            {current.collections && current.collections.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {current.collections.map((c) => {
+                  const meta = COLLECTION_META[c];
+                  const Icon = c === 'blockbuster' ? Rocket : Trophy;
+                  return (
+                    <Link
+                      key={c}
+                      href={meta.href}
+                      className="group inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white shadow-[var(--shadow-sm)] transition-transform hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
+                      style={{ backgroundImage: meta.gradient, fontFamily: 'var(--font-body)' }}
+                      aria-label={`${meta.label} — ${meta.tagline}`}
+                    >
+                      <Icon size={13} weight="fill" aria-hidden />
+                      {meta.label}
+                      <span
+                        aria-hidden
+                        className="text-[10px] font-normal text-white/80 transition-transform group-hover:translate-x-0.5"
+                      >
+                        →
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            ) : null}
 
             <div className="flex flex-wrap gap-2">
               <span
