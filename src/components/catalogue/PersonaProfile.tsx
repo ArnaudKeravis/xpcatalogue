@@ -6,6 +6,16 @@ import type { Persona } from '@/lib/data/types';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import { cn } from '@/lib/utils/cn';
 
+/**
+ * Persona hero — compact, two-column layout.
+ *
+ * Left  : portrait (≤ 420px) on a soft dotted field, with a pinned quote card
+ *         hanging off its bottom edge so the quote is always visually linked to
+ *         the face, not floating somewhere on the page.
+ * Right : a flowing grid of focused cards (workplace stats, goals, motivations,
+ *         pains, needs). Each card is typographically smaller than before so
+ *         the band can breathe at two-thirds its previous height.
+ */
 
 const HERO_GRADIENT =
   'linear-gradient(90deg, rgb(255, 255, 255) 6.1%, rgba(223, 229, 251, 0.9) 66.28%, rgba(137, 160, 240, 0.631) 119%, rgba(0, 48, 222, 0.2) 123%)';
@@ -15,33 +25,58 @@ interface Props {
   className?: string;
 }
 
-function ListCard({
+/* ── Card primitives ─────────────────────────────────────────────────────── */
+
+function InfoCard({
   title,
   icon,
   items,
+  tone = 'white',
 }: {
   title: string;
   icon: ReactNode;
   items: string[];
+  tone?: 'white' | 'navy' | 'amber';
 }) {
+  const toneClasses =
+    tone === 'navy'
+      ? 'bg-[var(--blue)] text-white [&_li]:text-white'
+      : tone === 'amber'
+        ? 'bg-[#ffd05e] text-[var(--blue)]'
+        : 'bg-white text-[var(--blue)]';
+  const iconClasses =
+    tone === 'navy'
+      ? 'bg-white/15 text-white'
+      : tone === 'amber'
+        ? 'bg-white/60 text-[var(--blue)]'
+        : 'bg-[var(--icon-bg)] text-[var(--blue)]';
+
   return (
     <div
-      className="flex flex-col rounded-brand-3xl bg-white px-6 py-5 text-[var(--blue)]"
+      className={cn(
+        'flex flex-col rounded-brand-xl px-5 py-4',
+        toneClasses,
+      )}
       style={{ boxShadow: 'var(--shadow-benefits)' }}
     >
-      <div className="mb-3 flex items-center gap-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--icon-bg)] text-[var(--blue)]">
+      <div className="mb-2.5 flex items-center gap-2">
+        <span
+          className={cn(
+            'flex h-8 w-8 shrink-0 items-center justify-center rounded-brand-md',
+            iconClasses,
+          )}
+        >
           {icon}
         </span>
         <h3
-          className="text-xl font-bold leading-tight text-[var(--blue)]"
+          className="text-[15px] font-extrabold uppercase leading-tight tracking-[0.06em]"
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {title}
         </h3>
       </div>
       <ul
-        className="list-disc space-y-1.5 pl-6 text-base leading-normal text-[var(--blue)] marker:text-[var(--blue)]"
+        className="list-disc space-y-1 pl-5 text-[14px] leading-snug marker:text-current"
         style={{ fontFamily: 'var(--font-body)' }}
       >
         {items.map((item, i) => (
@@ -52,110 +87,61 @@ function ListCard({
   );
 }
 
+/* ── Component ──────────────────────────────────────────────────────────── */
+
 export function PersonaProfile({ persona, className }: Props) {
   const eyebrow = persona.profileEyebrow ?? persona.name;
-  const hasRichLeft = (persona.workplaceStats?.length ?? 0) > 0 && (persona.professionalGoals?.length ?? 0) > 0;
   const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
+  const hasWorkplaceStats = (persona.workplaceStats?.length ?? 0) > 0;
+  const hasProfessionalGoals = (persona.professionalGoals?.length ?? 0) > 0;
 
   return (
     <section
-      className={cn('relative overflow-hidden rounded-brand-xl pb-16 md:pb-20', className)}
+      className={cn('relative overflow-hidden rounded-brand-xl pb-10 md:pb-12', className)}
       data-persona={persona.id}
-      data-layout={hasRichLeft ? 'rich' : 'simple'}
       style={{ background: HERO_GRADIENT }}
     >
-      {/* Decorative dot field — decorative dot field */}
+      {/* Decorative dot field */}
       <div
-        className="pointer-events-none absolute -left-[20%] top-1/2 h-[min(140%,1200px)] w-[80%] -translate-y-1/2 rotate-[-75deg] opacity-[0.35]"
+        className="pointer-events-none absolute -left-[20%] top-1/2 h-[min(140%,1000px)] w-[80%] -translate-y-1/2 rotate-[-75deg] opacity-[0.3]"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgba(41, 56, 150, 0.22) 1.2px, transparent 1.2px)',
+          backgroundImage:
+            'radial-gradient(circle, rgba(41, 56, 150, 0.22) 1.2px, transparent 1.2px)',
           backgroundSize: '14px 14px',
         }}
         aria-hidden
       />
 
-      <div className="relative z-[1] px-4 pb-10 pt-6 md:px-8 lg:px-12">
-        {/* Name row — persona name row */}
-        <div className="mb-8 flex flex-col gap-1 md:mb-10">
+      <div className="relative z-[1] px-4 pb-6 pt-5 md:px-8 md:pt-6">
+        {/* ── Name row ─────────────────────────────────────────────────── */}
+        <div className="mb-5 flex flex-col gap-0.5 md:mb-6">
           <p
-            className="text-[clamp(1.25rem,3vw,2.5rem)] font-bold text-[var(--blue)]"
+            className="text-[clamp(0.95rem,1.6vw,1.25rem)] font-bold uppercase tracking-[0.14em] text-[var(--blue)]/70"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             {eyebrow}
           </p>
           <h2
-            className="text-[clamp(2rem,5vw,4rem)] font-extrabold leading-none text-[var(--blue)]"
+            className="text-[clamp(1.875rem,4vw,3rem)] font-extrabold leading-[1.05] text-[var(--blue)]"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             {persona.fullName}
           </h2>
           <p
-            className="text-[clamp(1.25rem,2.5vw,2.5rem)] font-semibold text-[var(--teal)]"
+            className="text-[clamp(1rem,1.8vw,1.5rem)] font-semibold text-[var(--teal)]"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             {persona.role}
           </p>
         </div>
 
-        {hasRichLeft ? (
-          /*
-           * Grid weighting rebalanced to let the portrait carry the hero.
-           * Side columns use `minmax(0,0.9fr)` so they shrink first when the
-           * viewport narrows; the portrait column gets `minmax(420px,1.8fr)`
-           * so it dominates on wide screens without collapsing on medium ones.
-           */
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1.8fr)_minmax(0,1.1fr)] lg:gap-8">
-            {/* Left: workplace + goals + quote */}
-            <div className="flex flex-col gap-5">
+        {/* ── Main grid: portrait column + card grid ───────────────────── */}
+        <div className="grid gap-5 lg:grid-cols-[minmax(260px,1fr)_minmax(0,1.8fr)] lg:gap-7">
+          {/* Portrait pane */}
+          <div className="relative flex flex-col gap-3">
+            <div className="relative overflow-hidden rounded-brand-xl">
               <div
-                className="rounded-brand-lg px-4 py-5 text-white"
-                style={{ background: 'var(--blue)', boxShadow: 'var(--shadow-benefits)' }}
-              >
-                <p className="mb-3 text-base font-bold leading-snug" style={{ fontFamily: 'var(--font-body)' }}>
-                  {persona.workplaceStats![0]}
-                </p>
-                <ul className="space-y-1.5 text-base leading-snug" style={{ fontFamily: 'var(--font-body)' }}>
-                  {persona.workplaceStats!.slice(1).map((line, i) => (
-                    <li key={i}>{line}</li>
-                  ))}
-                </ul>
-              </div>
-              <div
-                className="rounded-brand-lg px-4 py-5 text-[var(--blue)]"
-                style={{ background: '#ffd05e', boxShadow: 'var(--shadow-benefits)' }}
-              >
-                <div className="mb-3 flex items-center gap-2.5">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/60 text-[var(--blue)]">
-                    <Target size={22} weight="fill" />
-                  </span>
-                  <h3
-                    className="text-lg font-bold leading-tight text-[var(--blue)]"
-                    style={{ fontFamily: 'var(--font-heading)' }}
-                  >
-                    Professional goals
-                  </h3>
-                </div>
-                <ul
-                  className="list-disc space-y-1.5 pl-6 text-lg leading-normal marker:text-[var(--blue)]"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  {persona.professionalGoals!.map((line, i) => (
-                    <li key={i}>{line}</li>
-                  ))}
-                </ul>
-              </div>
-              <blockquote
-                className="rounded-brand-3xl border border-[var(--grey-border)] bg-white px-7 py-8 text-xl italic leading-normal text-[var(--blue)]"
-                style={{ fontFamily: 'var(--font-body)', boxShadow: 'var(--shadow-benefits)' }}
-              >
-                &ldquo;{persona.quote}&rdquo;
-              </blockquote>
-            </div>
-
-            {/* Center: portrait on dotted art */}
-            <div className="relative flex min-h-[520px] items-end justify-center overflow-hidden rounded-brand-xl lg:min-h-[680px]">
-              <div
-                className="absolute inset-0 opacity-90"
+                className="absolute inset-0"
                 style={{
                   backgroundImage:
                     'radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px)',
@@ -163,76 +149,68 @@ export function PersonaProfile({ persona, className }: Props) {
                 }}
                 aria-hidden
               />
-              <div className="relative z-[1] flex w-full items-end justify-center pb-0 pt-4">
+              <div className="relative z-[1] flex min-h-[280px] items-end justify-center pt-3 md:min-h-[360px] lg:min-h-[420px]">
                 {portraitSrc ? (
                   <img
                     src={portraitSrc}
                     alt={persona.fullName}
-                    className="h-auto w-full max-w-[720px] object-contain object-bottom lg:max-h-[min(880px,88vh)] lg:min-h-[640px]"
+                    className="h-auto w-full max-w-[380px] object-contain object-bottom md:max-w-[420px]"
                   />
                 ) : (
-                  <span className="text-[min(22vw,220px)] leading-none">{persona.emoji}</span>
+                  <span className="text-[min(22vw,180px)] leading-none">{persona.emoji}</span>
                 )}
               </div>
             </div>
 
-            {/* Right: motivations / pains / needs */}
-            <div className="flex flex-col gap-5">
-              <ListCard title="Motivations" icon={<Brain size={22} weight="fill" />} items={persona.motivations} />
-              <ListCard
-                title="Pain points & frustrations"
-                icon={<WarningCircle size={22} weight="fill" />}
-                items={persona.pains}
-              />
-              <ListCard title="Key needs" icon={<PushPin size={22} weight="fill" />} items={persona.needs} />
-            </div>
+            {/* Quote — sits under portrait so it's tied to the face, not floating */}
+            <blockquote
+              className="rounded-brand-xl border border-[var(--grey-border)] bg-white px-5 py-4 text-[15px] italic leading-relaxed text-[var(--blue)]"
+              style={{ fontFamily: 'var(--font-body)', boxShadow: 'var(--shadow-benefits)' }}
+            >
+              &ldquo;{persona.quote}&rdquo;
+            </blockquote>
           </div>
-        ) : (
-          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-            <div className="relative flex min-h-[520px] items-end justify-center overflow-hidden rounded-brand-xl lg:min-h-[640px]">
-              <div
-                className="absolute inset-0 opacity-90"
-                style={{
-                  backgroundImage:
-                    'radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px)',
-                  backgroundSize: '14px 14px',
-                }}
-                aria-hidden
-              />
-              <div className="relative z-[1] flex w-full items-end justify-center pb-0 pt-4">
-                {portraitSrc ? (
-                  <img
-                    src={portraitSrc}
-                    alt={persona.fullName}
-                    className="h-auto w-full max-w-[720px] object-contain object-bottom lg:max-h-[min(820px,85vh)] lg:min-h-[600px]"
-                  />
-                ) : (
-                  <span className="text-[min(22vw,200px)] leading-none">{persona.emoji}</span>
-                )}
-              </div>
-            </div>
-            <div className="flex flex-col gap-5">
-              <blockquote
-                className="rounded-brand-3xl border border-[var(--grey-border)] bg-white px-6 py-6 text-lg italic leading-relaxed text-[var(--blue)]"
-                style={{ fontFamily: 'var(--font-body)', boxShadow: 'var(--shadow-benefits)' }}
-              >
-                &ldquo;{persona.quote}&rdquo;
-              </blockquote>
-              <ListCard title="Motivations" icon={<Brain size={22} weight="fill" />} items={persona.motivations} />
-              <ListCard
-                title="Pain points & frustrations"
-                icon={<WarningCircle size={22} weight="fill" />}
-                items={persona.pains}
-              />
-              <ListCard title="Key needs" icon={<PushPin size={22} weight="fill" />} items={persona.needs} />
-            </div>
-          </div>
-        )}
 
+          {/* Card grid — 1 col on narrow, 2 cols at md+, density tuned so
+              5 cards fit a ~420px-tall portrait column without stretching. */}
+          <div className="grid gap-4 md:grid-cols-2">
+            {hasWorkplaceStats ? (
+              <InfoCard
+                title="Workplace"
+                icon={<Target size={16} weight="fill" />}
+                items={persona.workplaceStats!}
+                tone="navy"
+              />
+            ) : null}
+            {hasProfessionalGoals ? (
+              <InfoCard
+                title="Professional goals"
+                icon={<Target size={16} weight="fill" />}
+                items={persona.professionalGoals!}
+                tone="amber"
+              />
+            ) : null}
+            <InfoCard
+              title="Motivations"
+              icon={<Brain size={16} weight="fill" />}
+              items={persona.motivations}
+            />
+            <InfoCard
+              title="Pain points"
+              icon={<WarningCircle size={16} weight="fill" />}
+              items={persona.pains}
+            />
+            <InfoCard
+              title="Key needs"
+              icon={<PushPin size={16} weight="fill" />}
+              items={persona.needs}
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Download button */}
-      <div className="absolute bottom-4 left-4 z-[2] md:bottom-6 md:left-8">
+      {/* ── Download button ────────────────────────────────────────────── */}
+      <div className="absolute bottom-3 left-4 z-[2] md:bottom-4 md:left-8">
         <button
           type="button"
           onClick={() => window.print()}
@@ -244,15 +222,15 @@ export function PersonaProfile({ persona, className }: Props) {
         </button>
       </div>
 
-      {/* Sodexo mark — official logotype (local asset) */}
-      <div className="pointer-events-none absolute bottom-4 right-4 z-[2] md:bottom-6 md:right-8">
+      {/* ── Sodexo mark ─────────────────────────────────────────────────── */}
+      <div className="pointer-events-none absolute bottom-3 right-4 z-[2] md:bottom-4 md:right-8">
         <div className="overflow-hidden rounded-md shadow-md">
           <img
             src="/images/catalogue/assets/brand/sodexo-logotype-2021.jpg"
             alt="Sodexo"
             width={1024}
             height={576}
-            className="h-7 w-auto max-w-[min(200px,42vw)] md:h-9"
+            className="h-6 w-auto max-w-[min(160px,38vw)] md:h-7"
           />
         </div>
       </div>

@@ -11,27 +11,15 @@ interface Props {
 /**
  * Horizontal scroll strip of moments — a "table of contents" for a persona's day
  * that shows *before* the journey map. Fast visual scan → drill in.
+ *
+ * The parent (persona page) owns padding + the section heading, so this
+ * component renders only the scrollable list to avoid duplicated chrome.
  */
 export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
   if (steps.length === 0) return null;
 
   return (
-    <section className="px-4 pb-0 pt-8 md:px-10 lg:px-14" aria-label="Day at a glance">
-      <div className="mb-3 flex items-baseline gap-3">
-        <p
-          className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/60"
-          style={{ fontFamily: 'var(--font-body)' }}
-        >
-          Day at a glance
-        </p>
-        <span
-          className="text-[10px] font-semibold text-[var(--blue)]/40"
-          style={{ fontFamily: 'var(--font-body)' }}
-        >
-          {steps.length} moments
-        </span>
-      </div>
-
+    <div aria-label="Day at a glance" className="relative">
       <ol
         className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3"
         style={{ scrollbarWidth: 'thin' }}
@@ -99,6 +87,6 @@ export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
           );
         })}
       </ol>
-    </section>
+    </div>
   );
 }
