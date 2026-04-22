@@ -1,9 +1,10 @@
 'use client';
 
 import { useTransition, type ReactNode } from 'react';
-import { Brain, DownloadSimple, PushPin, Target, WarningCircle } from '@phosphor-icons/react';
+import { Brain, PushPin, Target, WarningCircle } from '@phosphor-icons/react';
 import type { AreaConfig, Persona } from '@/lib/data/types';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
+import { DownloadCta } from '@/components/ui/DownloadCta';
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -220,17 +221,11 @@ export function PersonaProfile({ persona, area, className }: Props) {
 
       {/* ── Download button ────────────────────────────────────────────── */}
       <div className="absolute bottom-3 left-4 z-[2] md:bottom-4 md:left-8">
-        <button
-          type="button"
+        <DownloadCta
+          label="Download persona"
+          pending={exporting}
           onClick={handleDownload}
-          disabled={exporting}
-          className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-xs font-semibold text-[var(--blue)] shadow-sm backdrop-blur-sm transition-colors hover:bg-white disabled:cursor-wait disabled:opacity-60 print:hidden"
-          style={{ fontFamily: 'var(--font-body)' }}
-          aria-live="polite"
-        >
-          <DownloadSimple size={14} weight="bold" aria-hidden />
-          {exporting ? 'Preparing slide…' : 'Download PowerPoint'}
-        </button>
+        />
       </div>
 
       {/* ── Sodexo mark ─────────────────────────────────────────────────── */}

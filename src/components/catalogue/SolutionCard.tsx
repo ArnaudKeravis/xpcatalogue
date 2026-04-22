@@ -3,7 +3,6 @@
 import {
   Article,
   ChartBar,
-  DownloadSimple,
   FileText,
   Info,
   LinkSimple,
@@ -17,6 +16,7 @@ import Link from 'next/link';
 import { useState, useTransition, type ReactNode } from 'react';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
+import { DownloadCta } from '@/components/ui/DownloadCta';
 import { SolutionHeroTile } from '@/components/catalogue/SolutionHeroTile';
 import { COLLECTION_META } from '@/lib/data/collections';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
@@ -269,17 +269,12 @@ export function SolutionCard({ solution, siblings, module }: Props) {
               </div>
             </div>
 
-            <button
-              type="button"
+            <DownloadCta
+              variant="block"
+              label="Download PowerPoint"
+              pending={exporting}
               onClick={handleDownload}
-              disabled={exporting}
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-[var(--grey-border)] bg-white px-3 py-2 text-xs font-semibold text-[var(--blue)] transition-colors hover:bg-[#f0f4ff] disabled:cursor-wait disabled:opacity-60 print:hidden"
-              style={{ fontFamily: 'var(--font-body)' }}
-              aria-live="polite"
-            >
-              <DownloadSimple size={14} weight="bold" aria-hidden />
-              {exporting ? 'Preparing slide…' : 'Download PowerPoint'}
-            </button>
+            />
             <p className="text-right text-xs text-gray-400" style={{ fontFamily: 'var(--font-body)' }}>
               ↻ Synced from Notion
             </p>
