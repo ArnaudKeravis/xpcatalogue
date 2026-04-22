@@ -1,4 +1,4 @@
-import { ArrowRight, Buildings, Compass, UsersThree } from '@phosphor-icons/react/dist/ssr';
+import { ArrowRight, Buildings, Compass, User, UsersThree } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import { getCatalogueData } from '@/lib/notion';
 import { TodayWidget, type BucketIconKey } from '@/components/home/TodayWidget';
@@ -51,7 +51,7 @@ export default async function HomePage() {
     { key: 'evening', label: 'Evening wind-down', time: '18–22' },
   ];
   const buckets = bucketLabels.map((b, i) => {
-    const items: { label: string; icon: string; href: string; personaName: string; areaLabel: string }[] = [];
+    const items: { label: string; stepId: string; href: string; personaName: string; areaLabel: string }[] = [];
     for (const p of data.personas) {
       const stepIdx = Math.min(i, p.steps.length - 1);
       const stepId = p.steps[stepIdx];
@@ -59,7 +59,7 @@ export default async function HomePage() {
       if (step) {
         items.push({
           label: step.label,
-          icon: step.icon,
+          stepId: step.id,
           href: `/${p.area}/${p.id}/moment/${step.id}`,
           personaName: p.name,
           areaLabel: data.areas[p.area].label,
@@ -142,7 +142,6 @@ export default async function HomePage() {
               featured ? (
                 <PersonaAvatar
                   photo={featured.photo}
-                  emoji={featured.emoji}
                   color={featured.color}
                   name={featured.fullName}
                 />
@@ -184,7 +183,6 @@ export default async function HomePage() {
               areaLabel={featuredArea.label}
               areaColor={featuredArea.color}
               color={featured.color}
-              emoji={featured.emoji}
               photo={featured.photo}
               href={`/${featured.area}/${featured.id}`}
             />
@@ -297,12 +295,10 @@ function EntryCard({
  */
 function PersonaAvatar({
   photo,
-  emoji,
   color,
   name,
 }: {
   photo?: string;
-  emoji: string;
   color: string;
   name: string;
 }) {
@@ -326,11 +322,11 @@ function PersonaAvatar({
   }
   return (
     <span
-      className="flex h-full w-full items-center justify-center text-3xl leading-none"
+      className="flex h-full w-full items-center justify-center"
       style={{ background: color }}
       aria-hidden
     >
-      {emoji}
+      <User size={30} weight="duotone" color="#ffffff" />
     </span>
   );
 }

@@ -15,6 +15,7 @@ import {
   SoccerBall,
   Stethoscope,
   Truck,
+  User,
   X,
 } from '@phosphor-icons/react/dist/ssr';
 import type { Icon, IconWeight } from '@phosphor-icons/react';
@@ -204,7 +205,7 @@ export default async function MomentPage({ params }: Props) {
                       className="absolute bottom-0 left-1/2 h-[150%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom"
                     />
                   ) : (
-                    <span className="text-2xl">{persona.emoji}</span>
+                    <User size={26} weight="duotone" color={persona.color} aria-hidden />
                   )}
                 </div>
                 <div className="min-w-0">
@@ -507,7 +508,11 @@ export default async function MomentPage({ params }: Props) {
                     {tag}
                   </span>
                   <div className="flex items-center gap-2">
-                    <span className="text-xl" aria-hidden>{s.icon}</span>
+                    <MomentIcon
+                      momentId={s.id}
+                      weight="duotone"
+                      className="h-5 w-5 text-[var(--blue-primary)]"
+                    />
                     <h3
                       className="text-base font-extrabold leading-tight text-[var(--blue)]"
                       style={{ fontFamily: 'var(--font-heading)' }}
@@ -553,7 +558,13 @@ export default async function MomentPage({ params }: Props) {
                         href={`/${p.area}/${p.id}/moment/${matchingStep.id}`}
                         className="inline-flex items-center gap-2 rounded-full border border-[var(--grey-border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-semibold text-[var(--blue)] transition-colors hover:border-[var(--blue-primary)] hover:text-[var(--blue-primary)]"
                       >
-                        <span className="text-sm" aria-hidden>{p.emoji}</span>
+                        <span
+                          aria-hidden
+                          className="inline-flex h-5 w-5 items-center justify-center rounded-full"
+                          style={{ background: `${p.color}22`, color: p.color }}
+                        >
+                          <User size={12} weight="fill" />
+                        </span>
                         {p.name}
                         <span className="rounded-full bg-[var(--icon-bg)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--blue)]/70">
                           {areas[p.area].label}

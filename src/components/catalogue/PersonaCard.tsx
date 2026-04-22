@@ -1,5 +1,6 @@
 'use client';
 
+import { User } from '@phosphor-icons/react';
 import Link from 'next/link';
 import type { Persona } from '@/lib/data/types';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
@@ -27,10 +28,10 @@ export function PersonaCard({ persona, href }: Props) {
           />
         ) : (
           <div
-            className="flex h-full items-center justify-center text-7xl"
+            className="flex h-full items-center justify-center"
             style={{ background: `${persona.color}15` }}
           >
-            {persona.emoji}
+            <User size={72} weight="duotone" color={persona.color} aria-hidden />
           </div>
         )}
         {/* Gradient overlay at bottom */}

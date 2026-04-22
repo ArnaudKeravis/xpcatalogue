@@ -4,8 +4,9 @@ export interface GlobalSearchSolutionHit {
   id: string;
   name: string;
   module: string;
+  /** Module id of this solution — used to pick a Phosphor icon client-side. */
+  moduleId?: string;
   description: string;
-  emoji: string;
   href: string;
   score: number;
 }
@@ -13,7 +14,6 @@ export interface GlobalSearchSolutionHit {
 export interface GlobalSearchModuleHit {
   id: string;
   name: string;
-  icon: string;
   description: string;
   solutionCount: number;
   href: string;
@@ -27,7 +27,8 @@ export interface GlobalSearchPersonaHit {
   role: string;
   area: string;
   areaLabel: string;
-  emoji: string;
+  /** Brand hex color for the persona pill. */
+  color: string;
   href: string;
   score: number;
 }
@@ -35,7 +36,6 @@ export interface GlobalSearchPersonaHit {
 export interface GlobalSearchMomentHit {
   id: string;
   label: string;
-  icon: string;
   personaId: string;
   personaName: string;
   areaLabel: string;
@@ -90,12 +90,13 @@ export function globalSearch(data: CatalogueData, rawQuery: string): GlobalSearc
       scoreField(s.description, q) +
       Math.max(0, ...s.hashtags.map((h) => scoreField(h, q))) * 2;
     if (score > 0) {
+      const moduleConfig = Object.values(data.modules).find((m) => m.name === s.module);
       solutions.push({
         id: s.id,
         name: s.name,
         module: s.module,
+        moduleId: moduleConfig?.id,
         description: s.description,
-        emoji: s.img,
         href: `/solutions/${s.id}`,
         score,
       });
@@ -111,7 +112,6 @@ export function globalSearch(data: CatalogueData, rawQuery: string): GlobalSearc
       modules.push({
         id: m.id,
         name: m.name,
-        icon: m.icon,
         description: m.description,
         solutionCount: m.solutionIds.length,
         href: `/solutions?module=${encodeURIComponent(m.name)}`,
@@ -134,7 +134,7 @@ export function globalSearch(data: CatalogueData, rawQuery: string): GlobalSearc
         role: p.role,
         area: p.area,
         areaLabel: data.areas[p.area].label,
-        emoji: p.emoji,
+        color: p.color,
         href: `/${p.area}/${p.id}`,
         score,
       });
@@ -157,7 +157,6 @@ export function globalSearch(data: CatalogueData, rawQuery: string): GlobalSearc
         moments.push({
           id: step.id,
           label: step.label,
-          icon: step.icon,
           personaId: p.id,
           personaName: p.name,
           areaLabel: data.areas[p.area].label,

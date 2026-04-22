@@ -3,6 +3,7 @@
 import { Clock, Compass, MapPin, SunHorizon, UsersThree, type Icon } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { pickJourneyStepVisual } from '@/lib/data/journeyStepVisuals';
 
 export type BucketIconKey = 'morning' | 'midday' | 'afternoon' | 'evening';
 
@@ -18,8 +19,10 @@ export interface TodayBucket {
   label: string;
   time: string;
   items: {
+    /** Moment label, e.g. "Morning rounds". */
     label: string;
-    icon: string;
+    /** Journey step id — drives the Phosphor icon. */
+    stepId: string;
     href: string;
     personaName: string;
     areaLabel: string;
@@ -97,14 +100,19 @@ export function TodayWidget({ buckets }: Props) {
       </p>
 
       <ul className="grid gap-2">
-        {active?.items.map((it) => (
+        {active?.items.map((it) => {
+          const { Icon: StepIcon, weight } = pickJourneyStepVisual({ id: it.stepId, label: it.label });
+          return (
           <li key={it.href}>
             <Link
               href={it.href}
               className="group flex items-center gap-3 rounded-xl border border-[var(--grey-border)] bg-[var(--surface)] px-3 py-2.5 transition-all hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
             >
-              <span className="text-xl" aria-hidden>
-                {it.icon}
+              <span
+                aria-hidden
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--icon-bg)] text-[var(--blue-primary)]"
+              >
+                <StepIcon size={16} weight={weight} />
               </span>
               <span className="min-w-0 flex-1">
                 <span
@@ -122,7 +130,8 @@ export function TodayWidget({ buckets }: Props) {
               </span>
             </Link>
           </li>
-        ))}
+          );
+        })}
       </ul>
 
       {/* Bucket switcher — subtle */}

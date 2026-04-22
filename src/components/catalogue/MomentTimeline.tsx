@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { JourneyStep } from '@/lib/data/types';
+import { JourneyStepIcon } from './JourneyStepIcon';
 
 interface Props {
   area: string;
@@ -37,13 +38,7 @@ export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-3 transition-all duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
               >
                 <div className="mb-2 flex items-center justify-between gap-2">
-                  <span
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-lg"
-                    style={{ background: `${accentColor}22` }}
-                    aria-hidden
-                  >
-                    {step.icon}
-                  </span>
+                  <JourneyStepIcon step={step} accent={accentColor} size={32} />
                   <span
                     className="rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white"
                     style={{ background: accentColor }}

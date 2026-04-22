@@ -140,7 +140,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
   if (status) titleParts.push(status);
   if (type) titleParts.push(type);
   if (persona) titleParts.push(persona.name);
-  if (moment) titleParts.push(`${moment.icon} ${moment.label}`);
+  if (moment) titleParts.push(moment.label);
   if (collectionFilter.length > 0)
     titleParts.push(collectionFilter.map((c) => COLLECTION_META[c].label).join(' · '));
   if (hashtagFilter.length > 0) titleParts.push(hashtagFilter.join(' · '));
@@ -199,7 +199,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
       <div className="flex-1 px-4 pb-10 md:px-8">
         {persona && moment ? (
           <p className="mb-4 text-sm text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>
-            Filtered to solutions relevant during <strong>{moment.icon} {moment.label}</strong> for <strong>{persona.name}</strong>.
+            Filtered to solutions relevant during <strong>{moment.label}</strong> for <strong>{persona.name}</strong>.
           </p>
         ) : persona ? (
           <p className="mb-4 text-sm text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>

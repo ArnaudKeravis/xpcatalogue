@@ -1,6 +1,6 @@
 'use client';
 
-import { CircleNotch, MagnifyingGlass, X } from '@phosphor-icons/react';
+import { CircleNotch, MagnifyingGlass, User, X } from '@phosphor-icons/react';
 import { useRouter } from 'next/navigation';
 import {
   useCallback,
@@ -12,6 +12,8 @@ import {
   type ReactNode,
 } from 'react';
 import type { GlobalSearchResult } from '@/lib/queries/globalSearch';
+import { pickJourneyStepVisual } from '@/lib/data/journeyStepVisuals';
+import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 
 /** Flat hit used for keyboard navigation through all groups. */
 interface FlatHit {
@@ -20,7 +22,6 @@ interface FlatHit {
   group: 'solutions' | 'modules' | 'personas' | 'moments';
   primary: string;
   secondary?: string;
-  glyph: string;
 }
 
 const EMPTY: GlobalSearchResult = {
@@ -117,7 +118,6 @@ export function GlobalSearch() {
         group: 'solutions',
         primary: h.name,
         secondary: h.module,
-        glyph: h.emoji || '🧩',
       })
     );
     result.modules.forEach((h) =>
@@ -127,7 +127,6 @@ export function GlobalSearch() {
         group: 'modules',
         primary: h.name,
         secondary: `${h.solutionCount} solution${h.solutionCount === 1 ? '' : 's'}`,
-        glyph: h.icon || '🗂️',
       })
     );
     result.personas.forEach((h) =>
@@ -137,7 +136,6 @@ export function GlobalSearch() {
         group: 'personas',
         primary: h.name,
         secondary: `${h.role} · ${h.areaLabel}`,
-        glyph: h.emoji || '👤',
       })
     );
     result.moments.forEach((h) =>
@@ -147,7 +145,6 @@ export function GlobalSearch() {
         group: 'moments',
         primary: h.label,
         secondary: `${h.personaName} · ${h.areaLabel}`,
-        glyph: h.icon || '⏱️',
       })
     );
     return arr;
@@ -265,12 +262,16 @@ export function GlobalSearch() {
               <ResultGroup title="Solutions" count={result.solutions.length}>
                 {result.solutions.map((h) => {
                   const idx = flatHits.findIndex((f) => f.key === `sol-${h.id}`);
+                  const { Icon: SolIcon, weight } = pickModuleVisual({
+                    id: h.moduleId ?? '',
+                    name: h.module,
+                  });
                   return (
                     <ResultRow
                       key={h.id}
                       idx={idx}
                       active={idx === activeIdx}
-                      glyph={h.emoji || '🧩'}
+                      glyph={<SolIcon size={16} weight={weight} />}
                       primary={h.name}
                       secondary={h.module}
                       onHover={() => setActiveIdx(idx)}
@@ -283,12 +284,13 @@ export function GlobalSearch() {
               <ResultGroup title="Modules" count={result.modules.length}>
                 {result.modules.map((h) => {
                   const idx = flatHits.findIndex((f) => f.key === `mod-${h.id}`);
+                  const { Icon: ModIcon, weight } = pickModuleVisual({ id: h.id, name: h.name });
                   return (
                     <ResultRow
                       key={h.id}
                       idx={idx}
                       active={idx === activeIdx}
-                      glyph={h.icon || '🗂️'}
+                      glyph={<ModIcon size={16} weight={weight} />}
                       primary={h.name}
                       secondary={`${h.solutionCount} solution${h.solutionCount === 1 ? '' : 's'}`}
                       onHover={() => setActiveIdx(idx)}
@@ -306,7 +308,8 @@ export function GlobalSearch() {
                       key={h.id}
                       idx={idx}
                       active={idx === activeIdx}
-                      glyph={h.emoji || '👤'}
+                      glyph={<User size={16} weight="fill" color={h.color} />}
+                      glyphTint={h.color}
                       primary={h.name}
                       secondary={`${h.role} · ${h.areaLabel}`}
                       onHover={() => setActiveIdx(idx)}
@@ -321,12 +324,13 @@ export function GlobalSearch() {
                   const idx = flatHits.findIndex(
                     (f) => f.key === `mom-${h.personaId}-${h.id}`
                   );
+                  const { Icon: StepIcon, weight } = pickJourneyStepVisual({ id: h.id, label: h.label });
                   return (
                     <ResultRow
                       key={`${h.personaId}-${h.id}`}
                       idx={idx}
                       active={idx === activeIdx}
-                      glyph={h.icon || '⏱️'}
+                      glyph={<StepIcon size={16} weight={weight} />}
                       primary={h.label}
                       secondary={`${h.personaName} · ${h.areaLabel}`}
                       onHover={() => setActiveIdx(idx)}
@@ -391,6 +395,7 @@ function ResultRow({
   idx,
   active,
   glyph,
+  glyphTint,
   primary,
   secondary,
   onHover,
@@ -398,7 +403,9 @@ function ResultRow({
 }: {
   idx: number;
   active: boolean;
-  glyph: string;
+  glyph: ReactNode;
+  /** Optional accent hex — softens the icon tile with a 14% alpha wash. */
+  glyphTint?: string;
   primary: string;
   secondary?: string;
   onHover: () => void;
@@ -419,8 +426,8 @@ function ResultRow({
       }
     >
       <span
-        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-base"
-        style={{ background: 'var(--icon-bg)' }}
+        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-[var(--blue-primary)]"
+        style={{ background: glyphTint ? `${glyphTint}22` : 'var(--icon-bg)' }}
         aria-hidden
       >
         {glyph}

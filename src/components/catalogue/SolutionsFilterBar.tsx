@@ -315,7 +315,7 @@ export function SolutionsFilterBar({
             { value: '', label: selectedPersona ? 'All moments' : 'All moments (any persona)' },
             ...availableMoments.map((m) => ({
               value: m.value,
-              label: `${m.icon} ${m.label}`,
+              label: m.label,
             })),
           ]}
           onChange={(v) =>

@@ -1,4 +1,4 @@
-import { ArrowRight, Quotes } from '@phosphor-icons/react/dist/ssr';
+import { ArrowRight, Quotes, User } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
   areaLabel: string;
   areaColor: string;
   color: string;
-  emoji: string;
   photo?: string;
   href: string;
 }
@@ -26,7 +25,6 @@ export function FeaturedPersona({
   areaLabel,
   areaColor,
   color,
-  emoji,
   photo,
   href,
 }: Props) {
@@ -91,7 +89,7 @@ export function FeaturedPersona({
           Walk their day <ArrowRight size={14} weight="bold" aria-hidden />
         </span>
         <span
-          className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-4xl shadow-[var(--shadow-sm)]"
+          className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-[var(--shadow-sm)]"
           style={{ background: color, color: 'white' }}
           aria-hidden
         >
@@ -104,7 +102,7 @@ export function FeaturedPersona({
               decoding="async"
             />
           ) : (
-            emoji
+            <User size={32} weight="duotone" color="#ffffff" />
           )}
         </span>
       </div>

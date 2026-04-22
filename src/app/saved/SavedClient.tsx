@@ -1,24 +1,33 @@
 'use client';
 
-import { ArrowRight, Clock, Heart, Trash } from '@phosphor-icons/react';
+import {
+  ArrowRight,
+  Clock,
+  Heart,
+  PuzzlePiece,
+  Timer,
+  Trash,
+  User,
+  type Icon,
+} from '@phosphor-icons/react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useStore, type FavouriteKind } from '@/lib/store';
 
-const LABELS: Record<FavouriteKind, { title: string; emoji: string; blurb: string }> = {
+const LABELS: Record<FavouriteKind, { title: string; Icon: Icon; blurb: string }> = {
   persona: {
     title: 'Personas',
-    emoji: '👤',
+    Icon: User,
     blurb: "The lives you're following — their full day, with every moment of care.",
   },
   moment: {
     title: 'Moments',
-    emoji: '⏱️',
+    Icon: Timer,
     blurb: 'Specific moments of a persona\u2019s day, bookmarked for the workshop.',
   },
   solution: {
     title: 'Solutions',
-    emoji: '🧩',
+    Icon: PuzzlePiece,
     blurb: 'The concrete tools that power those moments.',
   },
 };
@@ -99,15 +108,22 @@ export function SavedClient() {
       {total === 0 ? <EmptyState /> : null}
 
       <div className="flex flex-col gap-10">
-        {ORDER.filter((k) => grouped[k].length > 0).map((kind) => (
+        {ORDER.filter((k) => grouped[k].length > 0).map((kind) => {
+          const KindIcon = LABELS[kind].Icon;
+          return (
           <section key={kind} aria-labelledby={`saved-${kind}`}>
-            <div className="mb-3 flex items-baseline gap-3">
+            <div className="mb-3 flex items-center gap-3">
               <h2
                 id={`saved-${kind}`}
-                className="text-lg font-extrabold text-[var(--blue)]"
+                className="flex items-center gap-2 text-lg font-extrabold text-[var(--blue)]"
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
-                <span className="mr-2" aria-hidden>{LABELS[kind].emoji}</span>
+                <span
+                  aria-hidden
+                  className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--icon-bg)] text-[var(--blue-primary)]"
+                >
+                  <KindIcon size={16} weight="duotone" />
+                </span>
                 {LABELS[kind].title}
               </h2>
               <span className="text-[11px] text-[var(--blue)]/50">
@@ -172,7 +188,8 @@ export function SavedClient() {
               ))}
             </ul>
           </section>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -183,9 +200,9 @@ function EmptyState() {
     <div className="flex flex-col items-center gap-4 rounded-3xl border border-dashed border-[var(--grey-border)] bg-[var(--surface-card)] p-12 text-center">
       <span
         aria-hidden
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--icon-bg)] text-2xl"
+        className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--icon-bg)] text-[var(--blue-primary)]"
       >
-        ♥
+        <Heart size={22} weight="fill" />
       </span>
       <div className="max-w-md">
         <h2

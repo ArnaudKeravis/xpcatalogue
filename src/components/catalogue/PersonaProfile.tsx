@@ -1,7 +1,7 @@
 'use client';
 
 import { useTransition, type ReactNode } from 'react';
-import { Brain, PushPin, Target, WarningCircle } from '@phosphor-icons/react';
+import { Brain, PushPin, Target, User, WarningCircle } from '@phosphor-icons/react';
 import type { AreaConfig, Persona } from '@/lib/data/types';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import { DownloadCta } from '@/components/ui/DownloadCta';
@@ -167,7 +167,12 @@ export function PersonaProfile({ persona, area, className }: Props) {
                     className="h-auto w-full max-w-[380px] object-contain object-bottom md:max-w-[420px]"
                   />
                 ) : (
-                  <span className="text-[min(22vw,180px)] leading-none">{persona.emoji}</span>
+                  <User
+                    size={160}
+                    weight="duotone"
+                    color={persona.color}
+                    aria-hidden
+                  />
                 )}
               </div>
             </div>
