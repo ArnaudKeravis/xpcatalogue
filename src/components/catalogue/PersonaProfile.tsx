@@ -1,8 +1,8 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useTransition, type ReactNode } from 'react';
 import { Brain, DownloadSimple, PushPin, Target, WarningCircle } from '@phosphor-icons/react';
-import type { Persona } from '@/lib/data/types';
+import type { AreaConfig, Persona } from '@/lib/data/types';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import { cn } from '@/lib/utils/cn';
 
@@ -22,6 +22,7 @@ const HERO_GRADIENT =
 
 interface Props {
   persona: Persona;
+  area?: AreaConfig;
   className?: string;
 }
 
@@ -89,11 +90,19 @@ function InfoCard({
 
 /* ── Component ──────────────────────────────────────────────────────────── */
 
-export function PersonaProfile({ persona, className }: Props) {
+export function PersonaProfile({ persona, area, className }: Props) {
   const eyebrow = persona.profileEyebrow ?? persona.name;
   const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
   const hasWorkplaceStats = (persona.workplaceStats?.length ?? 0) > 0;
   const hasProfessionalGoals = (persona.professionalGoals?.length ?? 0) > 0;
+  const [exporting, startExport] = useTransition();
+
+  const handleDownload = () => {
+    startExport(async () => {
+      const { exportPersonaToPptx } = await import('@/lib/export/pptPersona');
+      await exportPersonaToPptx(persona, area);
+    });
+  };
 
   return (
     <section
@@ -213,12 +222,14 @@ export function PersonaProfile({ persona, className }: Props) {
       <div className="absolute bottom-3 left-4 z-[2] md:bottom-4 md:left-8">
         <button
           type="button"
-          onClick={() => window.print()}
-          className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-xs font-semibold text-[var(--blue)] shadow-sm backdrop-blur-sm transition-colors hover:bg-white print:hidden"
+          onClick={handleDownload}
+          disabled={exporting}
+          className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-xs font-semibold text-[var(--blue)] shadow-sm backdrop-blur-sm transition-colors hover:bg-white disabled:cursor-wait disabled:opacity-60 print:hidden"
           style={{ fontFamily: 'var(--font-body)' }}
+          aria-live="polite"
         >
           <DownloadSimple size={14} weight="bold" aria-hidden />
-          Download persona card
+          {exporting ? 'Preparing slide…' : 'Download PowerPoint'}
         </button>
       </div>
 

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { JourneyMap } from '@/components/catalogue/JourneyMap';
+import { JourneyDownloadButton } from '@/components/catalogue/JourneyDownloadButton';
 import { MomentTimeline } from '@/components/catalogue/MomentTimeline';
 import { PersonaProfile } from '@/components/catalogue/PersonaProfile';
 import { PersonaSideNav } from '@/components/catalogue/PersonaSideNav';
@@ -90,7 +91,7 @@ export default async function PersonaPage({ params }: Props) {
                 accentColor={persona.color}
                 headingId="section-who-heading"
               />
-              <PersonaProfile persona={persona} />
+              <PersonaProfile persona={persona} area={areaConfig} />
             </section>
 
             {/* ─── 02 · What I do ──────────────────────────────────── */}
@@ -119,13 +120,23 @@ export default async function PersonaPage({ params }: Props) {
                   journeyMapImage={persona.journeyMapImage}
                   journeyHotspots={persona.journeyHotspots}
                 />
-                <p
-                  className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--blue)]/60"
-                  style={{ fontFamily: 'var(--font-body)' }}
-                >
-                  Tap a moment on the map to see the modules and solutions that
-                  apply at that point of the day.
-                </p>
+                <div className="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p
+                    className="max-w-2xl text-sm leading-relaxed text-[var(--blue)]/60"
+                    style={{ fontFamily: 'var(--font-body)' }}
+                  >
+                    Tap a moment on the map to see the modules and solutions that
+                    apply at that point of the day.
+                  </p>
+                  {persona.journeyMapImage ? (
+                    <JourneyDownloadButton
+                      persona={persona}
+                      area={areaConfig}
+                      steps={steps}
+                      imageUrl={persona.journeyMapImage}
+                    />
+                  ) : null}
+                </div>
               </div>
             </section>
 

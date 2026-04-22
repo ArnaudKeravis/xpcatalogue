@@ -14,7 +14,7 @@ import {
   User,
 } from '@phosphor-icons/react';
 import Link from 'next/link';
-import { useState, type ReactNode } from 'react';
+import { useState, useTransition, type ReactNode } from 'react';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { SolutionHeroTile } from '@/components/catalogue/SolutionHeroTile';
@@ -37,10 +37,18 @@ function statusColor(s: string) {
 
 export function SolutionCard({ solution, siblings, module }: Props) {
   const [active, setActive] = useState(solution.id);
+  const [exporting, startExport] = useTransition();
   const allSolutions = [solution, ...siblings];
   const current = allSolutions.find((s) => s.id === active) ?? solution;
   const sc = statusColor(current.status);
   const { Icon: RailIcon, weight: railWeight } = pickModuleVisual(module ?? undefined);
+
+  const handleDownload = () => {
+    startExport(async () => {
+      const { exportSolutionToPptx } = await import('@/lib/export/pptSolution');
+      await exportSolutionToPptx(current, module);
+    });
+  };
 
   return (
     <div className="flex min-h-0 flex-1">
@@ -263,12 +271,14 @@ export function SolutionCard({ solution, siblings, module }: Props) {
 
             <button
               type="button"
-              onClick={() => window.print()}
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-[var(--grey-border)] bg-white px-3 py-2 text-xs font-semibold text-[var(--blue)] transition-colors hover:bg-[#f0f4ff] print:hidden"
+              onClick={handleDownload}
+              disabled={exporting}
+              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-[var(--grey-border)] bg-white px-3 py-2 text-xs font-semibold text-[var(--blue)] transition-colors hover:bg-[#f0f4ff] disabled:cursor-wait disabled:opacity-60 print:hidden"
               style={{ fontFamily: 'var(--font-body)' }}
+              aria-live="polite"
             >
               <DownloadSimple size={14} weight="bold" aria-hidden />
-              Download solution card
+              {exporting ? 'Preparing slide…' : 'Download PowerPoint'}
             </button>
             <p className="text-right text-xs text-gray-400" style={{ fontFamily: 'var(--font-body)' }}>
               ↻ Synced from Notion
