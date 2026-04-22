@@ -8,6 +8,7 @@ import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { getMomentsForModuleName } from '@/lib/queries/journey';
 import { getCatalogueData } from '@/lib/notion';
+import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Area, JourneyStep } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -163,6 +164,7 @@ export default async function PersonaPage({ params }: Props) {
                   {relevantModules.map((mod) => {
                     const momentLinks = getMomentsForModuleName(mod.name, steps);
                     const moduleHref = `/modules/${mod.id}?area=${params.area}&persona=${params.persona}`;
+                    const { Icon: ModIcon, weight: modWeight } = pickModuleVisual(mod);
                     return (
                       <li key={mod.id}>
                         <div className="flex h-full flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-md">
@@ -172,8 +174,8 @@ export default async function PersonaPage({ params }: Props) {
                             aria-hidden
                           />
                           <div className="flex flex-1 flex-col p-3">
-                            <span className="mb-1.5 text-2xl" aria-hidden>
-                              {mod.icon}
+                            <span className="mb-1.5 inline-flex" aria-hidden>
+                              <ModIcon size={24} weight={modWeight} color="var(--blue)" />
                             </span>
                             <Link
                               href={moduleHref}

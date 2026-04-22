@@ -11,6 +11,7 @@ import {
   uniqueTypes,
 } from '@/lib/queries/filterSolutions';
 import { COLLECTION_META, parseCollectionKey } from '@/lib/data/collections';
+import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Area, SolutionCollection, SolutionStatus, SolutionType } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -48,7 +49,7 @@ function parseType(raw: string | undefined, allowed: SolutionType[]): SolutionTy
 
 export default async function SolutionsPage({ searchParams }: Props) {
   const catalogue = await getCatalogueData();
-  const { solutions, areas, personas, journeySteps } = catalogue;
+  const { solutions, areas, personas, journeySteps, modules: modulesByName } = catalogue;
 
   const modules = uniqueModules(solutions);
   const statuses = uniqueStatuses(solutions);
@@ -235,6 +236,8 @@ export default async function SolutionsPage({ searchParams }: Props) {
                 Study: { bg: '#f5f5f5', text: '#666' },
               };
               const sc = statusColors[s.status] ?? statusColors.Study;
+              const solMod = modulesByName[s.module];
+              const { Icon: SolIcon, weight: solIconWeight } = pickModuleVisual(solMod);
               return (
                 <li key={s.id}>
                   <Link
@@ -242,16 +245,23 @@ export default async function SolutionsPage({ searchParams }: Props) {
                     className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white shadow-[var(--shadow-sm)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                   >
                     {/* Module colour bar */}
-                    <div className="h-1.5 w-full" style={{ background: `linear-gradient(90deg,var(--blue),var(--blue-primary))` }} />
+                    <div
+                      className="h-1.5 w-full"
+                      style={{
+                        background:
+                          solMod?.gradient ?? 'linear-gradient(90deg,var(--blue),var(--blue-primary))',
+                      }}
+                    />
 
                     <div className="flex flex-1 flex-col gap-3 p-4">
                       {/* Header */}
                       <div className="flex items-start gap-3">
                         <div
-                          className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-xl"
+                          className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl"
                           style={{ background: 'var(--icon-bg)' }}
+                          aria-hidden
                         >
-                          {s.img}
+                          <SolIcon size={20} weight={solIconWeight} color="var(--blue)" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-extrabold leading-tight text-[var(--blue)]">

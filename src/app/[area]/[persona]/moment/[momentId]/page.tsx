@@ -24,6 +24,7 @@ import { ShareButton } from '@/components/ui/ShareButton';
 import { MomentScene } from '@/components/catalogue/MomentScene';
 import { getCatalogueData } from '@/lib/notion';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
+import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Area, Module } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -376,6 +377,7 @@ export default async function MomentPage({ params }: Props) {
                 {moduleCards.map((mod) => {
                   const href = `/modules/${mod.id}?area=${params.area}&persona=${params.persona}&momentId=${encodeURIComponent(step.id)}`;
                   const count = solutionsCountFor(mod.name);
+                  const { Icon: ModIcon, weight: modWeight } = pickModuleVisual(mod);
                   return (
                     <StaggerItem key={mod.id}>
                       <Link
@@ -383,11 +385,23 @@ export default async function MomentPage({ params }: Props) {
                         className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(41,56,150,0.14)]"
                       >
                         <div
-                          className="flex h-28 items-center justify-center text-5xl"
+                          className="relative flex h-28 items-center justify-center overflow-hidden"
                           style={{ background: mod.gradient }}
                           aria-hidden
                         >
-                          <span className="drop-shadow-sm">{mod.icon}</span>
+                          <span
+                            className="pointer-events-none absolute inset-0"
+                            style={{
+                              background:
+                                'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
+                            }}
+                          />
+                          <ModIcon
+                            size={52}
+                            weight={modWeight}
+                            color="#ffffff"
+                            style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.2))' }}
+                          />
                         </div>
                         <div className="flex flex-1 flex-col p-4">
                           <h3

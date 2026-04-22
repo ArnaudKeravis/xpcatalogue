@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CaretRight } from '@phosphor-icons/react/dist/ssr';
 import { SolutionCard } from '@/components/catalogue/SolutionCard';
+import { ModuleIcon } from '@/components/catalogue/ModuleIcon';
 import { PillLink } from '@/components/ui/PillLink';
 import { getCatalogueData } from '@/lib/notion';
 import type { Area, Module, Solution } from '@/lib/data/types';
@@ -123,13 +124,7 @@ export default async function ModulePage({ params, searchParams }: Props) {
         ) : null}
 
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-5">
-          <div
-            className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl text-3xl shadow-[var(--shadow-sm)]"
-            style={{ background: mod.gradient }}
-            aria-hidden
-          >
-            <span>{mod.icon}</span>
-          </div>
+          <ModuleIcon module={mod} size={56} />
           <div className="min-w-0 flex-1">
             <p
               className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/60"
@@ -204,13 +199,7 @@ export default async function ModulePage({ params, searchParams }: Props) {
                     href={`/modules/${m.id}`}
                     className="group flex h-full items-start gap-3 rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-4 transition-[transform,border-color,box-shadow] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
                   >
-                    <span
-                      aria-hidden
-                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-xl shadow-[var(--shadow-sm)]"
-                      style={{ background: m.gradient }}
-                    >
-                      {m.icon}
-                    </span>
+                    <ModuleIcon module={m} size={40} />
                     <div className="min-w-0 flex-1">
                       <p
                         className="truncate text-sm font-extrabold text-[var(--blue)]"

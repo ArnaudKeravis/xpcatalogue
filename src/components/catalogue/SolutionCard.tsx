@@ -17,7 +17,9 @@ import Link from 'next/link';
 import { useState, type ReactNode } from 'react';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
+import { SolutionHeroTile } from '@/components/catalogue/SolutionHeroTile';
 import { COLLECTION_META } from '@/lib/data/collections';
+import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Module, Solution } from '@/lib/data/types';
 
 interface Props {
@@ -38,19 +40,27 @@ export function SolutionCard({ solution, siblings, module }: Props) {
   const allSolutions = [solution, ...siblings];
   const current = allSolutions.find((s) => s.id === active) ?? solution;
   const sc = statusColor(current.status);
+  const { Icon: RailIcon, weight: railWeight } = pickModuleVisual(module ?? undefined);
 
   return (
     <div className="flex min-h-0 flex-1">
       <aside className="flex w-64 flex-shrink-0 flex-col gap-3 border-r border-[var(--grey-border)] bg-white p-4">
         <div
-          className="flex h-24 items-center justify-center rounded-2xl text-5xl"
+          className="relative flex h-24 items-center justify-center overflow-hidden rounded-2xl"
           style={{
             background: module?.gradient ?? 'linear-gradient(135deg,#293896,#1a69ff)',
             boxShadow: 'var(--shadow-card)',
           }}
           aria-hidden
         >
-          <span aria-hidden>{current.img}</span>
+          <span
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
+            }}
+          />
+          <RailIcon size={44} weight={railWeight} color="#ffffff" />
         </div>
         <div
           className="rounded-2xl bg-white p-3 text-xs leading-relaxed"
@@ -222,23 +232,11 @@ export function SolutionCard({ solution, siblings, module }: Props) {
           </div>
 
           <aside className="w-72 flex-shrink-0 space-y-3">
-            <div
-              className="flex h-48 w-full items-center justify-center overflow-hidden rounded-2xl text-6xl"
-              style={{
-                background: module?.gradient ?? 'linear-gradient(135deg,#293896,#1a69ff)',
-                boxShadow: 'var(--shadow-card)',
-              }}
-            >
-              {current.heroImage ? (
-                <img
-                  src={current.heroImage}
-                  alt=""
-                  className="h-full w-full object-cover object-center"
-                />
-              ) : (
-                current.img
-              )}
-            </div>
+            <SolutionHeroTile
+              solution={current}
+              module={module}
+              alt={`${current.name} — ${module?.name ?? current.module}`}
+            />
 
             <div
               className="rounded-[var(--radius-lg)] bg-white p-4"

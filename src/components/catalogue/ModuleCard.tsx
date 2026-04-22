@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Module } from '@/lib/data/types';
 
 interface MomentLink {
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export function ModuleCard({ module, href, compact, momentLinks }: Props) {
+  const { Icon, weight } = pickModuleVisual(module);
   if (compact) {
     return (
       <div
@@ -22,7 +24,9 @@ export function ModuleCard({ module, href, compact, momentLinks }: Props) {
         style={{ boxShadow: 'var(--shadow-sm)' }}
       >
         <Link href={href} className="block p-3">
-          <div className="mb-1 text-2xl">{module.icon}</div>
+          <div className="mb-1 flex items-center justify-center">
+            <Icon size={24} weight={weight} color="var(--blue)" aria-hidden />
+          </div>
           <div
             className="text-[11px] font-bold leading-tight text-[var(--blue)]"
             style={{ fontFamily: 'var(--font-body)' }}
@@ -52,8 +56,19 @@ export function ModuleCard({ module, href, compact, momentLinks }: Props) {
       className="block cursor-pointer overflow-hidden rounded-[18px] bg-white transition-all hover:-translate-y-1"
       style={{ boxShadow: 'var(--shadow-card)' }}
     >
-      <div className="flex h-24 items-center justify-center text-4xl" style={{ background: module.gradient }}>
-        {module.icon}
+      <div
+        className="relative flex h-24 items-center justify-center overflow-hidden"
+        style={{ background: module.gradient }}
+        aria-hidden
+      >
+        <span
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
+          }}
+        />
+        <Icon size={44} weight={weight} color="#ffffff" />
       </div>
       <div className="p-3">
         <div className="mb-1 text-base font-bold text-[var(--blue)]">{module.name}</div>
