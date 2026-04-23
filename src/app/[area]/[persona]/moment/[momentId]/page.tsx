@@ -27,6 +27,7 @@ import { getCatalogueData } from '@/lib/notion';
 import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import { pickFirstRealHero } from '@/lib/data/solutionHeroImage';
+import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
 import type { Area, Module, Solution } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -95,6 +96,9 @@ export default async function MomentPage({ params }: Props) {
     .filter((m): m is Module => Boolean(m));
 
   const mapImage = persona.journeyMapImage;
+  const momentIsoImage = resolveJourneyMomentImage(persona.id, step.id);
+  const heroImageSrc = momentIsoImage ?? mapImage;
+  const heroIsVector = Boolean(heroImageSrc?.endsWith('.svg'));
   const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
   const eyebrow = persona.profileEyebrow ?? 'Consumer';
 
@@ -132,11 +136,15 @@ export default async function MomentPage({ params }: Props) {
           ring plus an accent bloom reads as a cinematographer's spotlight
           rather than a UI hotspot pin. */}
       <div className="relative z-0 h-[36vh] w-full overflow-hidden sm:h-[40vh] md:h-[44vh] lg:h-[46vh]">
-        {mapImage ? (
+        {heroImageSrc ? (
           <img
-            src={mapImage}
-            alt="Journey map"
-            className="h-full w-full object-cover object-center"
+            src={heroImageSrc}
+            alt=""
+            className={
+              heroIsVector
+                ? 'h-full w-full object-contain object-center bg-[#E8EEFB]'
+                : 'h-full w-full object-cover object-center'
+            }
           />
         ) : (
           <div
@@ -147,7 +155,7 @@ export default async function MomentPage({ params }: Props) {
 
         {/* Focus halo — radial spotlight centered on the moment hotspot.
             Darkens the periphery, brightens the moment's region. */}
-        {mapImage && hotspotCenter ? (
+        {heroImageSrc && hotspotCenter ? (
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0"
@@ -158,7 +166,7 @@ export default async function MomentPage({ params }: Props) {
         ) : null}
 
         {/* Accent bloom — a soft colored glow in the moment's neighbourhood */}
-        {mapImage && hotspotCenter ? (
+        {heroImageSrc && hotspotCenter ? (
           <div
             aria-hidden
             className="pointer-events-none absolute"
@@ -253,7 +261,18 @@ export default async function MomentPage({ params }: Props) {
                   continuity with the journey map. Falls back to the plain
                   tinted icon tile when we don't have a journey image or
                   hotspot for this moment. */}
-              {mapImage && hotspotCenter ? (
+              {momentIsoImage ? (
+                <div className="mt-1 w-full overflow-hidden rounded-brand-lg ring-1 ring-[var(--grey-border)]">
+                  <div className="relative aspect-[4/3] w-full bg-[var(--surface)]">
+                    {/* Dedicated moment SVG — already framed; no journey hotspot crop. */}
+                    <img
+                      src={momentIsoImage}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-contain object-center p-2"
+                    />
+                  </div>
+                </div>
+              ) : mapImage && hotspotCenter ? (
                 <div className="mt-1 w-full">
                   <MomentScene
                     imageSrc={mapImage}

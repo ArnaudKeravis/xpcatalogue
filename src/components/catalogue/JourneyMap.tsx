@@ -33,6 +33,11 @@ import {
 import type { JourneyHotspot, JourneyStep } from '@/lib/data/types';
 import { cn } from '@/lib/utils/cn';
 
+const journeyImgClass = (src: string) =>
+  src.endsWith('.svg')
+    ? 'h-full w-full object-contain object-center bg-[#E8EEFB]'
+    : 'h-full w-full object-cover object-center';
+
 type StepIconCmp = ComponentType<{ className?: string; weight?: IconWeight }>;
 
 const STEP_ICONS: Record<string, StepIconCmp> = {
@@ -203,7 +208,7 @@ export function JourneyMap({
                 <motion.img
                   src={journeyMapImage}
                   alt="Isometric journey map — moments across the day"
-                  className="h-full w-full object-cover object-center"
+                  className={journeyImgClass(journeyMapImage)}
                   loading="eager"
                   decoding="async"
                   initial={reduceMotion ? false : { scale: 1.04, opacity: 0 }}

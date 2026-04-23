@@ -2,7 +2,7 @@
  * Per-persona journey maps + clickable moment hotspots.
  *
  * Single source of truth for all 24 personas. Each persona points at a local
- * PNG/JPG under `public/images/catalogue/assets/journeys/` and declares its
+ * SVG (or raster) under `public/images/catalogue/assets/journeys/` and declares its
  * moment pills with percent-based bounding boxes (0–100) over the image.
  *
  * Hotspot ids are JourneyStep ids — they must exist in the catalogue's
@@ -56,7 +56,7 @@ function pill(id: string, label: string, cx: number, cy: number, w = PILL_W, h =
  * ─────────────────────────────────────────────────────────────────────── */
 
 const WHITE_COLLAR: PersonaJourneyDef = {
-  image: `${BASE}/white-collar.jpg`,
+  image: `${BASE}/iso-journey-work-white-collar.svg`,
   moments: [
     pill('commute', 'Commute', 19, 51),
     pill('welcome-area', 'Welcome Area', 27, 77),
@@ -67,7 +67,7 @@ const WHITE_COLLAR: PersonaJourneyDef = {
 };
 
 const BLUE_COLLAR: PersonaJourneyDef = {
-  image: `${BASE}/blue-collar.jpg`,
+  image: `${BASE}/iso-journey-work-blue-collar.svg`,
   moments: [
     pill('bc-commute', 'Commute', 18, 50),
     pill('bc-welcome', 'Welcome Area', 29, 76),
@@ -78,7 +78,7 @@ const BLUE_COLLAR: PersonaJourneyDef = {
 };
 
 const GREY_COLLAR: PersonaJourneyDef = {
-  image: `${BASE}/grey-collar.jpg`,
+  image: `${BASE}/iso-journey-work-grey-collar.svg`,
   moments: [
     pill('gc-commute', 'Commute', 21, 52),
     pill('gc-welcome', 'Welcome Area', 13, 79),
@@ -89,7 +89,7 @@ const GREY_COLLAR: PersonaJourneyDef = {
 };
 
 const MILITARY: PersonaJourneyDef = {
-  image: `${BASE}/military.jpg`,
+  image: `${BASE}/iso-journey-work-army-officer.svg`,
   moments: [
     pill('mil-evening', 'Evening Routine', 11, 88),
     pill('mil-morning', 'Morning Routine', 26, 33),
@@ -105,7 +105,7 @@ const MILITARY: PersonaJourneyDef = {
  * ─────────────────────────────────────────────────────────────────────── */
 
 const DOCTOR: PersonaJourneyDef = {
-  image: `${BASE}/doctor.jpg`,
+  image: `${BASE}/iso-journey-heal-doctor.svg`,
   moments: [
     pill('doc-commute', 'Commute', 22, 43),
     pill('doc-end-shift', 'End of Shift', 27, 73),
@@ -118,7 +118,7 @@ const DOCTOR: PersonaJourneyDef = {
 };
 
 const NURSE: PersonaJourneyDef = {
-  image: `${BASE}/nurse.jpg`,
+  image: `${BASE}/iso-journey-heal-nurse.svg`,
   moments: [
     pill('nur-commute', 'Commute', 21, 47),
     pill('nur-freetime', 'Freetime & Work/Life Balance', 22, 66, 22),
@@ -130,7 +130,7 @@ const NURSE: PersonaJourneyDef = {
 };
 
 const SENIOR: PersonaJourneyDef = {
-  image: `${BASE}/senior.jpg`,
+  image: `${BASE}/iso-journey-heal-senior.svg`,
   moments: [
     pill('sen-welcome', 'Welcome Residents', 20, 50, 18),
     pill('sen-activities', 'Activities', 37, 15),
@@ -142,7 +142,7 @@ const SENIOR: PersonaJourneyDef = {
 };
 
 const PATIENT: PersonaJourneyDef = {
-  image: `${BASE}/patient.jpg`,
+  image: `${BASE}/iso-journey-heal-patient.svg`,
   moments: [
     pill('pat-rest', 'Rest & Personal Balance', 13, 88, 22),
     pill('pat-commute', 'Commute', 22, 47),
@@ -171,7 +171,7 @@ const SPORT_FAN: PersonaJourneyDef = {
 };
 
 const PARTICIPANT: PersonaJourneyDef = {
-  image: `${BASE}/participant.jpg`,
+  image: `${BASE}/iso-journey-play-event-participant.svg`,
   moments: [
     pill('par-commute', 'Commute', 11, 33),
     pill('par-arrival', 'Arrival & Access', 40, 24),
@@ -183,7 +183,7 @@ const PARTICIPANT: PersonaJourneyDef = {
 };
 
 const VIP_GUEST: PersonaJourneyDef = {
-  image: `${BASE}/vip-guest.jpg`,
+  image: `${BASE}/iso-journey-play-vip-guest-stadium.svg`,
   moments: [
     pill('vip-commute', 'Prep & Commute', 19, 33),
     pill('vip-lounge', 'Private Lounge Entry', 30, 13, 18),
@@ -195,7 +195,7 @@ const VIP_GUEST: PersonaJourneyDef = {
 };
 
 const TOURIST: PersonaJourneyDef = {
-  image: `${BASE}/tourist.jpg`,
+  image: `${BASE}/iso-journey-play-vip-guest-airport.svg`,
   moments: [
     pill('tou-commute', 'Prep & Commute', 9, 40),
     pill('tou-welcome', 'Welcome & Orientation', 34, 27, 20),
@@ -211,7 +211,7 @@ const TOURIST: PersonaJourneyDef = {
  * ─────────────────────────────────────────────────────────────────────── */
 
 const STUDENT: PersonaJourneyDef = {
-  image: `${BASE}/student.jpg`,
+  image: `${BASE}/iso-journey-learn-student.svg`,
   moments: [
     pill('stu-commute', 'Commute', 8, 33),
     pill('stu-welcome', 'Welcome Area', 43, 35),
@@ -222,7 +222,7 @@ const STUDENT: PersonaJourneyDef = {
 };
 
 const SCHOOLCHILD: PersonaJourneyDef = {
-  image: `${BASE}/schoolchild.jpg`,
+  image: `${BASE}/iso-journey-learn-schoolchild.svg`,
   moments: [
     pill('sch-commute', 'Commute', 10, 30),
     pill('sch-welcome', 'Welcome Area', 35, 34),
@@ -233,7 +233,7 @@ const SCHOOLCHILD: PersonaJourneyDef = {
 };
 
 const PARENT_LEARN: PersonaJourneyDef = {
-  image: `${BASE}/parent.jpg`,
+  image: `${BASE}/iso-journey-learn-parent.svg`,
   moments: [
     pill('lp-weekly', 'Weekly Preparation', 17, 88),
     pill('lp-prep', 'Prep & Commute', 26, 27),
@@ -245,7 +245,7 @@ const PARENT_LEARN: PersonaJourneyDef = {
 };
 
 const TEACHER: PersonaJourneyDef = {
-  image: `${BASE}/teacher.jpg`,
+  image: `${BASE}/iso-journey-learn-teacher.svg`,
   moments: [
     pill('tea-commute', 'Commute', 10, 28),
     pill('tea-freetime', 'Freetime & Work/Life Balance', 31, 93, 24),
@@ -261,7 +261,7 @@ const TEACHER: PersonaJourneyDef = {
  * ─────────────────────────────────────────────────────────────────────── */
 
 const OPERATOR: PersonaJourneyDef = {
-  image: `${BASE}/operator.jpg`,
+  image: `${BASE}/iso-journey-operator-site-manager.svg`,
   moments: [
     pill('op-fm-round', 'Kitchen / Back Kitchen: FM Checking Round', 31, 8, 22),
     pill('op-kick-off', 'Kick-off & Early Check', 46, 44, 18),
@@ -276,7 +276,7 @@ const OPERATOR: PersonaJourneyDef = {
  * ─────────────────────────────────────────────────────────────────────── */
 
 const CLIENT: PersonaJourneyDef = {
-  image: `${BASE}/client.jpg`,
+  image: `${BASE}/iso-journey-client-operation-director.svg`,
   moments: [
     pill('cli-welcome', 'Welcome & Admission', 23, 77),
     pill('cli-meetings', 'Internal Meetings & Alignment', 34, 14, 18),
