@@ -118,6 +118,8 @@ const SOLUTION_ALIASES: Record<string, string> = {
   airomas: 'airomas',
   'starship technologies': 'starship',
   starship: 'starship',
+  'costa express': 'costaCoffeeMachine',
+  'amazon go': 'amazonJwo',
   'in reach (a sodexo brand)': 'inReach',
   inreach: 'inReach',
   'pavegen': 'pavegen',

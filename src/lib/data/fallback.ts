@@ -11,6 +11,7 @@ import {
   consumerModuleNamesByMoment,
   CONSUMER_MOMENT_TO_STEP,
 } from './xpFlowAdapter';
+import { mergeTddiV2IntoCatalogue } from './tddiV2CatalogueMerge';
 
 export const AREA_CONFIGS: Record<Area, AreaConfig> = {
   work: {
@@ -570,6 +571,8 @@ for (const [, def] of Object.entries(PERSONA_JOURNEYS)) {
   }
 }
 
+const TDDI_MERGED = mergeTddiV2IntoCatalogue(MERGED_MODULES, MERGED_JOURNEY_STEPS, SOLUTIONS_CATALOG);
+
 const MERGED_PERSONAS: Persona[] = CATALOGUE_PERSONAS.map((p) => {
   const def = PERSONA_JOURNEYS[p.id];
   if (!def) return p;
@@ -581,17 +584,17 @@ const MERGED_PERSONAS: Persona[] = CATALOGUE_PERSONAS.map((p) => {
   };
 });
 
-// Map step id → step label for display
+// Map step id → step label for display (includes TDDI-augmented journey steps)
 export const STEP_LABEL: Record<string, string> = Object.fromEntries(
-  Object.values(MERGED_JOURNEY_STEPS).map((s) => [s.id, s.label])
+  Object.values(TDDI_MERGED.journeySteps).map((s) => [s.id, s.label])
 );
 
 // Solutions mirror `reference/static-home/catalog-solutions.js` (see `solutionsCatalog.ts`).
 export const FALLBACK_DATA: CatalogueData = {
-  solutions: enrichSolutionsWithCollections(SOLUTIONS_CATALOG),
+  solutions: enrichSolutionsWithCollections([...SOLUTIONS_CATALOG, ...TDDI_MERGED.extraSolutions]),
   personas: MERGED_PERSONAS,
-  modules: MERGED_MODULES,
+  modules: TDDI_MERGED.modules,
   areas: AREA_CONFIGS,
-  journeySteps: MERGED_JOURNEY_STEPS,
+  journeySteps: TDDI_MERGED.journeySteps,
   lastUpdated: new Date().toISOString(),
 };

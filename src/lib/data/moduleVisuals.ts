@@ -27,6 +27,7 @@ import {
   ClipboardText,
   Cookie,
   CookingPot,
+  CreditCard,
   Cube,
   DeviceMobile,
   Drop,
@@ -42,6 +43,7 @@ import {
   Medal,
   Monitor,
   Package,
+  Receipt,
   Recycle,
   Robot,
   Scan,
@@ -144,6 +146,10 @@ const BY_ID: Record<string, ModuleVisual> = {
   'battery-charger': DUO(Lightning),
   '3d-printing': DUO(Cube),
   'digital-xp': DUO(Sparkle),
+  'accounts-card-and-management-corporate': DUO(CreditCard),
+  'ai-personal-assistant': DUO(Sparkle),
+  'billing-and-invoicing-tddi': DUO(Receipt),
+  'business-center': DUO(Buildings),
 };
 
 /** Tuples of [regex, visual] — first match wins. Used when BY_ID doesn't hit. */

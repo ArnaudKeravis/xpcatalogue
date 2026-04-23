@@ -115,6 +115,26 @@ export interface Persona {
   modularPuzzleImage?: string;
 }
 
+/**
+ * Enrichment from the TDDI / Notion **Modules experiences TDDI DB (V2)** view:
+ * taxonomy (module types), audience presence, representative third-party names,
+ * and verbatim “associated moments” labels used for journey wiring.
+ */
+export interface ModuleTddiMeta {
+  /** Title as authored in the TDDI database (may differ from catalogue `name`). */
+  sourceTitle: string;
+  moduleTypes: string[];
+  userPresence: Array<'client' | 'consumer' | 'operator'>;
+  /** Checkbox “Is New” from the TDDI view (editorial flag, not release status). */
+  isNew: boolean;
+  /** Product / brand names listed under Solutions (TDDI) in Notion. */
+  solutionsListed: string[];
+  /** Free-text column Solutions (External) when present. */
+  externalSolutions?: string;
+  /** Verbatim Associated Moments (TDDI) labels from Notion. */
+  associatedMomentLabels: string[];
+}
+
 export interface Module {
   id: string;
   name: string;
@@ -122,6 +142,8 @@ export interface Module {
   description: string;
   gradient: string;       // CSS gradient string
   solutionIds: string[];
+  /** Optional Sodexo TDDI V2 database fields merged at catalogue load time. */
+  tddi?: ModuleTddiMeta;
 }
 
 /**
