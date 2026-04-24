@@ -10,7 +10,10 @@ import {
   uniqueStatuses,
   uniqueTypes,
 } from '@/lib/queries/filterSolutions';
+import { BlockbusterCollectionIntro } from '@/components/catalogue/BlockbusterCollectionIntro';
+import { StandardOfferParallax } from '@/components/standard-offer/StandardOfferParallax';
 import { COLLECTION_META, parseCollectionKey } from '@/lib/data/collections';
+import { cn } from '@/lib/utils/cn';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Area, SolutionCollection, SolutionStatus, SolutionType } from '@/lib/data/types';
 
@@ -148,55 +151,69 @@ export default async function SolutionsPage({ searchParams }: Props) {
   if (q) titleParts.push(`“${q}”`);
   const title = titleParts.length > 0 ? `Solutions — ${titleParts.join(' · ')}` : 'All solutions';
 
+  const catalogueAnchorId =
+    soloCollection?.key === 'standard-offer' || soloCollection?.key === 'blockbuster'
+      ? 'solutions-catalogue'
+      : undefined;
+
   const areaOptions = (['work', 'learn', 'heal', 'play'] as const).map((id) => ({
     value: id,
     label: areas[id].label,
   }));
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--surface)]">
-      <div className="px-4 py-6 md:px-8">
-        {soloCollection ? (
-          <div
-            className="mb-4 overflow-hidden rounded-brand-2xl p-6 text-white md:p-8"
-            style={{ backgroundImage: soloCollection.gradient }}
-          >
-            <span
-              className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/85"
-              style={{ fontFamily: 'var(--font-body)' }}
+    <main id="main-content" className="flex flex-1 flex-col bg-[var(--surface)]">
+      {soloCollection?.key === 'standard-offer' ? (
+        <StandardOfferParallax embedded />
+      ) : (
+        <div className="px-4 py-6 md:px-8">
+          {soloCollection?.key === 'blockbuster' ? (
+            <BlockbusterCollectionIntro solutionCount={filtered.length} />
+          ) : soloCollection ? (
+            <div
+              className="mb-4 overflow-hidden rounded-brand-2xl p-6 text-white md:p-8"
+              style={{ backgroundImage: soloCollection.gradient }}
             >
-              <span aria-hidden className="h-px w-8 bg-white/70" />
-              Curated collection
-            </span>
+              <span
+                className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/85"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                <span aria-hidden className="h-px w-8 bg-white/70" />
+                Curated collection
+              </span>
+              <h1
+                className="mt-3 max-w-[22ch] text-[clamp(1.75rem,3.6vw,2.75rem)] font-extrabold leading-[1.05]"
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                {soloCollection.label}
+              </h1>
+              <p
+                className="mt-2 max-w-2xl text-sm leading-relaxed text-white/90 md:text-base"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                {soloCollection.description}
+              </p>
+              <p
+                className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                {filtered.length} {filtered.length === 1 ? 'solution' : 'solutions'} in this collection
+              </p>
+            </div>
+          ) : (
             <h1
-              className="mt-3 max-w-[22ch] text-[clamp(1.75rem,3.6vw,2.75rem)] font-extrabold leading-[1.05]"
+              className="mb-4 text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold leading-tight text-[var(--blue)]"
               style={{ fontFamily: 'var(--font-heading)' }}
             >
-              {soloCollection.label}
+              {title}
             </h1>
-            <p
-              className="mt-2 max-w-2xl text-sm leading-relaxed text-white/90 md:text-base"
-              style={{ fontFamily: 'var(--font-body)' }}
-            >
-              {soloCollection.description}
-            </p>
-            <p
-              className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80"
-              style={{ fontFamily: 'var(--font-body)' }}
-            >
-              {filtered.length} {filtered.length === 1 ? 'solution' : 'solutions'} in this collection
-            </p>
-          </div>
-        ) : (
-          <h1
-            className="mb-4 text-[clamp(1.5rem,3vw,2.25rem)] font-extrabold leading-tight text-[var(--blue)]"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            {title}
-          </h1>
-        )}
-      </div>
-      <div className="flex-1 px-4 pb-10 md:px-8">
+          )}
+        </div>
+      )}
+      <div
+        id={catalogueAnchorId}
+        className={cn('flex-1 px-4 pb-10 md:px-8', catalogueAnchorId && 'scroll-mt-28')}
+      >
         {persona && moment ? (
           <p className="mb-4 text-sm text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>
             Filtered to solutions relevant during <strong>{moment.label}</strong> for <strong>{persona.name}</strong>.
@@ -321,6 +338,6 @@ export default async function SolutionsPage({ searchParams }: Props) {
           </ul>
         )}
       </div>
-    </div>
+    </main>
   );
 }

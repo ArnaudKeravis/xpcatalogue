@@ -6,8 +6,8 @@ import type { Solution, SolutionCollection } from '@/lib/data/types';
 /**
  * Home-page band that surfaces the two curated collections — Standard Offer
  * (Spark portfolio) and AI Blockbusters. Each tile becomes an editorial
- * shortcut into `/solutions?collection=…`, with a live count and a few
- * representative solution names so the band is never empty-feeling.
+ * shortcut into `COLLECTION_META.href` (Standard Offer story vs Blockbuster grid),
+ * with a live count and a few representative solution names so the band is never empty-feeling.
  *
  * Rendered as a server component: counts + previews are derived from the
  * already-fetched solution list, so no extra round-trip is needed.

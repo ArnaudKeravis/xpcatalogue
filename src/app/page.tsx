@@ -1,6 +1,7 @@
-import { ArrowRight, Buildings, Compass, User, UsersThree } from '@phosphor-icons/react/dist/ssr';
+import { ArrowRight, Buildings, Compass, Rocket, Trophy, User, UsersThree } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import { getCatalogueData } from '@/lib/notion';
+import { COLLECTION_META } from '@/lib/data/collections';
 import { TodayWidget, type BucketIconKey } from '@/components/home/TodayWidget';
 import { CatalogueSnapshot } from '@/components/home/CatalogueSnapshot';
 import { CuratedCollectionsBand } from '@/components/home/CuratedCollectionsBand';
@@ -168,6 +169,29 @@ export default async function HomePage() {
             footer={`${counts.solutions} solutions`}
           />
         </div>
+
+        <nav
+          className="motion-fade-up mx-auto mt-8 flex max-w-[1600px] flex-wrap items-center justify-center gap-3 md:gap-4"
+          style={{ animationDelay: '640ms' }}
+          aria-label="TDDI curated shortlists"
+        >
+          <Link
+            href={COLLECTION_META['standard-offer'].href}
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-bold text-white shadow-[var(--shadow-sm)] backdrop-blur-sm transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            <Trophy size={16} weight="duotone" className="text-[var(--teal)]" aria-hidden />
+            Standard Offer
+          </Link>
+          <Link
+            href={COLLECTION_META.blockbuster.href}
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-bold text-white shadow-[var(--shadow-sm)] backdrop-blur-sm transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            <Rocket size={16} weight="duotone" className="text-amber-200" aria-hidden />
+            AI Blockbusters
+          </Link>
+        </nav>
       </section>
 
       {/* ── Today + Featured + Countries band ─────────────────── */}

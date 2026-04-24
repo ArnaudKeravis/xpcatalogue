@@ -141,7 +141,7 @@ export function SolutionCard({ solution, siblings, module }: Props) {
                   return (
                     <Link
                       key={c}
-                      href={meta.href}
+                      href={meta.catalogueHref ?? meta.href}
                       className="group inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white shadow-[var(--shadow-sm)] transition-transform hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
                       style={{ backgroundImage: meta.gradient, fontFamily: 'var(--font-body)' }}
                       aria-label={`${meta.label} — ${meta.tagline}`}

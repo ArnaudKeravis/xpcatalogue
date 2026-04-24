@@ -114,7 +114,10 @@ export interface CollectionMeta {
   accent: string;
   /** Phosphor icon name — resolved lazily in client components to keep SSR lean. */
   icon: 'Trophy' | 'Rocket';
+  /** Primary editorial link (home tiles, header). */
   href: string;
+  /** Filtered catalogue URL when it differs from `href` (e.g. Standard Offer story vs grid). */
+  catalogueHref?: string;
 }
 
 export const COLLECTION_META: Record<SolutionCollection, CollectionMeta> = {
@@ -128,7 +131,8 @@ export const COLLECTION_META: Record<SolutionCollection, CollectionMeta> = {
     gradient: 'linear-gradient(135deg, #0b76b8 0%, #14b8a6 100%)',
     accent: '#14b8a6',
     icon: 'Trophy',
-    href: '/solutions?collection=standard-offer',
+    href: '/standard-offer',
+    catalogueHref: '/solutions?collection=standard-offer',
   },
   blockbuster: {
     key: 'blockbuster',

@@ -38,10 +38,10 @@ const NAV: NavItem[] = [
     matches: (p) => p.startsWith('/solutions'),
   },
   {
-    href: '/solutions?collection=standard-offer',
+    href: '/standard-offer',
     label: 'Standard Offer',
     Icon: Trophy,
-    matches: () => false,
+    matches: (p) => p === '/standard-offer',
     gradient: 'linear-gradient(135deg, #0b76b8 0%, #14b8a6 100%)',
   },
   {

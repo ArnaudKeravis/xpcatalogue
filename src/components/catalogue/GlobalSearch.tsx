@@ -1,6 +1,7 @@
 'use client';
 
 import { CircleNotch, MagnifyingGlass, User, X } from '@phosphor-icons/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   useCallback,
@@ -340,7 +341,7 @@ export function GlobalSearch() {
                 })}
               </ResultGroup>
 
-              <div className="flex items-center justify-between border-t border-[var(--grey-border)] bg-[#f8faff] px-4 py-2 text-[11px] text-gray-500">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--grey-border)] bg-[#f8faff] px-4 py-2 text-[11px] text-gray-500">
                 <span>
                   <kbd className="rounded border border-[var(--grey-border)] bg-white px-1 py-0.5 font-semibold">↑</kbd>{' '}
                   <kbd className="rounded border border-[var(--grey-border)] bg-white px-1 py-0.5 font-semibold">↓</kbd>{' '}
@@ -350,13 +351,18 @@ export function GlobalSearch() {
                   <kbd className="rounded border border-[var(--grey-border)] bg-white px-1 py-0.5 font-semibold">esc</kbd>{' '}
                   close
                 </span>
-                <button
-                  type="button"
-                  onClick={() => go(`/solutions?q=${encodeURIComponent(q.trim())}`)}
-                  className="font-semibold text-[var(--blue-primary)] hover:underline"
-                >
-                  See all solutions matching “{q.trim()}”
-                </button>
+                <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <Link href="/search-guide" className="font-semibold text-[var(--blue)]/80 hover:underline">
+                    Search guide
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => go(`/solutions?q=${encodeURIComponent(q.trim())}`)}
+                    className="font-semibold text-[var(--blue-primary)] hover:underline"
+                  >
+                    See all solutions matching “{q.trim()}”
+                  </button>
+                </span>
               </div>
             </>
           )}
