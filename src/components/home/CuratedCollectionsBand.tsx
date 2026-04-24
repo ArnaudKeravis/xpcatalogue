@@ -5,7 +5,7 @@ import type { Solution, SolutionCollection } from '@/lib/data/types';
 
 /**
  * Home-page band that surfaces the two curated collections — Standard Offer
- * (Spark portfolio) and AI Blockbusters. Each tile becomes an editorial
+ * and AI Blockbusters. Each tile becomes an editorial
  * shortcut into `COLLECTION_META.href` (Standard Offer story vs Blockbuster grid),
  * with a live count and a few representative solution names so the band is never empty-feeling.
  *
@@ -40,7 +40,7 @@ export function CuratedCollectionsBand({ solutions }: { solutions: Solution[] })
               className="mt-1 max-w-2xl text-sm text-[var(--blue)]/70"
               style={{ fontFamily: 'var(--font-body)' }}
             >
-              Two shortlists to cut through 91 solutions — our Spark{' '}
+              Two shortlists to cut through 91 solutions —{' '}
               <strong className="text-[var(--blue)]">Standard Offer</strong> for scaled, client-ready
               products, and the <strong className="text-[var(--blue)]">AI Blockbusters</strong> driving
               Sodexo P&amp;L.

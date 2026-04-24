@@ -54,7 +54,7 @@ export function StandardOfferParallax({ embedded = false }: StandardOfferParalla
             style={{ fontFamily: 'var(--font-body)' }}
           >
             <Trophy size={14} weight="duotone" className="text-[var(--teal)]" aria-hidden />
-            TDDI · Sodexo Spark
+            TDDI · Standard Offer
           </span>
           <h1
             className="mt-5 text-[clamp(2rem,5vw,3.25rem)] font-extrabold leading-[1.05] text-[var(--blue)]"
@@ -67,9 +67,11 @@ export function StandardOfferParallax({ embedded = false }: StandardOfferParalla
             style={{ fontFamily: 'var(--font-body)' }}
           >
             The TDDI Standard Offer packages our most mature, scaled products: the ones already deployed with
-            clients, with clear outcomes and runbooks. It is organised around three Sodexo Spark pillars —{' '}
-            <strong className="text-[var(--blue)]">Spark IQ</strong>, <strong className="text-[var(--blue)]">Spark OS</strong>, and{' '}
-            <strong className="text-[var(--blue)]">Spark XP</strong> — so teams can navigate from insight to operations to experience.
+            clients, with clear outcomes and runbooks. It is organised around three pillars —{' '}
+            <strong className="text-[var(--blue)]">IQ</strong> (insight &amp; intelligence),{' '}
+            <strong className="text-[var(--blue)]">OS</strong> (operations &amp; orchestration), and{' '}
+            <strong className="text-[var(--blue)]">XP</strong> (guest &amp; employee experience) — so teams can move from signal to
+            operations to signature moments.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {embedded ? (
@@ -102,7 +104,7 @@ export function StandardOfferParallax({ embedded = false }: StandardOfferParalla
         </div>
       </ParallaxBand>
 
-      {/* Spark IQ */}
+      {/* IQ — intelligence */}
       <ParallaxBand drift={56} className="relative min-h-[72vh] border-b border-[var(--grey-border)]">
         <div
           aria-hidden
@@ -113,13 +115,13 @@ export function StandardOfferParallax({ embedded = false }: StandardOfferParalla
           <div className="flex flex-col gap-4">
             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
               <ChartLine size={16} weight="duotone" className="text-[var(--blue-primary)]" aria-hidden />
-              Spark IQ
+              IQ
             </span>
             <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
               Intelligence that makes the invisible visible
             </h2>
             <p className="text-sm leading-relaxed text-[var(--blue)]/75 md:text-base" style={{ fontFamily: 'var(--font-body)' }}>
-              Spark IQ groups analytics, client portals and decision-grade signals — from performance dashboards to
+              The IQ pillar groups analytics, client portals and decision-grade signals — from performance dashboards to
               B2B platforms — so account teams can prove value, spot drift early, and steer programmes with facts, not
               anecdotes.
             </p>
@@ -134,13 +136,13 @@ export function StandardOfferParallax({ embedded = false }: StandardOfferParalla
           >
             <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">In the catalogue</p>
             <p className="mt-2 text-sm leading-relaxed text-[var(--blue)]/75">
-              Look for solutions tagged <strong className="text-[var(--blue)]">Standard Offer</strong> under Spark IQ themes — they are curated for scale and repeatability across accounts.
+              Look for solutions tagged <strong className="text-[var(--blue)]">Standard Offer</strong> in the intelligence lane — they are curated for scale and repeatability across accounts.
             </p>
           </div>
         </div>
       </ParallaxBand>
 
-      {/* Spark OS */}
+      {/* OS — operations */}
       <ParallaxBand drift={44} className="relative min-h-[72vh] border-b border-[var(--grey-border)] bg-[var(--surface-card)]/60">
         <div
           aria-hidden
@@ -151,13 +153,13 @@ export function StandardOfferParallax({ embedded = false }: StandardOfferParalla
           <div className="order-2 flex flex-col gap-4 md:order-1">
             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
               <Lightning size={16} weight="duotone" className="text-[var(--teal)]" aria-hidden />
-              Spark OS
+              OS
             </span>
             <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
               Operating systems for resilient sites
             </h2>
             <p className="text-sm leading-relaxed text-[var(--blue)]/75 md:text-base" style={{ fontFamily: 'var(--font-body)' }}>
-              Spark OS is where menus, sustainability telemetry, and dynamic FM command centres meet — the digital
+              The OS pillar is where menus, sustainability telemetry, and dynamic FM command centres meet — the digital
               layer that keeps kitchens, frontline teams and assets orchestrated day after day.
             </p>
             <ul className="list-inside list-disc space-y-2 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
@@ -178,25 +180,25 @@ export function StandardOfferParallax({ embedded = false }: StandardOfferParalla
         </div>
       </ParallaxBand>
 
-      {/* Spark XP */}
+      {/* XP — experience */}
       <ParallaxBand drift={52} className="relative min-h-[72vh] border-b border-[var(--grey-border)]">
         <div className="relative mx-auto grid max-w-[1100px] gap-10 px-6 py-20 md:grid-cols-[1fr_1.1fr] md:items-center md:py-28">
           <div className="flex flex-col gap-4">
             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
               <Sparkle size={16} weight="duotone" className="text-[var(--blue-primary)]" aria-hidden />
-              Spark XP
+              XP
             </span>
             <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
               Signature experiences guests feel on day one
             </h2>
             <p className="text-sm leading-relaxed text-[var(--blue)]/75 md:text-base" style={{ fontFamily: 'var(--font-body)' }}>
-              Spark XP covers Everyday, WRX, Circles, and frictionless formats — autonomous stores and checkout
+              The XP pillar covers Everyday, WRX, Circles, and frictionless formats — autonomous stores and checkout
               innovation that shorten queues, lift satisfaction, and create premium moments without adding chaos for
               operators.
             </p>
             <ul className="list-inside list-disc space-y-2 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
               <li>Consumer-grade journeys wired to Sodexo operations</li>
-              <li>Composable with the rest of Spark — not isolated gadgets</li>
+              <li>Composable with the rest of the Standard Offer stack — not isolated gadgets</li>
             </ul>
           </div>
           <div

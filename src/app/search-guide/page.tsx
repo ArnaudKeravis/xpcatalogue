@@ -80,7 +80,7 @@ export default function SearchGuidePage() {
                 <Link href={so.href} className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline">
                   Standard Offer story
                 </Link>{' '}
-                explains Spark IQ / OS / XP on a dedicated page; the{' '}
+                explains the IQ / OS / XP framing on a dedicated page; the{' '}
                 <Link
                   href={so.catalogueHref!}
                   className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline"

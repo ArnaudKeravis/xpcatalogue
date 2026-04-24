@@ -8,7 +8,7 @@ export type SolutionStatus = 'Scaled' | 'Scaling' | 'Pilot' | 'Study';
  * because collections are finite, institutionally-blessed shortlists used to answer
  * "what's our scaled, client-ready standard offer?" and "what are our AI blockbusters?".
  *
- * Source of truth: TDDI Standard Offer deck (Sodexo Spark) + the P&L-impact AI slide.
+ * Source of truth: TDDI Standard Offer deck + the P&L-impact AI slide.
  */
 export type SolutionCollection = 'standard-offer' | 'blockbuster';
 

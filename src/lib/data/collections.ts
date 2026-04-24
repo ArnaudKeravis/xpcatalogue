@@ -4,8 +4,8 @@
  * Two collections are maintained here:
  *
  * 1. **Standard Offer** — Sodexo's scaled, matured, client-ready products as
- *    documented in the TDDI Standard Offer deck (Sodexo Spark). These are the
- *    solutions a sales / account team can safely propose today.
+ *    documented in the TDDI Standard Offer deck. These are the solutions a sales /
+ *    account team can safely propose today.
  *
  * 2. **Blockbuster** — the AI products explicitly called out as boosting Sodexo
  *    P&L in the TDDI AI portfolio slide (B2C / B2O / B2B AI, GenAI, AgenticAI).
@@ -19,9 +19,9 @@ import type { Solution, SolutionCollection } from './types';
 /**
  * Solution IDs (matching `src/lib/data/solutionsCatalog.ts`) that belong to
  * the Standard Offer. Derived from the TDDI Standard Offer deck:
- *   - Spark IQ   : 4Site, B2B Platform, (FM Insights via DBFM)
- *   - Spark OS   : MenuAI, SEA (sustainability), DBFM (dynamic services / command centres)
- *   - Spark XP   : Everyday, Sodexo WRX (× 2 module entries), Circles, Autonomous /
+ *   - IQ   : 4Site, B2B Platform, (FM Insights via DBFM)
+ *   - OS   : MenuAI, SEA (sustainability), DBFM (dynamic services / command centres)
+ *   - XP   : Everyday, Sodexo WRX (× 2 module entries), Circles, Autonomous /
  *                  frictionless stores (AiFi / JWO / Zippin / Totem / Mashgin / Trayvisor)
  */
 export const STANDARD_OFFER_IDS: readonly string[] = [
@@ -127,7 +127,7 @@ export const COLLECTION_META: Record<SolutionCollection, CollectionMeta> = {
     shortLabel: 'Standard',
     tagline: 'Scaled and ready to propose',
     description:
-      'Our matured, client-ready products — the backbone of the Sodexo Spark offer. Each has been deployed at scale with proven impact.',
+      'Our matured, client-ready products — the backbone of the Standard Offer. Each has been deployed at scale with proven impact.',
     gradient: 'linear-gradient(135deg, #0b76b8 0%, #14b8a6 100%)',
     accent: '#14b8a6',
     icon: 'Trophy',
