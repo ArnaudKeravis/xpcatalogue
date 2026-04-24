@@ -1,12 +1,16 @@
 'use client';
 
 import { Heart, List, MapTrifold, Rocket, SquaresFour, Trophy, UsersThree, X } from '@phosphor-icons/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { GlobalSearch } from '@/components/catalogue/GlobalSearch';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useStore } from '@/lib/store';
+
+/** Local brand mark — `public/images/catalogue/assets/brand/xp-catalogue-mark.svg` */
+const XP_CATALOGUE_LOGO = '/images/catalogue/assets/brand/xp-catalogue-mark.svg';
 
 interface NavItem {
   href: string;
@@ -82,29 +86,28 @@ export function Header() {
         {/* Logo + brand */}
         <Link
           href="/"
-          aria-label="Experience Catalogue — home"
-          className="group flex items-center gap-2.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--blue-primary)]"
+          aria-label="XP Catalogue — home"
+          className="group flex min-w-0 items-center gap-2.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--blue-primary)]"
         >
-          <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white shadow-[var(--shadow-sm)] transition-transform group-hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, var(--blue) 0%, var(--blue-primary) 100%)' }}
-            aria-hidden
-          >
-            <span className="text-[13px] font-black tracking-tight">SDX</span>
-          </span>
-          <span className="hidden flex-col leading-tight md:flex">
+          <span className="hidden min-w-0 flex-col leading-tight md:flex">
             <span
               className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--blue)]/60"
               style={{ fontFamily: 'var(--font-body)' }}
             >
-              Experience
+              Digital &amp; AI · Innovation
             </span>
             <span
-              className="-mt-0.5 text-sm font-extrabold text-[var(--blue)]"
+              className="-mt-0.5 truncate text-sm font-extrabold text-[var(--blue)]"
               style={{ fontFamily: 'var(--font-heading)' }}
             >
-              Catalogue
+              XP Catalogue
             </span>
+          </span>
+          <span
+            className="truncate text-sm font-extrabold text-[var(--blue)] md:hidden"
+            style={{ fontFamily: 'var(--font-heading)' }}
+          >
+            XP Catalogue
           </span>
         </Link>
 
@@ -159,11 +162,39 @@ export function Header() {
             );
           })}
           <div className="mx-1 h-5 w-px bg-[var(--grey-border)]" aria-hidden />
+          <Link
+            href="/"
+            aria-label="XP Catalogue — home"
+            className="ml-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg shadow-[var(--shadow-sm)] ring-1 ring-[var(--grey-border)] transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
+          >
+            <Image
+              src={XP_CATALOGUE_LOGO}
+              alt=""
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-lg"
+              unoptimized
+            />
+          </Link>
           <ThemeToggle />
         </nav>
 
         {/* Mobile: compact search launcher + menu button */}
         <div className="ml-auto flex items-center gap-2 md:hidden">
+          <Link
+            href="/"
+            aria-label="XP Catalogue — home"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg shadow-[var(--shadow-sm)] ring-1 ring-[var(--grey-border)]"
+          >
+            <Image
+              src={XP_CATALOGUE_LOGO}
+              alt=""
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-lg"
+              unoptimized
+            />
+          </Link>
           <MobileSearchLauncher />
           <button
             type="button"

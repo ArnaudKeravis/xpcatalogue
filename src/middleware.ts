@@ -6,7 +6,14 @@ const COOKIE = 'sdx_auth';
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith('/_next') || pathname.startsWith('/api') || pathname === '/favicon.ico') {
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/images/') ||
+    pathname === '/favicon.ico' ||
+    pathname === '/icon.svg' ||
+    pathname === '/apple-icon.png'
+  ) {
     return NextResponse.next();
   }
 

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="xpFaviconBg" x1="2" y1="4" x2="30" y2="28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#293896" />
+      <stop offset="0.55" stop-color="#1a69ff" />
+      <stop offset="1" stop-color="#00d1c7" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#xpFaviconBg)" />
+  <g stroke="#ffffff" stroke-width="2.35" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6.5 9.5L12.5 16M12.5 9.5L6.5 16" />
+    <path d="M14.5 9.5V22.5" />
+    <path d="M14.5 9.5H18.8Q22.5 9.5 22.5 13.1Q22.5 16.6 18.8 16.6H14.5" fill="none" />
+  </g>
+</svg>
