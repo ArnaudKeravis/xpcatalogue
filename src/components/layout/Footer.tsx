@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getCatalogueData } from '@/lib/notion';
+import { COLLECTION_META } from '@/lib/data/collections';
 
 /**
  * Global footer. Async server component so we can show live counts from
@@ -78,6 +79,13 @@ export async function Footer() {
               { href: '/heal', label: 'Heal' },
               { href: '/play', label: 'Play' },
               { href: '/solutions', label: 'All solutions' },
+              { href: COLLECTION_META['standard-offer'].href, label: 'Standard Offer' },
+              {
+                href: COLLECTION_META['standard-offer'].catalogueHref!,
+                label: 'Standard Offer + grid',
+              },
+              { href: COLLECTION_META.blockbuster.href, label: 'AI Blockbusters' },
+              { href: '/search-guide', label: 'Search guide' },
               { href: '/saved', label: 'My saved' },
               { href: '/login', label: 'Sign in' },
             ].map((link) => (

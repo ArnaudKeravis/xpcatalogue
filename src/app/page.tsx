@@ -123,6 +123,37 @@ export default async function HomePage() {
           <HeroCollage className="w-full" />
         </div>
 
+        {/* TDDI shortlists — above the large entry cards so they stay above the fold on mobile */}
+        <nav
+          className="motion-fade-up mx-auto mt-10 flex max-w-[1600px] flex-wrap items-center justify-center gap-3 md:mt-12 md:justify-start md:gap-4"
+          style={{ animationDelay: '480ms' }}
+          aria-label="TDDI curated shortlists"
+        >
+          <Link
+            href={COLLECTION_META['standard-offer'].href}
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2.5 text-sm font-bold text-white shadow-[var(--shadow-sm)] ring-1 ring-white/20 backdrop-blur-sm transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            <Trophy size={18} weight="duotone" className="text-[var(--teal)]" aria-hidden />
+            Standard Offer
+          </Link>
+          <Link
+            href={COLLECTION_META.blockbuster.href}
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2.5 text-sm font-bold text-white shadow-[var(--shadow-sm)] ring-1 ring-white/20 backdrop-blur-sm transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            <Rocket size={18} weight="duotone" className="text-amber-200" aria-hidden />
+            AI Blockbusters
+          </Link>
+          <Link
+            href={COLLECTION_META['standard-offer'].catalogueHref!}
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-transparent px-4 py-2.5 text-sm font-semibold text-white/95 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            Standard grid only
+          </Link>
+        </nav>
+
         {/* Three entry points */}
         <div
           className="motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-3"
@@ -169,29 +200,6 @@ export default async function HomePage() {
             footer={`${counts.solutions} solutions`}
           />
         </div>
-
-        <nav
-          className="motion-fade-up mx-auto mt-8 flex max-w-[1600px] flex-wrap items-center justify-center gap-3 md:gap-4"
-          style={{ animationDelay: '640ms' }}
-          aria-label="TDDI curated shortlists"
-        >
-          <Link
-            href={COLLECTION_META['standard-offer'].href}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-bold text-white shadow-[var(--shadow-sm)] backdrop-blur-sm transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            <Trophy size={16} weight="duotone" className="text-[var(--teal)]" aria-hidden />
-            Standard Offer
-          </Link>
-          <Link
-            href={COLLECTION_META.blockbuster.href}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-bold text-white shadow-[var(--shadow-sm)] backdrop-blur-sm transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            <Rocket size={16} weight="duotone" className="text-amber-200" aria-hidden />
-            AI Blockbusters
-          </Link>
-        </nav>
       </section>
 
       {/* ── Today + Featured + Countries band ─────────────────── */}
