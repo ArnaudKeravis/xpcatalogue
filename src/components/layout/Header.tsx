@@ -89,6 +89,14 @@ export function Header() {
           aria-label="XP Catalogue — home"
           className="group flex min-w-0 items-center gap-2.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--blue-primary)]"
         >
+          <Image
+            src={XP_CATALOGUE_LOGO}
+            alt=""
+            width={36}
+            height={36}
+            className="h-9 w-9 shrink-0 rounded-lg shadow-[var(--shadow-sm)] ring-1 ring-[var(--grey-border)] md:h-10 md:w-10"
+            unoptimized
+          />
           <span className="hidden min-w-0 flex-col leading-tight md:flex">
             <span
               className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--blue)]/60"
@@ -162,44 +170,15 @@ export function Header() {
             );
           })}
           <div className="mx-1 h-5 w-px bg-[var(--grey-border)]" aria-hidden />
-          <Link
-            href="/"
-            aria-label="XP Catalogue — home"
-            className="ml-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg shadow-[var(--shadow-sm)] ring-1 ring-[var(--grey-border)] transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
-          >
-            <Image
-              src={XP_CATALOGUE_LOGO}
-              alt=""
-              width={36}
-              height={36}
-              className="h-9 w-9 rounded-lg"
-              unoptimized
-            />
-          </Link>
           <ThemeToggle />
         </nav>
 
         {/* Mobile: compact search launcher + menu button */}
         <div className="ml-auto flex items-center gap-2 md:hidden">
-          <Link
-            href="/"
-            aria-label="XP Catalogue — home"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg shadow-[var(--shadow-sm)] ring-1 ring-[var(--grey-border)]"
-          >
-            <Image
-              src={XP_CATALOGUE_LOGO}
-              alt=""
-              width={36}
-              height={36}
-              className="h-9 w-9 rounded-lg"
-              unoptimized
-            />
-          </Link>
           <MobileSearchLauncher />
           <button
             type="button"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
             aria-controls="header-mobile-menu"
             onClick={() => setMenuOpen((v) => !v)}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--grey-border)] bg-[var(--surface-card)] text-[var(--blue)] transition-colors"
@@ -279,7 +258,6 @@ function MobileSearchLauncher() {
       <button
         type="button"
         aria-label="Open search"
-        aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--grey-border)] bg-[var(--surface-card)] text-[var(--blue)]"
       >
