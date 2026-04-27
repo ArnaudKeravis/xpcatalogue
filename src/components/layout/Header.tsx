@@ -82,7 +82,7 @@ export function Header() {
       className="sticky top-0 z-40 w-full border-b border-[var(--grey-border)] bg-[var(--surface-card)] backdrop-blur-xl supports-[backdrop-filter]:bg-[var(--surface-card)]"
       style={{ boxShadow: 'var(--shadow-nav)' }}
     >
-      <div className="mx-auto flex h-14 w-full max-w-[1600px] items-center gap-3 px-4 md:h-16 md:gap-4 md:px-8">
+      <div className="mx-auto flex flex-row h-14 w-full max-w-[1600px] items-center gap-3 px-4 md:h-16 md:gap-4 md:px-8">
         {/* Logo + brand */}
         <Link
           href="/"
