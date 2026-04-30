@@ -134,6 +134,7 @@ export default async function PersonaPage({ params }: Props) {
                       area={areaConfig}
                       steps={steps}
                       imageUrl={persona.journeyMapImage}
+                      journeyHotspots={persona.journeyHotspots}
                     />
                   ) : null}
                 </div>

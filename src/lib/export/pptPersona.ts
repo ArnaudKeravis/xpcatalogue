@@ -11,19 +11,13 @@ import {
   fetchAsDataUrl,
   safeFilename,
 } from './brand';
+import { imageContainInBox, TEXT_SHRINK } from './pptHelpers';
+
+const FIT = TEXT_SHRINK;
 
 /**
- * Persona one-pager. Layout:
- *
- *   [ navy header ]  eyebrow · area    ·    Sodexo logo
- *   ┌─────────────┬────────────────────────────────────┐
- *   │ portrait    │ Full name (huge)                   │
- *   │             │ role (teal)                        │
- *   │             │ "quote" …                          │
- *   │             │                                    │
- *   │ (quote card)│ MOTIVATIONS · PAINS · NEEDS grid   │
- *   └─────────────┴────────────────────────────────────┘
- *   footer
+ * Persona one-pager aligned with the PersonaProfile UI: eyebrow, portrait,
+ * quote, then Workplace → Professional goals → Motivations → Pains → Needs.
  */
 export async function exportPersonaToPptx(
   persona: Persona,
@@ -44,6 +38,8 @@ export async function exportPersonaToPptx(
   const slide = pptx.addSlide();
   slide.background = { color: SODEXO.canvas };
 
+  const eyebrow = persona.profileEyebrow ?? persona.name;
+
   /* ── Header ──────────────────────────────────────────────────────── */
   slide.addShape('rect', {
     x: 0,
@@ -56,29 +52,31 @@ export async function exportPersonaToPptx(
   slide.addText('EXPERIENCE CATALOGUE', {
     x: 0.45,
     y: 0.08,
-    w: 5,
+    w: 6,
     h: 0.22,
     fontFace: SODEXO_FONT.heading,
     fontSize: 9,
     color: 'FFFFFF',
     bold: true,
     charSpacing: 4,
+    ...FIT,
   });
   slide.addText(
     `Persona · ${area?.label ?? persona.area.toUpperCase()}`,
     {
       x: 0.45,
       y: 0.3,
-      w: 8,
+      w: 9,
       h: 0.26,
       fontFace: SODEXO_FONT.body,
       fontSize: 11,
       color: 'FFFFFF',
       bold: true,
+      ...FIT,
     },
   );
   if (logo) {
-    slide.addImage({ data: logo, x: 11.88, y: 0.12, w: 1.1, h: 0.38 });
+    slide.addImage(imageContainInBox({ data: logo, x: 11.88, y: 0.12, w: 1.1, h: 0.38 }));
   }
   slide.addShape('rect', {
     x: 0,
@@ -105,15 +103,15 @@ export async function exportPersonaToPptx(
     line: { color: SODEXO.hairline, width: 1 },
   });
   if (portrait) {
-    // Contain portrait inside card with some top padding.
-    slide.addImage({
-      data: portrait,
-      x: leftX + 0.35,
-      y: portraitY + 0.25,
-      w: leftW - 0.7,
-      h: portraitH - 0.5,
-      sizing: { type: 'contain', w: leftW - 0.7, h: portraitH - 0.5 },
-    });
+    slide.addImage(
+      imageContainInBox({
+        data: portrait,
+        x: leftX + 0.35,
+        y: portraitY + 0.25,
+        w: leftW - 0.7,
+        h: portraitH - 0.5,
+      }),
+    );
   } else {
     slide.addText(persona.emoji, {
       x: leftX,
@@ -126,33 +124,34 @@ export async function exportPersonaToPptx(
     });
   }
 
-  // Quote card under portrait
   slide.addShape('roundRect', {
     x: leftX,
     y: portraitY + portraitH + 0.15,
     w: leftW,
-    h: 1.4,
+    h: 1.55,
     rectRadius: 0.14,
     fill: { color: SODEXO.white },
     line: { color: SODEXO.hairline, width: 1 },
   });
   slide.addText(`"${persona.quote}"`, {
     x: leftX + 0.25,
-    y: portraitY + portraitH + 0.3,
+    y: portraitY + portraitH + 0.28,
     w: leftW - 0.5,
-    h: 1.1,
+    h: 1.25,
     fontFace: SODEXO_FONT.body,
     fontSize: 11,
     color: SODEXO.navy,
     italic: true,
     valign: 'middle',
+    wrap: true,
+    ...FIT,
   });
 
-  /* ── Right column: title + grid ──────────────────────────────────── */
+  /* ── Right column: eyebrow + title + cards (same order as PersonaProfile) ─ */
   const rightX = 4.5;
   const rightW = 8.4;
 
-  slide.addText(persona.name.toUpperCase(), {
+  slide.addText(eyebrow.toUpperCase(), {
     x: rightX,
     y: 0.95,
     w: rightW,
@@ -162,56 +161,73 @@ export async function exportPersonaToPptx(
     color: SODEXO.textMuted,
     bold: true,
     charSpacing: 6,
+    ...FIT,
   });
   slide.addText(persona.fullName, {
     x: rightX,
     y: 1.22,
     w: rightW,
-    h: 0.85,
+    h: 0.82,
     fontFace: SODEXO_FONT.heading,
-    fontSize: 38,
+    fontSize: 34,
     color: SODEXO.navy,
     bold: true,
+    ...FIT,
   });
   slide.addText(persona.role, {
     x: rightX,
     y: 2.05,
     w: rightW,
-    h: 0.36,
+    h: 0.38,
     fontFace: SODEXO_FONT.heading,
-    fontSize: 16,
+    fontSize: 15,
     color: SODEXO.teal,
     bold: true,
+    ...FIT,
   });
 
-  /* Info cards: Motivations / Pains / Needs (and optional Goals) ─── */
-  type CardTone = 'white' | 'amber';
-  const cards: Array<{ title: string; items: string[]; tone: CardTone }> = [
+  type CardTone = 'white' | 'navy' | 'amber';
+  const cards: Array<{ title: string; items: string[]; tone: CardTone }> = [];
+  if (persona.workplaceStats?.length) {
+    cards.push({ title: 'Workplace', items: persona.workplaceStats, tone: 'navy' });
+  }
+  if (persona.professionalGoals?.length) {
+    cards.push({ title: 'Professional goals', items: persona.professionalGoals, tone: 'amber' });
+  }
+  cards.push(
     { title: 'Motivations', items: persona.motivations, tone: 'white' },
     { title: 'Pain points', items: persona.pains, tone: 'white' },
     { title: 'Key needs', items: persona.needs, tone: 'white' },
-  ];
-  if (persona.professionalGoals?.length) {
-    cards.push({
-      title: 'Professional goals',
-      items: persona.professionalGoals,
-      tone: 'amber',
-    });
+  );
+
+  const cardsY = 2.58;
+  const maxBottom = 7.05;
+  const availableH = maxBottom - cardsY;
+  const gap = 0.22;
+
+  let cols = 2;
+  let rows = Math.ceil(cards.length / cols);
+  let cardH = (availableH - (rows - 1) * 0.18) / rows;
+
+  if (cardH < 0.88 && cards.length > 3) {
+    cols = 3;
+    rows = Math.ceil(cards.length / cols);
+    cardH = (availableH - (rows - 1) * 0.18) / rows;
   }
 
-  const cardsY = 2.6;
-  const rows = cards.length <= 3 ? 1 : 2;
-  const cols = cards.length <= 3 ? cards.length : 2;
-  const cardW = (rightW - 0.25 * (cols - 1)) / cols;
-  const cardH = rows === 1 ? 2.9 : 1.4;
+  cardH = Math.max(0.82, Math.min(1.38, cardH));
+  const cardW = (rightW - gap * (cols - 1)) / cols;
 
   cards.forEach((c, i) => {
     const row = Math.floor(i / cols);
     const col = i % cols;
-    const x = rightX + col * (cardW + 0.25);
-    const y = cardsY + row * (cardH + 0.2);
-    const fill = c.tone === 'amber' ? SODEXO.amber : SODEXO.white;
-    const titleColor = SODEXO.navy;
+    const x = rightX + col * (cardW + gap);
+    const y = cardsY + row * (cardH + 0.18);
+    const fill =
+      c.tone === 'navy' ? SODEXO.navy : c.tone === 'amber' ? SODEXO.amber : SODEXO.white;
+    const titleColor = c.tone === 'navy' ? 'FFFFFF' : SODEXO.navy;
+    const bulletColor = c.tone === 'navy' ? 'FFFFFF' : SODEXO.textBody;
+
     slide.addShape('roundRect', {
       x,
       y,
@@ -222,31 +238,33 @@ export async function exportPersonaToPptx(
       line: { color: SODEXO.hairline, width: 1 },
     });
     slide.addText(c.title.toUpperCase(), {
-      x: x + 0.2,
-      y: y + 0.15,
-      w: cardW - 0.4,
-      h: 0.3,
+      x: x + 0.18,
+      y: y + 0.12,
+      w: cardW - 0.36,
+      h: 0.28,
       fontFace: SODEXO_FONT.heading,
-      fontSize: 10,
+      fontSize: 9,
       color: titleColor,
       bold: true,
-      charSpacing: 5,
+      charSpacing: 4,
+      ...FIT,
     });
     slide.addText(
       c.items.map((it) => ({
         text: it,
-        options: { bullet: { code: '25CF' } },
+        options: { bullet: { code: '25CF' }, color: bulletColor },
       })),
       {
-        x: x + 0.2,
-        y: y + 0.5,
-        w: cardW - 0.4,
-        h: cardH - 0.6,
+        x: x + 0.18,
+        y: y + 0.4,
+        w: cardW - 0.36,
+        h: cardH - 0.48,
         fontFace: SODEXO_FONT.body,
-        fontSize: 10.5,
-        color: SODEXO.textBody,
+        fontSize: 9.5,
         valign: 'top',
-        paraSpaceAfter: 3,
+        paraSpaceAfter: 2,
+        wrap: true,
+        ...FIT,
       },
     );
   });
@@ -269,6 +287,7 @@ export async function exportPersonaToPptx(
     fontSize: 9,
     color: 'FFFFFF',
     valign: 'middle',
+    ...FIT,
   });
 
   await pptx.writeFile({

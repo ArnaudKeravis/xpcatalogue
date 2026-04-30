@@ -46,7 +46,10 @@ export function SolutionCard({ solution, siblings, module }: Props) {
   const handleDownload = () => {
     startExport(async () => {
       const { exportSolutionToPptx } = await import('@/lib/export/pptSolution');
-      await exportSolutionToPptx(current, module);
+      await exportSolutionToPptx(current, {
+        module,
+        siblingCount: allSolutions.length,
+      });
     });
   };
 
