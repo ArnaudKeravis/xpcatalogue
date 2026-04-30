@@ -11,6 +11,7 @@ import {
   uniqueTypes,
 } from '@/lib/queries/filterSolutions';
 import { BlockbusterCollectionIntro } from '@/components/catalogue/BlockbusterCollectionIntro';
+import { ScrollToStandardOfferCatalogue } from '@/components/catalogue/ScrollToStandardOfferCatalogue';
 import { StandardOfferParallax } from '@/components/standard-offer/StandardOfferParallax';
 import { COLLECTION_META, parseCollectionKey } from '@/lib/data/collections';
 import { cn } from '@/lib/utils/cn';
@@ -164,7 +165,12 @@ export default async function SolutionsPage({ searchParams }: Props) {
   return (
     <main id="main-content" className="flex flex-1 flex-col bg-[var(--surface)]">
       {soloCollection?.key === 'standard-offer' ? (
-        <StandardOfferParallax embedded />
+        <>
+          <Suspense fallback={null}>
+            <ScrollToStandardOfferCatalogue />
+          </Suspense>
+          <StandardOfferParallax embedded />
+        </>
       ) : (
         <div className="px-4 py-6 md:px-8">
           {soloCollection?.key === 'blockbuster' ? (

@@ -132,7 +132,7 @@ export const COLLECTION_META: Record<SolutionCollection, CollectionMeta> = {
     accent: '#14b8a6',
     icon: 'Trophy',
     href: '/standard-offer',
-    catalogueHref: '/solutions?collection=standard-offer',
+    catalogueHref: '/solutions?collection=standard-offer#solutions-catalogue',
   },
   blockbuster: {
     key: 'blockbuster',
