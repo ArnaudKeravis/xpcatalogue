@@ -92,6 +92,8 @@ const SOLUTION_ALIASES: Record<string, string> = {
   'menu ai': 'menuai',
   'pret-a-generer - menu ai': 'menuai',
   'sodexo wrx': 'sodexoWrx',
+  sodexowrx: 'sodexoWrx',
+  'wando app': 'wandoAnalytics',
   leanpath: 'leanpath',
   'my village': 'myVillage',
   'my village ': 'myVillage',

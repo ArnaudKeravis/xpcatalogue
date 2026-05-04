@@ -2,7 +2,7 @@
 
 import PptxGenJS from 'pptxgenjs';
 import type { AreaConfig, Persona } from '@/lib/data/types';
-import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
+import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 import {
   SODEXO,
   SODEXO_FONT,
@@ -32,7 +32,7 @@ export async function exportPersonaToPptx(
 
   const [logo, portrait] = await Promise.all([
     fetchAsDataUrl(SODEXO_LOGO_PATH),
-    fetchAsDataUrl(persona.photo ?? PERSONA_PORTRAIT_URL[persona.id] ?? ''),
+    fetchAsDataUrl(resolvePersonaImage('full', persona.id, persona.photo)),
   ]);
 
   const slide = pptx.addSlide();

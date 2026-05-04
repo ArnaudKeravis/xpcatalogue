@@ -3,7 +3,7 @@
 import { useTransition, type ReactNode } from 'react';
 import { Brain, PushPin, Target, User, WarningCircle } from '@phosphor-icons/react';
 import type { AreaConfig, Persona } from '@/lib/data/types';
-import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
+import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 import { DownloadCta } from '@/components/ui/DownloadCta';
 import { cn } from '@/lib/utils/cn';
 
@@ -93,7 +93,7 @@ function InfoCard({
 
 export function PersonaProfile({ persona, area, className }: Props) {
   const eyebrow = persona.profileEyebrow ?? persona.name;
-  const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
+  const portraitSrc = resolvePersonaImage('full', persona.id, persona.photo);
   const hasWorkplaceStats = (persona.workplaceStats?.length ?? 0) > 0;
   const hasProfessionalGoals = (persona.professionalGoals?.length ?? 0) > 0;
   const [exporting, startExport] = useTransition();

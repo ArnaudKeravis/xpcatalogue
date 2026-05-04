@@ -24,7 +24,7 @@ import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { MomentScene } from '@/components/catalogue/MomentScene';
 import { getCatalogueData } from '@/lib/notion';
-import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
+import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import { pickFirstRealHero } from '@/lib/data/solutionHeroImage';
 import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
@@ -99,7 +99,7 @@ export default async function MomentPage({ params }: Props) {
   const momentIsoImage = resolveJourneyMomentImage(persona.id, step.id);
   const heroImageSrc = momentIsoImage ?? mapImage;
   const heroIsVector = Boolean(heroImageSrc?.endsWith('.svg'));
-  const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
+  const portraitSrc = resolvePersonaImage('listing', persona.id, persona.photo);
   const eyebrow = persona.profileEyebrow ?? 'Consumer';
 
   // Locate this moment's hotspot on the journey artwork. We use it to (a) draw

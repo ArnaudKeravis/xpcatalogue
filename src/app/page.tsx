@@ -8,6 +8,7 @@ import { CuratedCollectionsBand } from '@/components/home/CuratedCollectionsBand
 import { FeaturedPersona } from '@/components/home/FeaturedPersona';
 import { HeroCollage } from '@/components/home/HeroCollage';
 import type { Area } from '@/lib/data/types';
+import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 
 export const revalidate = 3600;
 
@@ -41,6 +42,9 @@ export default async function HomePage() {
   const dayIdx = Math.floor(Date.now() / 86400000) % Math.max(1, data.personas.length);
   const featured = data.personas[dayIdx];
   const featuredArea = featured ? data.areas[featured.area] : null;
+  const featuredFaceSrc = featured
+    ? resolvePersonaImage('face', featured.id, featured.photo)
+    : undefined;
 
   // Moments across the day (bucketed by position in a persona's journey). We don't have
   // timestamps, so we use position in each persona's `steps` array as a proxy for
@@ -173,7 +177,7 @@ export default async function HomePage() {
             icon={
               featured ? (
                 <PersonaAvatar
-                  photo={featured.photo}
+                  photo={featuredFaceSrc}
                   color={featured.color}
                   name={featured.fullName}
                 />
@@ -215,7 +219,7 @@ export default async function HomePage() {
               areaLabel={featuredArea.label}
               areaColor={featuredArea.color}
               color={featured.color}
-              photo={featured.photo}
+              photo={featuredFaceSrc}
               href={`/${featured.area}/${featured.id}`}
             />
           ) : null}

@@ -60,7 +60,7 @@ function TripleParallaxBand({ children, className, drift = 56, variant = 'iq' }:
         : 'var(--blue)';
 
   return (
-    <div ref={ref} className={cn('relative min-h-[72vh] overflow-hidden border-b border-[var(--grey-border)]', className)}>
+    <div ref={ref} className={cn('relative overflow-hidden border-b border-[var(--grey-border)]', className)}>
       <motion.div
         aria-hidden
         className="pointer-events-none absolute -left-28 top-8 h-80 w-80 rounded-full opacity-[0.11] blur-3xl"
@@ -108,25 +108,43 @@ function HeroParallaxScene({ children, className }: { children: React.ReactNode;
   );
 }
 
-function FeaturedStrip({ solutions, label }: { solutions: Solution[]; label: string }) {
+function FeaturedStrip({
+  solutions,
+  label,
+  compact = false,
+}: {
+  solutions: Solution[];
+  label: string;
+  compact?: boolean;
+}) {
   if (solutions.length === 0) return null;
 
   return (
-    <div className="col-span-full mt-10 w-full border-t border-[var(--grey-border)] pt-10">
+    <div
+      className={cn(
+        'w-full border-t border-[var(--grey-border)]',
+        compact ? 'mt-4 border-[var(--grey-border)]/70 pt-4' : 'mt-6 pt-6',
+      )}
+    >
       <p
-        className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/50"
+        className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--blue)]/50 md:text-[11px]"
         style={{ fontFamily: 'var(--font-body)' }}
       >
         {label}
       </p>
-      <ul className="mt-4 grid gap-4 sm:grid-cols-3">
+      <ul className={cn('grid sm:grid-cols-3', compact ? 'mt-2.5 gap-2.5' : 'mt-3 gap-3')}>
         {solutions.map((s) => (
           <li key={s.id}>
             <Link
               href={`/solutions/${s.id}`}
-              className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] shadow-[var(--shadow-sm)] transition-transform hover:-translate-y-0.5 hover:shadow-md"
+              className="group flex h-full flex-col overflow-hidden rounded-xl border border-[var(--grey-border)] bg-[var(--surface-card)] shadow-[var(--shadow-sm)] transition-transform hover:-translate-y-0.5 hover:shadow-md"
             >
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--icon-bg)]">
+              <div
+                className={cn(
+                  'relative w-full overflow-hidden bg-[var(--icon-bg)]',
+                  compact ? 'aspect-[16/10]' : 'aspect-[4/3]',
+                )}
+              >
                 {s.heroImage ? (
                   <Image
                     src={s.heroImage}
@@ -136,17 +154,17 @@ function FeaturedStrip({ solutions, label }: { solutions: Solution[]; label: str
                     sizes="(max-width: 640px) 100vw, 33vw"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-3xl" aria-hidden>
+                  <div className="flex h-full items-center justify-center text-2xl" aria-hidden>
                     {s.img}
                   </div>
                 )}
               </div>
-              <div className="flex flex-1 flex-col gap-1.5 p-4">
+              <div className={cn('flex flex-1 flex-col gap-1', compact ? 'p-3' : 'p-4')}>
                 <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--blue)]/45">{s.module}</p>
-                <p className="text-sm font-extrabold text-[var(--blue)]" style={{ fontFamily: 'var(--font-heading)' }}>
+                <p className="text-sm font-extrabold leading-snug text-[var(--blue)]" style={{ fontFamily: 'var(--font-heading)' }}>
                   {s.name}
                 </p>
-                <p className="line-clamp-2 text-xs text-[var(--blue)]/70" style={{ fontFamily: 'var(--font-body)' }}>
+                <p className="line-clamp-2 text-[11px] leading-snug text-[var(--blue)]/70 md:text-xs" style={{ fontFamily: 'var(--font-body)' }}>
                   {s.description}
                 </p>
               </div>
@@ -186,7 +204,7 @@ export function StandardOfferParallax({ embedded = false, featured }: StandardOf
     <div className="bg-[var(--surface)]">
       {/* Hero — three soft depth layers */}
       <HeroParallaxScene>
-        <div className="mx-auto max-w-[960px] px-6 py-16 md:py-24 md:text-center">
+        <div className="mx-auto max-w-[960px] px-6 py-12 text-center md:py-16">
           <span
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--icon-bg)] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/70"
             style={{ fontFamily: 'var(--font-body)' }}
@@ -242,108 +260,120 @@ export function StandardOfferParallax({ embedded = false, featured }: StandardOf
         </div>
       </HeroParallaxScene>
 
-      {/* IQ — intelligence */}
+      {/* IQ — intelligence (copy → three solutions → tip) */}
       <TripleParallaxBand drift={56} variant="iq">
-        <div className="relative mx-auto grid max-w-[1100px] gap-x-10 gap-y-0 px-6 py-20 md:grid-cols-[1fr_1.1fr] md:items-start md:py-28">
-          <div className="flex flex-col gap-4">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
-              <ChartLine size={16} weight="duotone" className="text-[var(--blue-primary)]" aria-hidden />
-              IQ
-            </span>
-            <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
-              Intelligence that makes the invisible visible
-            </h2>
-            <p className="text-sm leading-relaxed text-[var(--blue)]/75 md:text-base" style={{ fontFamily: 'var(--font-body)' }}>
-              The IQ pillar groups analytics, client portals and decision-grade signals — from performance dashboards to B2B
-              platforms — so account teams can prove value, spot drift early, and steer programmes with facts, not anecdotes.
-            </p>
-            <ul className="list-inside list-disc space-y-2 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
-              <li>4Site and connected insight layers for commercial conversations</li>
-              <li>B2B digital touchpoints that keep clients aligned with live operations</li>
-            </ul>
+        <div className="relative mx-auto max-w-[1100px] px-6 py-12 md:py-16">
+          <div className="flex flex-col gap-5 md:flex-row md:items-start md:gap-6">
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
+                <ChartLine size={16} weight="duotone" className="text-[var(--blue-primary)]" aria-hidden />
+                IQ
+              </span>
+              <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
+                Intelligence that makes the invisible visible
+              </h2>
+              <p className="text-sm leading-snug text-[var(--blue)]/75 md:text-base md:leading-relaxed" style={{ fontFamily: 'var(--font-body)' }}>
+                The IQ pillar groups analytics, client portals and decision-grade signals — from performance dashboards to B2B
+                platforms — so account teams can prove value, spot drift early, and steer programmes with facts, not anecdotes.
+              </p>
+              <ul className="list-inside list-disc space-y-1.5 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
+                <li>4Site and connected insight layers for commercial conversations</li>
+                <li>B2B digital touchpoints that keep clients aligned with live operations</li>
+              </ul>
+              {showFeatured && featured ? (
+                <FeaturedStrip solutions={featured.iq} label="Featured · IQ" compact />
+              ) : null}
+            </div>
+            <div
+              className="w-full shrink-0 rounded-brand-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)] md:max-w-[300px] md:p-5"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">In the catalogue</p>
+              <p className="mt-2 text-sm leading-snug text-[var(--blue)]/75">
+                Look for solutions tagged <strong className="text-[var(--blue)]">Standard Offer</strong> in the intelligence lane — they are curated for scale and repeatability across accounts.
+              </p>
+            </div>
           </div>
-          <div
-            className="rounded-brand-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)] md:p-8"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">In the catalogue</p>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--blue)]/75">
-              Look for solutions tagged <strong className="text-[var(--blue)]">Standard Offer</strong> in the intelligence lane — they are curated for scale and repeatability across accounts.
-            </p>
-          </div>
-          {showFeatured && featured ? <FeaturedStrip solutions={featured.iq} label="Featured · IQ" /> : null}
         </div>
       </TripleParallaxBand>
 
       {/* OS — operations */}
       <TripleParallaxBand drift={44} variant="os" className="bg-[var(--surface-card)]/60">
-        <div className="relative mx-auto grid max-w-[1100px] gap-x-10 gap-y-0 px-6 py-20 md:grid-cols-[1.1fr_1fr] md:items-start md:py-28">
-          <div className="order-2 flex flex-col gap-4 md:order-1">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
-              <Lightning size={16} weight="duotone" className="text-[var(--teal)]" aria-hidden />
-              OS
-            </span>
-            <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
-              Operating systems for resilient sites
-            </h2>
-            <p className="text-sm leading-relaxed text-[var(--blue)]/75 md:text-base" style={{ fontFamily: 'var(--font-body)' }}>
-              The OS pillar is where menus, sustainability telemetry, and dynamic FM command centres meet — the digital layer that keeps kitchens, frontline teams and assets orchestrated day after day.
-            </p>
-            <ul className="list-inside list-disc space-y-2 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
-              <li>MenuAI, SEA, DBFM — the operational stack Sodexo runs at depth</li>
-              <li>Designed for repeat deployment, not one-off pilots</li>
-            </ul>
+        <div className="relative mx-auto max-w-[1100px] px-6 py-12 md:py-16">
+          <div className="flex flex-col gap-5 md:flex-row md:items-start md:gap-6">
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
+                <Lightning size={16} weight="duotone" className="text-[var(--teal)]" aria-hidden />
+                OS
+              </span>
+              <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
+                Operating systems for resilient sites
+              </h2>
+              <p className="text-sm leading-snug text-[var(--blue)]/75 md:text-base md:leading-relaxed" style={{ fontFamily: 'var(--font-body)' }}>
+                The OS pillar is where menus, sustainability telemetry, and dynamic FM command centres meet — the digital layer that keeps kitchens, frontline teams and assets orchestrated day after day.
+              </p>
+              <ul className="list-inside list-disc space-y-1.5 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
+                <li>MenuAI, SEA, DBFM — the operational stack Sodexo runs at depth</li>
+                <li>Designed for repeat deployment, not one-off pilots</li>
+              </ul>
+              {showFeatured && featured ? (
+                <FeaturedStrip solutions={featured.os} label="Featured · OS" compact />
+              ) : null}
+            </div>
+            <div
+              className="w-full shrink-0 rounded-brand-2xl border border-[var(--grey-border)] bg-white p-5 shadow-[var(--shadow-card)] md:max-w-[300px]"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">Why it matters</p>
+              <p className="mt-2 text-sm leading-snug text-[var(--blue)]/75">
+                Standard Offer here means procurement-safe patterns: pricing, SLAs, and implementation paths that sales and delivery already know how to land.
+              </p>
+            </div>
           </div>
-          <div
-            className="order-1 rounded-brand-2xl border border-[var(--grey-border)] bg-white p-6 shadow-[var(--shadow-card)] md:order-2 md:p-8"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">Why it matters</p>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--blue)]/75">
-              Standard Offer here means procurement-safe patterns: pricing, SLAs, and implementation paths that sales and delivery already know how to land.
-            </p>
-          </div>
-          {showFeatured && featured ? <FeaturedStrip solutions={featured.os} label="Featured · OS" /> : null}
         </div>
       </TripleParallaxBand>
 
       {/* XP — experience */}
       <TripleParallaxBand drift={52} variant="xp">
-        <div className="relative mx-auto grid max-w-[1100px] gap-x-10 gap-y-0 px-6 py-20 md:grid-cols-[1fr_1.1fr] md:items-start md:py-28">
-          <div className="flex flex-col gap-4">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
-              <Sparkle size={16} weight="duotone" className="text-[var(--blue-primary)]" aria-hidden />
-              XP
-            </span>
-            <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
-              Signature experiences guests feel on day one
-            </h2>
-            <p className="text-sm leading-relaxed text-[var(--blue)]/75 md:text-base" style={{ fontFamily: 'var(--font-body)' }}>
-              The XP pillar covers Everyday, WRX, Circles, and frictionless formats — autonomous stores and checkout innovation that shorten queues, lift satisfaction, and create premium moments without adding chaos for operators.
-            </p>
-            <ul className="list-inside list-disc space-y-2 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
-              <li>Consumer-grade journeys wired to Sodexo operations</li>
-              <li>Composable with the rest of the Standard Offer stack — not isolated gadgets</li>
-            </ul>
+        <div className="relative mx-auto max-w-[1100px] px-6 py-12 md:py-16">
+          <div className="flex flex-col gap-5 md:flex-row md:items-start md:gap-6">
+            <div className="flex min-w-0 flex-1 flex-col gap-3">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--icon-bg)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/70">
+                <Sparkle size={16} weight="duotone" className="text-[var(--blue-primary)]" aria-hidden />
+                XP
+              </span>
+              <h2 className="text-3xl font-extrabold text-[var(--blue)] md:text-4xl" style={{ fontFamily: 'var(--font-heading)' }}>
+                Signature experiences guests feel on day one
+              </h2>
+              <p className="text-sm leading-snug text-[var(--blue)]/75 md:text-base md:leading-relaxed" style={{ fontFamily: 'var(--font-body)' }}>
+                The XP pillar covers Everyday, WRX, Circles, and frictionless formats — autonomous stores and checkout innovation that shorten queues, lift satisfaction, and create premium moments without adding chaos for operators.
+              </p>
+              <ul className="list-inside list-disc space-y-1.5 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
+                <li>Consumer-grade journeys wired to Sodexo operations</li>
+                <li>Composable with the rest of the Standard Offer stack — not isolated gadgets</li>
+              </ul>
+              {showFeatured && featured ? (
+                <FeaturedStrip solutions={featured.xp} label="Featured · XP" compact />
+              ) : null}
+            </div>
+            <div
+              className="w-full shrink-0 rounded-brand-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-5 shadow-[var(--shadow-card)] md:max-w-[300px]"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">From deck to demo</p>
+              <p className="mt-2 text-sm leading-snug text-[var(--blue)]/75">
+                {embedded
+                  ? 'Use the story above, then scroll to the grid to shortlist proof points, logos, and geographies for your next client workshop.'
+                  : 'Use this page as the narrative wrapper; jump into the catalogue to shortlist proof points, logos, and geographies for your next client workshop.'}
+              </p>
+            </div>
           </div>
-          <div
-            className="rounded-brand-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-6 shadow-[var(--shadow-card)] md:p-8"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">From deck to demo</p>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--blue)]/75">
-              {embedded
-                ? 'Use the story above, then scroll to the grid to shortlist proof points, logos, and geographies for your next client workshop.'
-                : 'Use this page as the narrative wrapper; jump into the catalogue to shortlist proof points, logos, and geographies for your next client workshop.'}
-            </p>
-          </div>
-          {showFeatured && featured ? <FeaturedStrip solutions={featured.xp} label="Featured · XP" /> : null}
         </div>
       </TripleParallaxBand>
 
       {/* Closing CTA */}
       <ParallaxBand drift={28} className="border-t border-[var(--grey-border)] bg-[var(--surface-card)]/40">
-        <section className="mx-auto max-w-[960px] px-6 py-16 text-center md:py-20">
+        <section className="mx-auto max-w-[960px] px-6 py-12 text-center md:py-14">
           <h2 className="text-2xl font-extrabold text-[var(--blue)] md:text-3xl" style={{ fontFamily: 'var(--font-heading)' }}>
             Ready to assemble a client-ready basket?
           </h2>

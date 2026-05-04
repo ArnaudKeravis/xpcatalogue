@@ -3,7 +3,7 @@
 import { User } from '@phosphor-icons/react';
 import Link from 'next/link';
 import type { Persona } from '@/lib/data/types';
-import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
+import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 
 interface Props {
   persona: Persona;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function PersonaCard({ persona, href }: Props) {
-  const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
+  const portraitSrc = resolvePersonaImage('listing', persona.id, persona.photo);
 
   return (
     <Link

@@ -5,7 +5,7 @@ import { AreaRoleStories } from '@/components/catalogue/AreaRoleStories';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { getCatalogueData } from '@/lib/notion';
-import { PERSONA_PORTRAIT_URL } from '@/lib/data/personaPortraits';
+import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 import type { Area, AreaConfig, Persona } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -29,7 +29,7 @@ function PersonaPortraitCard({
   href: string;
   areaConfig: AreaConfig;
 }) {
-  const portraitSrc = persona.photo ?? PERSONA_PORTRAIT_URL[persona.id];
+  const portraitSrc = resolvePersonaImage('listing', persona.id, persona.photo);
   const eyebrow = persona.profileEyebrow ?? '';
 
   return (
