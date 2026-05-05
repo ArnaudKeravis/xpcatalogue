@@ -32,3 +32,4 @@ _verify_*.ts
 _scratch_*.mjs
 _scratch_*.ts
 .venv-img/
+.vercel
