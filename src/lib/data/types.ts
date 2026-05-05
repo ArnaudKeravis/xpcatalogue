@@ -43,8 +43,14 @@ export interface Solution {
   hashtags: string[];
   flags: string[];
   img: string;            // emoji fallback (module tile)
-  /** Optional hero visual (local catalogue asset). */
+  /**
+   * Compact product / tile visual from `Solutions_Images.zip` — grids, parallax, hero tile, moment cards.
+   */
   heroImage?: string;
+  /**
+   * Full marketing card from `Solution_Descriptions.zip` (infographic + structured copy). Detail page + export.
+   */
+  descriptionImage?: string;
   context: string;
   description: string;
   kpis: KPI[];

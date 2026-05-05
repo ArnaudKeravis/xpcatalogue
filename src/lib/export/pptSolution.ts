@@ -145,6 +145,8 @@ export async function exportSolutionToPptx(
 
   const logo = await fetchAsDataUrl(SODEXO_LOGO_PATH);
   const heroData = solution.heroImage ? await fetchAsDataUrl(solution.heroImage) : undefined;
+  const descriptionCardData =
+    solution.descriptionImage ? await fetchAsDataUrl(solution.descriptionImage) : undefined;
 
   const collectionsLine =
     solution.collections?.length ?
@@ -403,6 +405,28 @@ export async function exportSolutionToPptx(
   }
 
   addStandardFooter(slide1, footerRight || undefined);
+
+  /* ── Optional slide · marketing card from Solution_Descriptions.zip ───── */
+  if (descriptionCardData) {
+    const slideCard = pptx.addSlide();
+    slideCard.background = { color: SODEXO.canvas };
+    addStandardHeader(
+      slideCard,
+      'EXPERIENCE CATALOGUE',
+      `${solution.name} · solution overview`,
+      logo,
+    );
+    slideCard.addImage(
+      imageContainInBox({
+        data: descriptionCardData,
+        x: 0.45,
+        y: 0.82,
+        w: 12.4,
+        h: 6.15,
+      }),
+    );
+    addStandardFooter(slideCard, footerRight || undefined);
+  }
 
   /* ── Slide 2 · KPIs, benefits, contact, URL ─────────────────────── */
   const slide2 = pptx.addSlide();

@@ -5,9 +5,8 @@ import type { Solution } from './types';
  * `solutionsCatalog.ts` until we get real per-solution art). Treat them as
  * "no hero image" so the UI falls back to the Phosphor starter tile.
  *
- * When real imagery lands — either user-provided under
- * `/images/catalogue/assets/solutions/…` or a full URL pointing at
- * Notion / Figma / the web — we automatically switch over.
+ * Real imagery lives under `/images/catalogue/assets/solutions/…` (`Solutions_Images.zip`).
+ * Full infographic cards use `solution.descriptionImage`, not `heroImage`.
  */
 const PLACEHOLDER_HERO_PATHS = new Set<string>([
   '/images/catalogue/assets/areas/work-area-info-iso.png',

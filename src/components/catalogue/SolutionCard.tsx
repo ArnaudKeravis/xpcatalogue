@@ -208,6 +208,18 @@ export function SolutionCard({ solution, siblings, module }: Props) {
               <p className="text-xs leading-relaxed text-gray-600">{current.description}</p>
             </Section>
 
+            {current.descriptionImage ? (
+              <div className="overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[var(--shadow-sm)]">
+                <img
+                  src={current.descriptionImage}
+                  alt={`${current.name} — solution overview`}
+                  className="w-full object-contain object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            ) : null}
+
             <div className="grid grid-cols-2 gap-3">
               <Section icon={<ChartBar size={20} weight="fill" color="var(--blue)" />} title="Deployment & KPIs">
                 <div className="mt-1 grid grid-cols-2 gap-2">

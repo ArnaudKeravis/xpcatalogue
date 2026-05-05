@@ -17,8 +17,8 @@ interface Props {
  * The large illustrative tile shown beside a solution in the detail pane.
  *
  * Priority, from richest to simplest:
- *   1. `solution.heroImage` (a real photograph — typically sourced from
- *      Notion or the Figma export) is rendered edge-to-edge.
+ *   1. `solution.heroImage` — compact tile from `Solutions_Images.zip` —
+ *      rendered edge-to-edge when present (see `solutionHeroImage` for placeholder handling).
  *   2. Otherwise we compose an "illustration": the module's gradient, a
  *      soft spotlight, a faint dot grid, and the Phosphor icon as a huge
  *      centred mark. Consistent across all 90+ solutions and never feels

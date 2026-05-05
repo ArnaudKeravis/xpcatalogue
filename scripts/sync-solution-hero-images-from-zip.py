@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unpack Solutions_Images.zip and wire each asset to catalogue solution ids.
+"""Unpack Solutions_Images.zip — compact product / tile imagery per solution (`heroImage`).
 
 Naming convention in the zip: `solution_image_<Label>.<ext>` where <Label> uses
 underscores instead of spaces (Excel / export naming). We resolve labels to
@@ -10,7 +10,8 @@ explicit overrides where filenames abbreviate or typo the official name.
 Writes files under:
   public/images/catalogue/assets/solutions/<id>.<ext>
 
-Then replaces each matched solution's `heroImage: HERO` with the public URL.
+Then updates each matched solution's `heroImage` to that public URL. For full
+infographic cards use `sync-solution-description-cards-from-zip.py` → `descriptionImage`.
 """
 
 from __future__ import annotations

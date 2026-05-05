@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Unpack Solution_Descriptions.zip — marketing cards / visuals per solution.
+"""Unpack Solution_Descriptions.zip — full marketing / infographic cards per solution.
 
 Filenames use spaces and underscores: `solution_<Label>.png`. Labels align with
 Excel / product naming. Assets are written to
   public/images/catalogue/assets/solution-descriptions/<id>.png
-and `heroImage` in `solutionsCatalog.ts` is pointed there (richer than the
-compact `solutions/` hero tiles when both exist).
+and `descriptionImage` in `solutionsCatalog.ts` is set to that URL (structured
+copy + visuals). Use `sync-solution-hero-images-from-zip.py` for compact
+`Solutions_Images` → `heroImage`.
 
 Re-run:
   python3 scripts/sync-solution-description-cards-from-zip.py [path/to.zip]
@@ -154,17 +155,17 @@ def extract_object_span(full: str, solution_id: str) -> tuple[int, int] | None:
         return None
 
 
-def inject_or_replace_hero(block: str, public_path: str) -> str:
-    if re.search(r"\bheroImage\s*:", block):
+def inject_or_replace_description_image(block: str, public_path: str) -> str:
+    if re.search(r"\bdescriptionImage\s*:", block):
         return re.sub(
-            r'(heroImage:\s*)(?:HERO|"[^"]*")',
+            r'(descriptionImage:\s*)"[^"]*"',
             rf'\1"{public_path}"',
             block,
             count=1,
         )
 
     def _after_img(m: re.Match[str]) -> str:
-        return m.group(1) + f'\n    heroImage: "{public_path}",'
+        return m.group(1) + f'\n    descriptionImage: "{public_path}",'
 
     return re.sub(
         r'(\n\s*img:\s*(?:"[^"]*"|\[[^\]]*\]),)',
@@ -254,7 +255,7 @@ def main() -> int:
         a, b = span
         block = text[a:b]
         path = f"{public_url_prefix}/{sid}.png"
-        text = text[:a] + inject_or_replace_hero(block, path) + text[b:]
+        text = text[:a] + inject_or_replace_description_image(block, path) + text[b:]
 
     for primary, alias in ALSO_COPY_ID.items():
         if primary not in id_to_src:
@@ -266,12 +267,12 @@ def main() -> int:
         a, b = span
         block = text[a:b]
         path = f"{public_url_prefix}/{alias}.png"
-        text = text[:a] + inject_or_replace_hero(block, path) + text[b:]
+        text = text[:a] + inject_or_replace_description_image(block, path) + text[b:]
 
     CATALOG_PATH.write_text(text, encoding="utf-8")
 
     print(f"wrote {len(id_to_src)} png files under {PUBLIC_DIR.relative_to(REPO)}")
-    print(f"updated heroImage → {public_url_prefix}/<id>.png in {CATALOG_PATH.relative_to(REPO)}")
+    print(f"updated descriptionImage → {public_url_prefix}/<id>.png in {CATALOG_PATH.relative_to(REPO)}")
     if skipped:
         print(f"note: skipped {len(skipped)} entries")
     return 0
