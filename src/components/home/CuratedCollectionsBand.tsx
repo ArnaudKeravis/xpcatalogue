@@ -1,12 +1,12 @@
-import { ArrowRight, Rocket, Trophy } from '@phosphor-icons/react/dist/ssr';
+import { ArrowRight, LightbulbFilament, Trophy } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import { COLLECTION_META } from '@/lib/data/collections';
 import type { Solution, SolutionCollection } from '@/lib/data/types';
 
 /**
  * Home-page band that surfaces the two curated collections — Standard Offer
- * and AI Blockbusters. Each tile becomes an editorial
- * shortcut into `COLLECTION_META.href` (Standard Offer story vs Blockbuster grid),
+ * and Big Bets. Each tile becomes an editorial
+ * shortcut into `COLLECTION_META.href` (Standard Offer story vs Big Bets story),
  * with a live count and a few representative solution names so the band is never empty-feeling.
  *
  * Rendered as a server component: counts + previews are derived from the
@@ -42,8 +42,9 @@ export function CuratedCollectionsBand({ solutions }: { solutions: Solution[] })
             >
               Two shortlists to cut through 91 solutions —{' '}
               <strong className="text-[var(--blue)]">Standard Offer</strong> for scaled, client-ready
-              products, and the <strong className="text-[var(--blue)]">AI Blockbusters</strong> driving
-              Sodexo P&amp;L.
+              products (including legacy P&amp;L-impact solutions tagged <strong className="text-[var(--blue)]">#blockbuster</strong>), and{' '}
+              <strong className="text-[var(--blue)]">Big Bets</strong> for FY26 innovation priorities across Food & Beyond, Health &
+              Wellbeing, and Automation.
             </p>
           </div>
         </div>
@@ -55,9 +56,9 @@ export function CuratedCollectionsBand({ solutions }: { solutions: Solution[] })
             previews={previews['standard-offer'].names}
           />
           <CollectionTile
-            collectionKey="blockbuster"
-            count={previews.blockbuster.count}
-            previews={previews.blockbuster.names}
+            collectionKey="big-bets"
+            count={previews['big-bets'].count}
+            previews={previews['big-bets'].names}
           />
         </div>
       </div>
@@ -77,7 +78,7 @@ function CollectionTile({
   previews: string[];
 }) {
   const meta = COLLECTION_META[collectionKey];
-  const Icon = meta.icon === 'Trophy' ? Trophy : Rocket;
+  const Icon = meta.icon === 'Trophy' ? Trophy : LightbulbFilament;
 
   return (
     <Link
@@ -187,7 +188,7 @@ function buildPreviews(solutions: Solution[]): Record<
 > {
   const init: Record<SolutionCollection, { count: number; names: string[] }> = {
     'standard-offer': { count: 0, names: [] },
-    blockbuster: { count: 0, names: [] },
+    'big-bets': { count: 0, names: [] },
   };
 
   for (const s of solutions) {

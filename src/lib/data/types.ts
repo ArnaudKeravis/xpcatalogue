@@ -6,11 +6,11 @@ export type SolutionStatus = 'Scaled' | 'Scaling' | 'Pilot' | 'Study';
  * Curated collections — hand-tagged groupings surfaced as first-class nav entries
  * and discovery lenses on the home page. Distinct from `hashtags` (free-form, editorial)
  * because collections are finite, institutionally-blessed shortlists used to answer
- * "what's our scaled, client-ready standard offer?" and "what are our AI blockbusters?".
+ * "what's our scaled, client-ready standard offer?" and "which solutions map to our Big Bets?".
  *
- * Source of truth: TDDI Standard Offer deck + the P&L-impact AI slide.
+ * Source of truth: TDDI Standard Offer deck + *Big Bets 2026* innovation mapping.
  */
-export type SolutionCollection = 'standard-offer' | 'blockbuster';
+export type SolutionCollection = 'standard-offer' | 'big-bets';
 
 export type SolutionType =
   | 'Application'
@@ -58,7 +58,7 @@ export interface Solution {
   areas: Area[];
   notionId?: string;
   /**
-   * Curated groupings this solution belongs to (`standard-offer`, `blockbuster`).
+   * Curated groupings this solution belongs to (`standard-offer`, `big-bets`).
    * Enriched at load time from `src/lib/data/collections.ts`, not authored per-solution.
    */
   collections?: SolutionCollection[];

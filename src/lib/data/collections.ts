@@ -1,67 +1,26 @@
 /**
  * Curated collections — hand-tagged shortlists of catalogue solutions.
  *
- * Two collections are maintained here:
+ * 1. **Standard Offer** — Sodexo’s scaled, client-ready backbone (TDDI Standard Offer deck).
+ *    Former “AI blockbuster” catalogue entries are folded in here and additionally carry
+ *    the `#blockbuster` hashtag for filtering (replacing the old standalone collection).
  *
- * 1. **Standard Offer** — Sodexo's scaled, matured, client-ready products as
- *    documented in the TDDI Standard Offer deck. These are the solutions a sales /
- *    account team can safely propose today.
+ * 2. **Big Bets** — Sodexo’s FY26 innovation priorities across three strategic areas:
+ *    Food & Beyond, Health & Wellbeing, Automation & Intelligent Operations
+ *    (*Big Bets 2026* deck). The shortlist maps deck examples + platforms to catalogue IDs.
  *
- * 2. **Blockbuster** — the AI products explicitly called out as boosting Sodexo
- *    P&L in the TDDI AI portfolio slide (B2C / B2O / B2B AI, GenAI, AgenticAI).
- *
- * Source of truth lives here, not in each Solution record, so the two lists
- * can evolve independently of the catalogue data feed (Notion / fallback).
+ * Source of truth lives here, not per-Solution authoring, so lists can evolve with decks.
  */
 
 import type { Solution, SolutionCollection } from './types';
 
-/**
- * Solution IDs (matching `src/lib/data/solutionsCatalog.ts`) that belong to
- * the Standard Offer. Derived from the TDDI Standard Offer deck:
- *   - IQ   : 4Site, B2B Platform, (FM Insights via DBFM)
- *   - OS   : MenuAI, SEA (sustainability), DBFM (dynamic services / command centres)
- *   - XP   : Everyday, Sodexo WRX (× 2 module entries), Circles, Autonomous /
- *                  frictionless stores (AiFi / JWO / Zippin / Totem / Mashgin / Trayvisor)
- */
-export const STANDARD_OFFER_IDS: readonly string[] = [
-  '4site',
-  'b2bPlatform',
-  'menuai',
-  'sea',
-  'dbfm',
-  'everyday',
-  'sodexoWrx',
-  'sodexoWrxConciergerie',
-  'circles',
-  'aifi',
-  'amazonJwo',
-  'zippin',
-  'totem',
-  'mashgin',
-  'trayvisor',
-] as const;
+const BLOCKBUSTER_HASHTAG = '#blockbuster';
 
 /**
- * Solution IDs that belong to the AI Blockbuster shortlist (the P&L-impact slide).
- *
- * Mapping from slide labels to catalogue IDs:
- *   - 4Site         → `4site`
- *   - DBFM          → `dbfm`
- *   - ForeSight HR  → `foresightHr`
- *   - PowerChef     → `powerchef`
- *   - Power Pricing → `pricing`
- *   - Menu AI       → `menuai`
- *   - P Swap        → `productSwap`
- *   - Pegasus       → `pegasus`
- *   - SoProAI       → `soproAi`
- *   - Brand Perf    → `brandPerformance`
- *
- * Slide items without a catalogue match (SAM & Chatbots, Copilots for Ops/Supply/Sales/Mkt,
- * BridgeAI, C360, Meal Plan uni, RecipeAI, Pers. Recos.) are intentionally omitted until
- * they exist in the Notion source.
+ * Solutions that historically sat on the AI “blockbuster” P&L-impact slide —
+ * surfaced today as **Standard Offer** plus the `#blockbuster` hashtag (not a collection).
  */
-export const BLOCKBUSTER_IDS: readonly string[] = [
+export const BLOCKBUSTER_TAG_IDS: readonly string[] = [
   '4site',
   'dbfm',
   'foresightHr',
@@ -72,6 +31,84 @@ export const BLOCKBUSTER_IDS: readonly string[] = [
   'pegasus',
   'soproAi',
   'brandPerformance',
+] as const;
+
+/**
+ * Solution IDs (matching `src/lib/data/solutionsCatalog.ts`) that belong to
+ * the Standard Offer. Derived from the TDDI Standard Offer deck, **union** the
+ * former AI blockbuster shortlist so every blockbuster-tagged solution is standard-offer scoped.
+ */
+export const STANDARD_OFFER_IDS: readonly string[] = Array.from(
+  new Set([
+    '4site',
+    'b2bPlatform',
+    'menuai',
+    'sea',
+    'dbfm',
+    'everyday',
+    'sodexoWrx',
+    'sodexoWrxConciergerie',
+    'circles',
+    'aifi',
+    'amazonJwo',
+    'zippin',
+    'totem',
+    'mashgin',
+    'trayvisor',
+    ...BLOCKBUSTER_TAG_IDS,
+  ])
+) as unknown as readonly string[];
+
+const BLOCKBUSTER_TAG_SET = new Set<string>(BLOCKBUSTER_TAG_IDS);
+
+/**
+ * Solutions aligned with *Big Bets 2026* (slide 15–19 + initiative examples on slide 16):
+ * platforms, frictionless / autonomous retail, food & sustainability innovation,
+ * workplace wellbeing, and robotics / automation where they exist in this catalogue.
+ */
+export const BIG_BETS_IDS: readonly string[] = [
+  '4site',
+  'b2bPlatform',
+  'dbfm',
+  'foresightHr',
+  'powerchef',
+  'pricing',
+  'productSwap',
+  'pegasus',
+  'soproAi',
+  'brandPerformance',
+  'aifi',
+  'amazonJwo',
+  'zippin',
+  'totem',
+  'mashgin',
+  'trayvisor',
+  'everyday',
+  'menuai',
+  'sea',
+  'kikleo',
+  'leanpath',
+  'notpla',
+  'goodBytz',
+  'foodini',
+  'eatch',
+  'kumulus',
+  'eatCurious',
+  'nudj',
+  'bibak',
+  'cubo',
+  'bioteos',
+  'metronaps',
+  'bearRobotics',
+  'userveRobot',
+  'somatic',
+  'botinkit',
+  'starship',
+  'myVillage',
+  'soeze',
+  'wandoAnalytics',
+  'wandoDi',
+  'blueOceanUvd',
 ] as const;
 
 /* ── Reverse index (id → collections[]) ─────────────────────────────────── */
@@ -87,16 +124,25 @@ const COLLECTION_INDEX: Map<string, SolutionCollection[]> = (() => {
     }
   };
   STANDARD_OFFER_IDS.forEach((id) => push(id, 'standard-offer'));
-  BLOCKBUSTER_IDS.forEach((id) => push(id, 'blockbuster'));
+  BIG_BETS_IDS.forEach((id) => push(id, 'big-bets'));
   return m;
 })();
 
-/** Non-destructive: returns a new solution list with `collections` populated. */
+/** Non-destructive: returns a new solution list with `collections` + blockbuster hashtag. */
 export function enrichSolutionsWithCollections(solutions: Solution[]): Solution[] {
   return solutions.map((s) => {
     const hits = COLLECTION_INDEX.get(s.id);
-    if (!hits || hits.length === 0) return s;
-    return { ...s, collections: hits };
+    let next: Solution = hits && hits.length > 0 ? { ...s, collections: hits } : { ...s };
+
+    if (BLOCKBUSTER_TAG_SET.has(s.id)) {
+      const tags = next.hashtags ?? [];
+      const hasBlockbuster = tags.some((t) => t.toLowerCase() === BLOCKBUSTER_HASHTAG.toLowerCase());
+      if (!hasBlockbuster) {
+        next = { ...next, hashtags: [...tags, BLOCKBUSTER_HASHTAG] };
+      }
+    }
+
+    return next;
   });
 }
 
@@ -113,7 +159,7 @@ export interface CollectionMeta {
   /** Solid accent colour (matches gradient anchor). */
   accent: string;
   /** Phosphor icon name — resolved lazily in client components to keep SSR lean. */
-  icon: 'Trophy' | 'Rocket';
+  icon: 'Trophy' | 'Lightbulb';
   /** Primary editorial link (home tiles, header). */
   href: string;
   /** Filtered catalogue URL when it differs from `href` (e.g. Standard Offer story vs grid). */
@@ -134,21 +180,22 @@ export const COLLECTION_META: Record<SolutionCollection, CollectionMeta> = {
     href: '/standard-offer',
     catalogueHref: '/solutions?collection=standard-offer#solutions-catalogue',
   },
-  blockbuster: {
-    key: 'blockbuster',
-    label: 'AI Blockbusters',
-    shortLabel: 'Blockbuster',
-    tagline: 'AI products driving Sodexo P&L',
+  'big-bets': {
+    key: 'big-bets',
+    label: 'Big Bets',
+    shortLabel: 'Big Bets',
+    tagline: 'FY26 innovation priorities',
     description:
-      'The AI, GenAI and AgenticAI products explicitly built to boost revenue, retention and operational performance across B2C, B2O and B2B.',
-    gradient: 'linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f59e0b 100%)',
+      'Sodexo’s three innovation areas for 2030 — Food & Beyond, Health & Wellbeing, and Automation & Intelligent Operations — and the catalogue solutions that exemplify those Big Bets today.',
+    gradient: 'linear-gradient(135deg, #0f766e 0%, #7c3aed 45%, #ea580c 100%)',
     accent: '#7c3aed',
-    icon: 'Rocket',
-    href: '/solutions?collection=blockbuster',
+    icon: 'Lightbulb',
+    href: '/big-bets',
+    catalogueHref: '/solutions?collection=big-bets#solutions-catalogue',
   },
 };
 
-export const COLLECTION_KEYS: SolutionCollection[] = ['standard-offer', 'blockbuster'];
+export const COLLECTION_KEYS: SolutionCollection[] = ['standard-offer', 'big-bets'];
 
 /** Type-guard helper for URL params. */
 export function parseCollectionKey(raw: string | undefined): SolutionCollection | undefined {

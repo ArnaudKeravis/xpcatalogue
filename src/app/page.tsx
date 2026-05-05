@@ -1,4 +1,4 @@
-import { ArrowRight, Buildings, Compass, Rocket, Trophy, User, UsersThree } from '@phosphor-icons/react/dist/ssr';
+import { ArrowRight, Buildings, Compass, LightbulbFilament, Trophy, User, UsersThree } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import { getCatalogueData } from '@/lib/notion';
 import { COLLECTION_META } from '@/lib/data/collections';
@@ -142,12 +142,12 @@ export default async function HomePage() {
             Standard Offer
           </Link>
           <Link
-            href={COLLECTION_META.blockbuster.href}
+            href={COLLECTION_META['big-bets'].href}
             className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2.5 text-sm font-bold text-white shadow-[var(--shadow-sm)] ring-1 ring-white/20 backdrop-blur-sm transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            <Rocket size={18} weight="duotone" className="text-amber-200" aria-hidden />
-            AI Blockbusters
+            <LightbulbFilament size={18} weight="duotone" className="text-amber-200" aria-hidden />
+            Big Bets
           </Link>
           <Link
             href={COLLECTION_META['standard-offer'].catalogueHref!}
@@ -226,7 +226,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Curated collections band (Standard Offer + Blockbusters) ─── */}
+      {/* ── Curated collections band (Standard Offer + Big Bets) ─── */}
       <div className="relative z-10 bg-[var(--surface)]">
         <CuratedCollectionsBand solutions={data.solutions} />
       </div>

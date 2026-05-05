@@ -1,6 +1,6 @@
 'use client';
 
-import { CaretDown, FunnelSimple, Rocket, Trophy, X } from '@phosphor-icons/react';
+import { CaretDown, FunnelSimple, LightbulbFilament, Trophy, X } from '@phosphor-icons/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { COLLECTION_META, COLLECTION_KEYS } from '@/lib/data/collections';
@@ -174,7 +174,7 @@ export function SolutionsFilterBar({
         {COLLECTION_KEYS.map((key) => {
           const meta = COLLECTION_META[key];
           const active = selectedCollections.includes(key);
-          const Icon = key === 'blockbuster' ? Rocket : Trophy;
+          const Icon = key === 'big-bets' ? LightbulbFilament : Trophy;
           return (
             <button
               key={key}

@@ -10,7 +10,7 @@ import {
   uniqueStatuses,
   uniqueTypes,
 } from '@/lib/queries/filterSolutions';
-import { BlockbusterCollectionIntro } from '@/components/catalogue/BlockbusterCollectionIntro';
+import { BigBetsCollectionIntro } from '@/components/catalogue/BigBetsCollectionIntro';
 import { ScrollToStandardOfferCatalogue } from '@/components/catalogue/ScrollToStandardOfferCatalogue';
 import { StandardOfferParallax } from '@/components/standard-offer/StandardOfferParallax';
 import { COLLECTION_META, parseCollectionKey } from '@/lib/data/collections';
@@ -111,7 +111,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
   const hashtagFilter = many(searchParams.hashtag);
   const flagFilter = many(searchParams.flag);
 
-  // Curated collection filter — accepts ?collection=standard-offer or ?collection=blockbuster.
+  // Curated collection filter — accepts ?collection=standard-offer or ?collection=big-bets.
   // Multiple values are supported (OR semantics) to allow future cross-collection views.
   const collectionFilter = many(searchParams.collection)
     .map(parseCollectionKey)
@@ -153,7 +153,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
   const title = titleParts.length > 0 ? `Solutions — ${titleParts.join(' · ')}` : 'All solutions';
 
   const catalogueAnchorId =
-    soloCollection?.key === 'standard-offer' || soloCollection?.key === 'blockbuster'
+    soloCollection?.key === 'standard-offer' || soloCollection?.key === 'big-bets'
       ? 'solutions-catalogue'
       : undefined;
 
@@ -173,8 +173,8 @@ export default async function SolutionsPage({ searchParams }: Props) {
         </>
       ) : (
         <div className="px-4 py-6 md:px-8">
-          {soloCollection?.key === 'blockbuster' ? (
-            <BlockbusterCollectionIntro solutionCount={filtered.length} />
+          {soloCollection?.key === 'big-bets' ? (
+            <BigBetsCollectionIntro solutionCount={filtered.length} />
           ) : soloCollection ? (
             <div
               className="mb-4 overflow-hidden rounded-brand-2xl p-6 text-white md:p-8"

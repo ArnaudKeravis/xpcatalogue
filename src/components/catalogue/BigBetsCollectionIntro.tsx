@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Brain, ChartLine, Rocket, Sparkle } from '@phosphor-icons/react/dist/ssr';
+import { ArrowRight, Brain, Leaf, LightbulbFilament, Robot } from '@phosphor-icons/react/dist/ssr';
 import { COLLECTION_META } from '@/lib/data/collections';
 
 interface Props {
@@ -7,11 +7,11 @@ interface Props {
 }
 
 /**
- * Editorial opening for the AI Blockbusters collection view — mirrors the home
- * page tone (eyebrow, headline, supporting copy) before the solutions grid.
+ * Editorial opening for the Big Bets collection view — aligned with *Big Bets 2026*
+ * (three innovation areas and strategic intent) before the solutions grid.
  */
-export function BlockbusterCollectionIntro({ solutionCount }: Props) {
-  const meta = COLLECTION_META.blockbuster;
+export function BigBetsCollectionIntro({ solutionCount }: Props) {
+  const meta = COLLECTION_META['big-bets'];
 
   return (
     <div className="mb-6 overflow-hidden rounded-brand-2xl text-white shadow-[var(--shadow-card)]">
@@ -32,7 +32,7 @@ export function BlockbusterCollectionIntro({ solutionCount }: Props) {
             style={{ fontFamily: 'var(--font-body)' }}
           >
             <span className="h-px w-8 bg-white/70" aria-hidden />
-            TDDI · AI portfolio
+            Innovation · Big Bets FY26
           </span>
           <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
             <div>
@@ -46,24 +46,25 @@ export function BlockbusterCollectionIntro({ solutionCount }: Props) {
                 className="mt-4 max-w-xl text-sm leading-relaxed text-white/90 md:text-base"
                 style={{ fontFamily: 'var(--font-body)' }}
               >
-                {meta.description} This view lists the subset already modelled in the catalogue — the products
-                Sodexo calls out for P&amp;L impact across B2C, B2O and B2B motions, including GenAI and agentic
-                patterns where they map to a named solution.
+                {meta.description}{' '}
+                Across these areas, the strategic intent is to build resilient and sustainable food systems, lead workplace
+                wellness, reduce costs and labour constraints through automation, and elevate experience through personalization
+                and convenience — per the Sodexo Labs innovation narrative.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  href="/search-guide"
+                  href="/big-bets"
                   className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-xs font-bold text-white ring-1 ring-white/40 backdrop-blur-sm transition-colors hover:bg-white/25"
                   style={{ fontFamily: 'var(--font-body)' }}
                 >
-                  Search tips
+                  Full Big Bets story
                 </Link>
                 <Link
-                  href="/solutions?q=AI"
+                  href="/solutions?hashtag=%23blockbuster"
                   className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-[var(--blue)] shadow-sm transition-transform hover:-translate-y-0.5"
                   style={{ fontFamily: 'var(--font-body)' }}
                 >
-                  Explore AI-tagged results
+                  Standard-offer #blockbuster tag
                   <ArrowRight size={14} weight="bold" aria-hidden />
                 </Link>
               </div>
@@ -73,33 +74,33 @@ export function BlockbusterCollectionIntro({ solutionCount }: Props) {
               className="rounded-2xl bg-black/20 p-5 ring-1 ring-white/25 backdrop-blur-md md:p-6"
               style={{ fontFamily: 'var(--font-body)' }}
             >
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/75">In this shortlist</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/75">Three innovation areas</p>
               <ul className="mt-4 space-y-3 text-sm text-white/95">
                 <li className="flex gap-3">
-                  <Rocket size={20} weight="duotone" className="shrink-0 text-amber-200" aria-hidden />
+                  <Leaf size={20} weight="duotone" className="shrink-0 text-emerald-200" aria-hidden />
                   <span>
-                    <strong className="font-extrabold">Operational AI</strong> — forecasting, pricing, menu intelligence
-                    and dynamic FM signals that change how sites run day to day.
+                    <strong className="font-extrabold">Food &amp; Beyond</strong> — climate-resilient ingredients,
+                    next-gen production, zero-waste models, and indulgent food at scale.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <Brain size={20} weight="duotone" className="shrink-0 text-pink-200" aria-hidden />
+                  <Brain size={20} weight="duotone" className="shrink-0 text-violet-200" aria-hidden />
                   <span>
-                    <strong className="font-extrabold">People &amp; revenue</strong> — HR analytics, swaps, and brand
-                    performance loops that protect margin while improving experience.
+                    <strong className="font-extrabold">Health &amp; Wellbeing</strong> — precision wellness, mental health
+                    and stress relief, prevention-as-a-service, and integrated corporate wellness platforms.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <ChartLine size={20} weight="duotone" className="shrink-0 text-violet-200" aria-hidden />
+                  <Robot size={20} weight="duotone" className="shrink-0 text-amber-200" aria-hidden />
                   <span>
-                    <strong className="font-extrabold">Proof over hype</strong> — each card below links to KPIs,
-                    deployment status, and areas where the solution is live today.
+                    <strong className="font-extrabold">Automation &amp; Intelligent Ops</strong> — AI-powered guest engagement,
+                    frictionless and robotic retail, autonomous foodservice, and workforce augmentation.
                   </span>
                 </li>
               </ul>
               <p className="mt-5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80">
-                <Sparkle size={14} weight="duotone" aria-hidden />
-                {solutionCount} {solutionCount === 1 ? 'solution' : 'solutions'} in Blockbusters
+                <LightbulbFilament size={14} weight="duotone" aria-hidden />
+                {solutionCount} {solutionCount === 1 ? 'solution' : 'solutions'} mapped to Big Bets
               </p>
             </aside>
           </div>

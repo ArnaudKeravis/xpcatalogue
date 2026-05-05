@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, List, MapTrifold, Rocket, SquaresFour, Trophy, UsersThree, X } from '@phosphor-icons/react';
+import { Heart, LightbulbFilament, List, MapTrifold, SquaresFour, Trophy, UsersThree, X } from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -49,11 +49,11 @@ const NAV: NavItem[] = [
     gradient: 'linear-gradient(135deg, #0b76b8 0%, #14b8a6 100%)',
   },
   {
-    href: '/solutions?collection=blockbuster',
-    label: 'Blockbusters',
-    Icon: Rocket,
-    matches: () => false,
-    gradient: 'linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f59e0b 100%)',
+    href: '/big-bets',
+    label: 'Big Bets',
+    Icon: LightbulbFilament,
+    matches: (p) => p === '/big-bets',
+    gradient: 'linear-gradient(135deg, #0f766e 0%, #7c3aed 45%, #ea580c 100%)',
   },
   {
     href: '/saved',

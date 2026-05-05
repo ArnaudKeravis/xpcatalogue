@@ -14,6 +14,7 @@ export const revalidate = 3600;
 
 export default function SearchGuidePage() {
   const so = COLLECTION_META['standard-offer'];
+  const bb = COLLECTION_META['big-bets'];
 
   return (
     <div className="flex flex-1 flex-col bg-[var(--surface)]">
@@ -73,10 +74,10 @@ export default function SearchGuidePage() {
             </span>
             <div>
               <h2 className="text-lg font-extrabold text-[var(--blue)]" style={{ fontFamily: 'var(--font-heading)' }}>
-                Standard Offer &amp; Blockbusters
+                Standard Offer &amp; Big Bets
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-[var(--blue)]/75" style={{ fontFamily: 'var(--font-body)' }}>
-                Use collection chips for TDDI shortlists. The{' '}
+                Use collection chips for TDDI-aligned shortlists. The{' '}
                 <Link href={so.href} className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline">
                   Standard Offer story
                 </Link>{' '}
@@ -87,14 +88,23 @@ export default function SearchGuidePage() {
                 >
                   Standard Offer catalogue view
                 </Link>{' '}
-                stacks that narrative with the filtered grid.{' '}
+                stacks that narrative with the filtered grid. Legacy P&amp;L-impact AI products from the blockbuster slide
+                remain in Standard Offer scope and carry the{' '}
                 <Link
-                  href={COLLECTION_META.blockbuster.href}
+                  href="/solutions?hashtag=%23blockbuster"
                   className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline"
                 >
-                  AI Blockbusters
+                  #blockbuster
                 </Link>{' '}
-                does the same for the AI portfolio slice.
+                hashtag.{' '}
+                <Link href={bb.href} className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline">
+                  Big Bets
+                </Link>{' '}
+                covers FY26 innovation priorities (Food & Beyond, Health & Wellbeing, Automation); open the{' '}
+                <Link href={bb.catalogueHref!} className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline">
+                  Big Bets catalogue view
+                </Link>{' '}
+                for the mapped solution shortlist.
               </p>
             </div>
           </li>

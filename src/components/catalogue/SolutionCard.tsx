@@ -7,7 +7,7 @@ import {
   Info,
   LinkSimple,
   Phone,
-  Rocket,
+  LightbulbFilament,
   TrendUp,
   Trophy,
   User,
@@ -144,7 +144,7 @@ export function SolutionCard({ solution, siblings, module, hideModuleRail = fals
               <div className="flex flex-wrap gap-2">
                 {current.collections.map((c) => {
                   const meta = COLLECTION_META[c];
-                  const Icon = c === 'blockbuster' ? Rocket : Trophy;
+                  const Icon = c === 'big-bets' ? LightbulbFilament : Trophy;
                   return (
                     <Link
                       key={c}
