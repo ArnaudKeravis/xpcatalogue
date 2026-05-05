@@ -133,7 +133,15 @@ export async function Footer() {
       {/* Fine print */}
       <div className="border-t border-[var(--grey-border)]">
         <div className="mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-2 px-4 py-4 text-[11px] text-[var(--blue)]/50 md:flex-row md:items-center md:px-8">
-          <p>© {new Date().getFullYear()} Sodexo — internal showcase. Data sourced from Notion.</p>
+          <p className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4">
+            <span>© {new Date().getFullYear()} Sodexo — internal showcase. Data sourced from Notion.</span>
+            <Link
+              href="/standard-offer/tddi-deck"
+              className="text-[var(--blue)]/60 underline-offset-4 transition-colors hover:text-[var(--blue-primary)] hover:underline"
+            >
+              TDDI Standard Offer — interactive deck (44 slides)
+            </Link>
+          </p>
           <p>
             Built with Next.js, Tailwind, Phosphor &amp; love for humans who live the moments.
           </p>
