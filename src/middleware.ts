@@ -6,6 +6,9 @@ const COOKIE = 'sdx_auth';
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  /** Narrative-only surface: share / present without catalogue credentials. */
+  const isPublicTddiDeck = pathname === '/standard-offer/tddi-deck' || pathname === '/standard-offer/tddi-deck/';
+
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
@@ -14,6 +17,10 @@ export function middleware(req: NextRequest) {
     pathname === '/icon.svg' ||
     pathname === '/apple-icon.png'
   ) {
+    return NextResponse.next();
+  }
+
+  if (isPublicTddiDeck) {
     return NextResponse.next();
   }
 

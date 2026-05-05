@@ -84,6 +84,7 @@ export async function Footer() {
                 href: COLLECTION_META['standard-offer'].catalogueHref!,
                 label: 'Standard Offer + grid',
               },
+              { href: '/standard-offer/tddi-deck', label: 'TDDI deck (44 slides)' },
               { href: COLLECTION_META['big-bets'].href, label: 'Big Bets' },
               { href: COLLECTION_META['big-bets'].catalogueHref!, label: 'Big Bets + grid' },
               { href: '/search-guide', label: 'Search guide' },
