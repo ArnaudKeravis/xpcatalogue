@@ -3,9 +3,9 @@ import { TddiStandardOfferDeck } from '@/components/standard-offer/TddiStandardO
 
 /** Full-motion mirror of *TDDI_Standard offer.pptx*. Linked from footer only — not surfaced in primary nav. */
 export const metadata: Metadata = {
-  title: 'TDDI Standard Offer — full deck',
+  title: 'TDDI Standard Offer — immersive story',
   description:
-    'Parallax storytelling experience synced to the TDDI Standard Offer PowerPoint — Spark narrative, Food, Hospitality, Workplace / FM, tech foundations, and innovation.',
+    'Visual, parallax-forward Spark narrative covering Food, Hospitality, Workplace / FM, foundations, and innovation — distilled on screen with full speaker notes available on demand.',
   robots: { index: false, follow: true },
 };
 

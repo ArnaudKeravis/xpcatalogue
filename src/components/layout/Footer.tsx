@@ -84,7 +84,7 @@ export async function Footer() {
                 href: COLLECTION_META['standard-offer'].catalogueHref!,
                 label: 'Standard Offer + grid',
               },
-              { href: '/standard-offer/tddi-deck', label: 'TDDI deck (44 slides)' },
+              { href: '/standard-offer/tddi-deck', label: 'TDDI · interactive story' },
               { href: COLLECTION_META['big-bets'].href, label: 'Big Bets' },
               { href: COLLECTION_META['big-bets'].catalogueHref!, label: 'Big Bets + grid' },
               { href: '/search-guide', label: 'Search guide' },
@@ -140,7 +140,7 @@ export async function Footer() {
               href="/standard-offer/tddi-deck"
               className="text-[var(--blue)]/60 underline-offset-4 transition-colors hover:text-[var(--blue-primary)] hover:underline"
             >
-              TDDI Standard Offer — interactive deck (44 slides)
+              TDDI Standard Offer — immersive story
             </Link>
           </p>
           <p>
