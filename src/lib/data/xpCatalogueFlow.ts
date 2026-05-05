@@ -33,6 +33,8 @@ export interface XpFlowMomentModule {
 
 export interface XpFlowMoment {
   name: string;
+  /** Optional narrative from a "Description" column; may be empty — see xpFlowAdapter synthesize. */
+  description: string;
   modules: XpFlowMomentModule[];
 }
 
@@ -712,6 +714,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
   "consumerWorkMoments": [
     {
       "name": "Commute",
+      "description": "",
       "modules": [
         {
           "module": "Parking Management",
@@ -727,6 +730,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
     },
     {
       "name": "Welcome Area",
+      "description": "",
       "modules": [
         {
           "module": "Conciergerie",
@@ -765,6 +769,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
     },
     {
       "name": "F&B",
+      "description": "",
       "modules": [
         {
           "module": "Alternative F&B",
@@ -837,6 +842,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
     },
     {
       "name": "WP",
+      "description": "",
       "modules": [
         {
           "module": "Concierge",
@@ -880,6 +886,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
     },
     {
       "name": "Wellbeing",
+      "description": "",
       "modules": [
         {
           "module": "Gym",
@@ -925,6 +932,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
   "operatorMoments": [
     {
       "name": "FMChecking round",
+      "description": "",
       "modules": [
         {
           "module": "Cleaning efficiency",
@@ -956,6 +964,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
     },
     {
       "name": "Kick off & early check",
+      "description": "",
       "modules": [
         {
           "module": "Reception",
@@ -974,6 +983,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
     },
     {
       "name": "Office time",
+      "description": "",
       "modules": [
         {
           "module": "Work Order Management",
@@ -1021,6 +1031,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
     },
     {
       "name": "Order, planning & maintenance management",
+      "description": "",
       "modules": [
         {
           "module": "Workforce management",
@@ -1050,6 +1061,7 @@ export const XP_CATALOGUE_FLOW: XpCatalogueFlow = {
     },
     {
       "name": "F&B",
+      "description": "",
       "modules": [
         {
           "module": "3D Printing",

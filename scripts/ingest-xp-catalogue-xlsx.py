@@ -79,6 +79,19 @@ def strip_new_suffix(name: str) -> str:
     return re.sub(r"\s*\(NOUVEAU\)\s*$", "", name, flags=re.IGNORECASE).strip()
 
 
+def find_description_column(ws, header_row: int = 1) -> int | None:
+    """0-based column index of 'Description' / 'Moment description' in row 1, or None."""
+    row = next(ws.iter_rows(min_row=header_row, max_row=header_row, values_only=True))
+    labels = {"description", "moment description", "description du moment"}
+    for i, cell in enumerate(row):
+        if cell is None:
+            continue
+        key = clean(str(cell)).lower()
+        if key in labels:
+            return i
+    return None
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Sheet parsers
 # ─────────────────────────────────────────────────────────────────────────────
@@ -132,23 +145,40 @@ def parse_modules(ws) -> list[dict]:
 
 
 def parse_consumer_wk(ws) -> list[dict]:
-    """Parse 'Consumer WK' sheet into [{name, modules: [{module, solutions}]}].
+    """Parse 'Consumer WK' sheet into [{name, description, modules: [{module, solutions}]}].
 
     Layout: col0 is moment header ('Commute:', 'Welcome Area', 'F&B ', 'WP',
     'Wellbeing'). col1 is module name. col2+ are solutions for that module.
     Header row is row 1; data starts at row 2. Moment headers carry trailing ':'.
+
+    Optional: a column headed **Description** / **Moment description** (row 1) carries
+    narrative for that moment on the same row as the moment name.
     """
+    desc_col = find_description_column(ws, 1)
     moments: list[dict] = []
     current: dict | None = None
     for row in ws.iter_rows(min_row=2, values_only=True):
         moment_cell = clean(row[0])
-        module_cell = clean(row[1])
-        solution_cells = [clean(c) for c in row[2:] if clean(c)]
+        module_cell = clean(row[1]) if len(row) > 1 else ""
+        solution_cells: list[str] = []
+        for i, c in enumerate(row):
+            if i < 2:
+                continue
+            if desc_col is not None and i == desc_col:
+                continue
+            v = clean(c)
+            if v:
+                solution_cells.append(v)
+        if desc_col is not None and len(row) > desc_col:
+            row_desc = clean(row[desc_col])
+        else:
+            row_desc = ""
 
         if moment_cell:
             # New moment block
-            moment_name = moment_cell.rstrip(":")
-            current = {"name": moment_name, "modules": []}
+            moment_name = moment_cell.rstrip(":").strip()
+            desc = row_desc if row_desc else ""
+            current = {"name": moment_name, "description": desc, "modules": []}
             moments.append(current)
             # Module on the same row as the header? (rare but possible)
             if module_cell:
@@ -171,20 +201,37 @@ def parse_consumer_wk(ws) -> list[dict]:
 
 
 def parse_operator(ws) -> list[dict]:
-    """Parse 'Operator' sheet into [{name, modules: [{module, solutions}]}].
+    """Parse 'Operator' sheet into [{name, description, modules: [{module, solutions}]}].
 
     Layout: col0 is persona ('Operator', first data row only). col1 is moment
     name (sparse — carries forward). col2 is module name. col3+ are solutions.
+
+    Optional: same **Description** column convention as Consumer WK (header in row 1);
+    text on the moment's first row overrides / augments app copy when re-ingested.
     """
+    desc_col = find_description_column(ws, 1)
     moments: list[dict] = []
     current: dict | None = None
     for row in ws.iter_rows(min_row=2, values_only=True):
         moment_cell = clean(row[1]) if len(row) > 1 else ""
         module_cell = clean(row[2]) if len(row) > 2 else ""
-        solution_cells = [clean(c) for c in row[3:] if clean(c)]
+        solution_cells = []
+        for i, c in enumerate(row):
+            if i < 3:
+                continue
+            if desc_col is not None and i == desc_col:
+                continue
+            v = clean(c)
+            if v:
+                solution_cells.append(v)
+        if desc_col is not None and len(row) > desc_col:
+            row_desc = clean(row[desc_col])
+        else:
+            row_desc = ""
 
         if moment_cell:
-            current = {"name": moment_cell, "modules": []}
+            desc = row_desc if row_desc else ""
+            current = {"name": moment_cell.strip(), "description": desc, "modules": []}
             moments.append(current)
 
         if not current:
@@ -255,6 +302,8 @@ export interface XpFlowMomentModule {
 
 export interface XpFlowMoment {
   name: string;
+  /** Optional narrative from a "Description" column; may be empty — see xpFlowAdapter synthesize. */
+  description: string;
   modules: XpFlowMomentModule[];
 }
 

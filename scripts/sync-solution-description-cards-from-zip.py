@@ -4,9 +4,8 @@
 Filenames use spaces and underscores: `solution_<Label>.png`. Labels align with
 Excel / product naming. Assets are written to
   public/images/catalogue/assets/solution-descriptions/<id>.png
-and `descriptionImage` in `solutionsCatalog.ts` is set to that URL (structured
-copy + visuals). Use `sync-solution-hero-images-from-zip.py` for compact
-`Solutions_Images` → `heroImage`.
+and `descriptionImage` paths in `solutionsCatalog.ts` (optional assets only — the
+running app uses Excel text from `xpCatalogueFlow` via `excelDescriptionBySolutionId()`).
 
 Re-run:
   python3 scripts/sync-solution-description-cards-from-zip.py [path/to.zip]

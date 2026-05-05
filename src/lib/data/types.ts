@@ -47,9 +47,7 @@ export interface Solution {
    * Compact product / tile visual from `Solutions_Images.zip` — grids, parallax, hero tile, moment cards.
    */
   heroImage?: string;
-  /**
-   * Full marketing card from `Solution_Descriptions.zip` (infographic + structured copy). Detail page + export.
-   */
+  /** @deprecated Stripped at catalogue load — use Excel `description` merged in `fallback.ts`. */
   descriptionImage?: string;
   context: string;
   description: string;

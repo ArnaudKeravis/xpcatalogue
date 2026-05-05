@@ -130,7 +130,7 @@ export default async function ModulePage({ params, searchParams }: Props) {
               className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/60"
               style={{ fontFamily: 'var(--font-heading)' }}
             >
-              Module · {moduleSolutions.length} solution{moduleSolutions.length === 1 ? '' : 's'}
+              Module · All solutions · {moduleSolutions.length}
             </p>
             <h1
               className="truncate text-2xl font-extrabold text-[var(--blue)] md:text-3xl"
@@ -144,57 +144,6 @@ export default async function ModulePage({ params, searchParams }: Props) {
             >
               {mod.description}
             </p>
-            {mod.tddi ? (
-              <div
-                className="mt-4 max-w-3xl rounded-2xl border border-[var(--blue-primary)]/25 bg-[var(--blue-primary)]/[0.06] px-4 py-3 text-xs leading-relaxed text-[var(--blue)]/80"
-                style={{ fontFamily: 'var(--font-body)' }}
-              >
-                <p className="font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">
-                  TDDI database (V2)
-                </p>
-                {mod.tddi.sourceTitle !== mod.name ? (
-                  <p className="mt-1 text-[var(--blue)]">
-                    <span className="font-semibold text-[var(--blue)]/90">Notion title:</span>{' '}
-                    {mod.tddi.sourceTitle}
-                  </p>
-                ) : null}
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {mod.tddi.moduleTypes.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full bg-[var(--surface-card)] px-2.5 py-0.5 font-semibold text-[var(--blue)]/75 ring-1 ring-[var(--grey-border)]"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                  {mod.tddi.userPresence.map((u) => (
-                    <span
-                      key={u}
-                      className="rounded-full bg-[var(--blue-primary)]/12 px-2.5 py-0.5 font-semibold capitalize text-[var(--blue-primary)]"
-                    >
-                      {u}
-                    </span>
-                  ))}
-                  {mod.tddi.isNew ? (
-                    <span className="rounded-full bg-[var(--blue-primary)]/18 px-2.5 py-0.5 font-semibold text-[var(--blue-primary)]">
-                      New in TDDI
-                    </span>
-                  ) : null}
-                </div>
-                {mod.tddi.associatedMomentLabels.length > 0 ? (
-                  <p className="mt-2 text-[var(--blue)]/75">
-                    <span className="font-semibold text-[var(--blue)]/90">Associated moments:</span>{' '}
-                    {mod.tddi.associatedMomentLabels.join(' · ')}
-                  </p>
-                ) : null}
-                {mod.tddi.externalSolutions ? (
-                  <p className="mt-2 text-[var(--blue)]/75">
-                    <span className="font-semibold text-[var(--blue)]/90">External (TDDI):</span>{' '}
-                    {mod.tddi.externalSolutions}
-                  </p>
-                ) : null}
-              </div>
-            ) : null}
           </div>
 
           <PillLink
@@ -208,7 +157,7 @@ export default async function ModulePage({ params, searchParams }: Props) {
       </header>
 
       <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <SolutionCard solution={primary} siblings={siblings} module={mod} />
+        <SolutionCard solution={primary} siblings={siblings} module={mod} hideModuleRail />
       </main>
 
       {/* ── Sibling modules peek ───────────────────────────────────

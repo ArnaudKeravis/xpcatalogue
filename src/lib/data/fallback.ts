@@ -1,6 +1,6 @@
 // Static fallback used when Notion is unavailable + static area/module/journey config
 
-import type { Area, AreaConfig, CatalogueData, JourneyStep, Module, Persona } from './types';
+import type { Area, AreaConfig, CatalogueData, JourneyStep, Module, Persona, Solution } from './types';
 import { CATALOGUE_PERSONAS } from './personaDefinitions';
 import { SOLUTIONS_CATALOG } from './solutionsCatalog';
 import { enrichSolutionsWithCollections } from './collections';
@@ -10,6 +10,8 @@ import {
   buildOperatorJourneySteps,
   consumerModuleNamesByMoment,
   CONSUMER_MOMENT_TO_STEP,
+  effectiveConsumerMomentDescription,
+  excelDescriptionBySolutionId,
 } from './xpFlowAdapter';
 import { mergeTddiV2IntoCatalogue } from './tddiV2CatalogueMerge';
 import { applyPersonaMomentModuleFill } from './personaMomentModules';
@@ -539,15 +541,20 @@ for (const [name, excelModule] of Object.entries(EXCEL_MODULES)) {
 }
 
 // Update existing Work-Consumer journey steps with Excel-aligned module lists
-// (Commute / Welcome Area / F&B / WP / Wellbeing). Keeps all other steps as-is.
+// (Commute / Welcome Area / F&B / WP / Wellbeing) + moment copy from Modules tab
+// / optional Description column (`ingest-xp-catalogue-xlsx.py`). Keeps other steps as-is.
 const MERGED_JOURNEY_STEPS: Record<string, JourneyStep> = { ...JOURNEY_STEPS };
 for (const [momentName, stepId] of Object.entries(CONSUMER_MOMENT_TO_STEP)) {
   const step = MERGED_JOURNEY_STEPS[stepId];
+  if (!step) continue;
   const excelModules = CONSUMER_MOMENT_MODULES[momentName] ?? [];
-  if (step && excelModules.length > 0) {
-    const merged = Array.from(new Set([...excelModules, ...step.modules]));
-    MERGED_JOURNEY_STEPS[stepId] = { ...step, modules: merged };
+  let next: JourneyStep = step;
+  if (excelModules.length > 0) {
+    next = { ...next, modules: Array.from(new Set([...excelModules, ...step.modules])) };
   }
+  const momentDesc = effectiveConsumerMomentDescription(momentName);
+  if (momentDesc) next = { ...next, description: momentDesc };
+  MERGED_JOURNEY_STEPS[stepId] = next;
 }
 // Add operator-specific moments (FM round / Kick off / Office time / Order / F&B ops).
 for (const [id, step] of Object.entries(OPERATOR_JOURNEY_STEPS)) {
@@ -575,6 +582,17 @@ for (const [, def] of Object.entries(PERSONA_JOURNEYS)) {
 const TDDI_MERGED = mergeTddiV2IntoCatalogue(MERGED_MODULES, MERGED_JOURNEY_STEPS, SOLUTIONS_CATALOG);
 const FINAL_JOURNEY_STEPS = applyPersonaMomentModuleFill(TDDI_MERGED.journeySteps, TDDI_MERGED.modules);
 
+/** Excel Solutions sheet body text (same source as the old infographic cards); no card images at runtime. */
+const EXCEL_SOLUTION_BODY = excelDescriptionBySolutionId();
+
+function withExcelSolutionDescription(s: Solution): Solution {
+  const fromExcel = EXCEL_SOLUTION_BODY[s.id]?.trim();
+  const out: Solution = { ...s };
+  delete out.descriptionImage;
+  if (fromExcel) out.description = fromExcel;
+  return out;
+}
+
 const MERGED_PERSONAS: Persona[] = CATALOGUE_PERSONAS.map((p) => {
   const def = PERSONA_JOURNEYS[p.id];
   if (!def) return p;
@@ -591,9 +609,12 @@ export const STEP_LABEL: Record<string, string> = Object.fromEntries(
   Object.values(FINAL_JOURNEY_STEPS).map((s) => [s.id, s.label])
 );
 
-// Solutions mirror `reference/static-home/catalog-solutions.js` (see `solutionsCatalog.ts`).
+// Solutions mirror `solutionsCatalog.ts`; long-form description comes from Excel (`xpCatalogueFlow`).
 export const FALLBACK_DATA: CatalogueData = {
-  solutions: enrichSolutionsWithCollections([...SOLUTIONS_CATALOG, ...TDDI_MERGED.extraSolutions]),
+  solutions: enrichSolutionsWithCollections([
+    ...SOLUTIONS_CATALOG.map(withExcelSolutionDescription),
+    ...TDDI_MERGED.extraSolutions.map(withExcelSolutionDescription),
+  ]),
   personas: MERGED_PERSONAS,
   modules: TDDI_MERGED.modules,
   areas: AREA_CONFIGS,

@@ -6,7 +6,7 @@ import type { Solution } from './types';
  * "no hero image" so the UI falls back to the Phosphor starter tile.
  *
  * Real imagery lives under `/images/catalogue/assets/solutions/…` (`Solutions_Images.zip`).
- * Full infographic cards use `solution.descriptionImage`, not `heroImage`.
+ * Long-form solution copy comes from Excel via `fallback.ts`; `heroImage` is the tile visual only.
  */
 const PLACEHOLDER_HERO_PATHS = new Set<string>([
   '/images/catalogue/assets/areas/work-area-info-iso.png',

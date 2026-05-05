@@ -11,7 +11,7 @@
  */
 
 import type { Module, JourneyStep } from './types';
-import { XP_CATALOGUE_FLOW, type XpFlowModule } from './xpCatalogueFlow';
+import { XP_CATALOGUE_FLOW, type XpFlowModule, type XpFlowMoment } from './xpCatalogueFlow';
 import { SOLUTIONS_CATALOG } from './solutionsCatalog';
 
 const norm = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -171,6 +171,23 @@ if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line no-console
     console.warn('[xpFlowAdapter] SOLUTION_ALIASES target(s) not in catalogue:', missing);
   }
+}
+
+/**
+ * Excel **Solutions** tab copy keyed by catalogue `solution.id`.
+ * Matches each Excel solution name → id via {@link resolveSolutionId}; prefers the
+ * longest non-empty description when several Excel rows resolve to one id.
+ */
+export function excelDescriptionBySolutionId(): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [excelName, meta] of Object.entries(XP_CATALOGUE_FLOW.solutions)) {
+    const id = resolveSolutionId(excelName);
+    const text = meta.description?.trim();
+    if (!id || !text) continue;
+    const prev = out[id];
+    if (!prev || text.length > prev.length) out[id] = text;
+  }
+  return out;
 }
 
 /** Resolve an Excel solution name to an app solution id, or undefined. */
@@ -334,6 +351,58 @@ export function operatorModuleNamesByMoment(): Record<string, string[]> {
   return result;
 }
 
+function lookupModuleDescriptionExcel(moduleName: string, persona: 'Consumer' | 'Operator'): string {
+  const target = norm(canonModuleName(moduleName));
+  for (const mod of XP_CATALOGUE_FLOW.modules) {
+    if (mod.persona !== persona) continue;
+    if (norm(canonModuleName(mod.name)) === target) return mod.description.trim();
+  }
+  return '';
+}
+
+/**
+ * Build a readable moment blurb from Excel **Modules** tab descriptions for all
+ * modules listed under that moment (deduped). Used when no explicit **Description**
+ * column is filled on the moment row.
+ */
+export function synthesizeMomentDescriptionFromModules(
+  moment: XpFlowMoment,
+  persona: 'Consumer' | 'Operator',
+): string {
+  const chunks: string[] = [];
+  const seen = new Set<string>();
+  for (const row of moment.modules) {
+    const d = lookupModuleDescriptionExcel(row.module, persona);
+    if (!d) continue;
+    const key = norm(d);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    chunks.push(d);
+    if (chunks.length >= 8) break;
+  }
+  const text = chunks.join(' ').replace(/\s+/g, ' ').trim();
+  return text.length > 1600 ? `${text.slice(0, 1597)}…` : text;
+}
+
+/** Prefer explicit Excel moment cell; otherwise module-description synthesis from the workbook. */
+export function effectiveConsumerMomentDescription(momentName: string): string {
+  const moment = XP_CATALOGUE_FLOW.consumerWorkMoments.find((m) => m.name === momentName);
+  if (!moment) return '';
+  const ex = moment.description?.trim();
+  if (ex) return ex;
+  return synthesizeMomentDescriptionFromModules(moment, 'Consumer');
+}
+
+/** Operator sheet moment name must match Excel `moment.name`. */
+export function effectiveOperatorMomentDescription(excelMomentName: string): string {
+  const name = excelMomentName.trim();
+  const moment = XP_CATALOGUE_FLOW.operatorMoments.find((m) => m.name.trim() === name);
+  if (!moment) return '';
+  const ex = moment.description?.trim();
+  if (ex) return ex;
+  return synthesizeMomentDescriptionFromModules(moment, 'Operator');
+}
+
 /**
  * Map Excel Consumer moment names → existing app `JourneyStep` ids.
  * (The app already defines these 5 Work-Consumer steps; we just reuse them.)
@@ -378,12 +447,13 @@ export function buildOperatorJourneySteps(): Record<string, JourneyStep> {
 
   const steps: Record<string, JourneyStep> = {};
   for (const m of OPERATOR_MOMENTS) {
+    const fromExcel = effectiveOperatorMomentDescription(m.excelName);
     steps[m.id] = {
       id: m.id,
       label: m.label,
       icon: m.icon,
       modules: byExcelName.get(m.excelName) ?? [],
-      description: `Operator moment — ${m.label}.`,
+      description: fromExcel || `Operator moment — ${m.label}.`,
     };
   }
   return steps;

@@ -26,6 +26,8 @@ interface Props {
   solution: Solution;
   siblings: Solution[];
   module?: Module;
+  /** Omit the left module summary rail (module page already shows it in the header). */
+  hideModuleRail?: boolean;
 }
 
 function statusColor(s: string) {
@@ -35,13 +37,13 @@ function statusColor(s: string) {
   return '#95a5a6';
 }
 
-export function SolutionCard({ solution, siblings, module }: Props) {
+export function SolutionCard({ solution, siblings, module, hideModuleRail = false }: Props) {
   const [active, setActive] = useState(solution.id);
   const [exporting, startExport] = useTransition();
   const allSolutions = [solution, ...siblings];
   const current = allSolutions.find((s) => s.id === active) ?? solution;
   const sc = statusColor(current.status);
-  const { Icon: RailIcon, weight: railWeight } = pickModuleVisual(module ?? undefined);
+  const railVisual = hideModuleRail ? null : pickModuleVisual(module ?? undefined);
 
   const handleDownload = () => {
     startExport(async () => {
@@ -55,35 +57,37 @@ export function SolutionCard({ solution, siblings, module }: Props) {
 
   return (
     <div className="flex min-h-0 flex-1">
-      <aside className="flex w-64 flex-shrink-0 flex-col gap-3 border-r border-[var(--grey-border)] bg-white p-4">
-        <div
-          className="relative flex h-24 items-center justify-center overflow-hidden rounded-2xl"
-          style={{
-            background: module?.gradient ?? 'linear-gradient(135deg,#293896,#1a69ff)',
-            boxShadow: 'var(--shadow-card)',
-          }}
-          aria-hidden
-        >
-          <span
-            className="pointer-events-none absolute inset-0"
+      {railVisual ? (
+        <aside className="flex w-64 flex-shrink-0 flex-col gap-3 border-r border-[var(--grey-border)] bg-white p-4">
+          <div
+            className="relative flex h-24 items-center justify-center overflow-hidden rounded-2xl"
             style={{
-              background:
-                'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
+              background: module?.gradient ?? 'linear-gradient(135deg,#293896,#1a69ff)',
+              boxShadow: 'var(--shadow-card)',
             }}
-          />
-          <RailIcon size={44} weight={railWeight} color="#ffffff" />
-        </div>
-        <div
-          className="rounded-2xl bg-white p-3 text-xs leading-relaxed"
-          style={{ boxShadow: 'var(--shadow-sm)', fontFamily: 'var(--font-body)', color: 'var(--blue)' }}
-        >
-          <strong className="mb-1 block">{module?.name ?? current.module}</strong>
-          {module?.description}
-          <div className="mt-2 text-gray-400">
-            {allSolutions.length} solution{allSolutions.length !== 1 ? 's' : ''} available
+            aria-hidden
+          >
+            <span
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
+              }}
+            />
+            <railVisual.Icon size={44} weight={railVisual.weight} color="#ffffff" />
           </div>
-        </div>
-      </aside>
+          <div
+            className="rounded-2xl bg-white p-3 text-xs leading-relaxed"
+            style={{ boxShadow: 'var(--shadow-sm)', fontFamily: 'var(--font-body)', color: 'var(--blue)' }}
+          >
+            <strong className="mb-1 block">{module?.name ?? current.module}</strong>
+            {module?.description}
+            <div className="mt-2 text-gray-400">
+              {allSolutions.length} solution{allSolutions.length !== 1 ? 's' : ''} available
+            </div>
+          </div>
+        </aside>
+      ) : null}
 
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div
@@ -94,7 +98,7 @@ export function SolutionCard({ solution, siblings, module }: Props) {
             className="mr-2 flex-shrink-0 text-lg font-extrabold text-[var(--blue)]"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            Solutions:
+            All solutions:
           </span>
           <div className="flex h-full flex-1 items-center overflow-x-auto border-b-2 border-[var(--grey-border)]">
             {allSolutions.map((s) => (
@@ -205,20 +209,8 @@ export function SolutionCard({ solution, siblings, module }: Props) {
             </Section>
 
             <Section icon={<Article size={20} weight="fill" color="var(--blue)" />} title="Description">
-              <p className="text-xs leading-relaxed text-gray-600">{current.description}</p>
+              <p className="whitespace-pre-wrap text-xs leading-relaxed text-gray-600">{current.description}</p>
             </Section>
-
-            {current.descriptionImage ? (
-              <div className="overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[var(--shadow-sm)]">
-                <img
-                  src={current.descriptionImage}
-                  alt={`${current.name} — solution overview`}
-                  className="w-full object-contain object-top"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            ) : null}
 
             <div className="grid grid-cols-2 gap-3">
               <Section icon={<ChartBar size={20} weight="fill" color="var(--blue)" />} title="Deployment & KPIs">
