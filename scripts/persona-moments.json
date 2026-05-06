@@ -1,0 +1,598 @@
+{
+  "white-collar": [
+    {
+      "id": "commute",
+      "label": "Commute"
+    },
+    {
+      "id": "welcome-area",
+      "label": "Welcome Area"
+    },
+    {
+      "id": "workplace",
+      "label": "Workplace"
+    },
+    {
+      "id": "wellbeing-break",
+      "label": "Wellbeing & Breaktime"
+    },
+    {
+      "id": "food-beverage-work",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "blue-collar": [
+    {
+      "id": "bc-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "bc-welcome",
+      "label": "Welcome Area"
+    },
+    {
+      "id": "bc-workplace",
+      "label": "Workplace"
+    },
+    {
+      "id": "bc-wellbeing",
+      "label": "Wellbeing & Breaktime"
+    },
+    {
+      "id": "bc-fnb",
+      "label": "Food and Beverage Area"
+    }
+  ],
+  "grey-collar": [
+    {
+      "id": "gc-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "gc-welcome",
+      "label": "Welcome Area"
+    },
+    {
+      "id": "gc-workplace",
+      "label": "Workplace"
+    },
+    {
+      "id": "gc-wellbeing",
+      "label": "Wellbeing & Breaktime"
+    },
+    {
+      "id": "gc-fnb",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "military": [
+    {
+      "id": "mil-evening",
+      "label": "Evening Routine"
+    },
+    {
+      "id": "mil-morning",
+      "label": "Morning Routine"
+    },
+    {
+      "id": "mil-work",
+      "label": "Work / Activities"
+    },
+    {
+      "id": "mil-diner",
+      "label": "Diner with Regiment"
+    },
+    {
+      "id": "mil-after-work",
+      "label": "After Work"
+    },
+    {
+      "id": "mil-lunch",
+      "label": "Lunch Break"
+    }
+  ],
+  "operator-work": [
+    {
+      "id": "op-fm-round",
+      "label": "Kitchen / Back Kitchen: FM Checking Round"
+    },
+    {
+      "id": "op-kick-off",
+      "label": "Kick-off & Early Check"
+    },
+    {
+      "id": "op-order-planning",
+      "label": "Order, Planning & Maintenance Management"
+    },
+    {
+      "id": "op-office-time",
+      "label": "Office Time"
+    },
+    {
+      "id": "op-food-service",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "client-work": [
+    {
+      "id": "cli-welcome",
+      "label": "Welcome & Admission"
+    },
+    {
+      "id": "cli-meetings",
+      "label": "Internal Meetings & Alignment"
+    },
+    {
+      "id": "cli-kickoff",
+      "label": "Kick off & Early Check"
+    },
+    {
+      "id": "cli-improvement",
+      "label": "Improvement Sessions & Forward Planning"
+    },
+    {
+      "id": "cli-review",
+      "label": "Service Review & Site Rounds"
+    },
+    {
+      "id": "cli-lunch",
+      "label": "Lunch & Stakeholder Engagement"
+    }
+  ],
+  "doctor": [
+    {
+      "id": "doc-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "doc-end-shift",
+      "label": "End of Shift"
+    },
+    {
+      "id": "doc-consult",
+      "label": "Patient Consultations"
+    },
+    {
+      "id": "doc-rounds",
+      "label": "Afternoon Rounds"
+    },
+    {
+      "id": "doc-meetings",
+      "label": "Team Meetings"
+    },
+    {
+      "id": "doc-break",
+      "label": "Breaktime"
+    },
+    {
+      "id": "doc-fnb",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "nurse": [
+    {
+      "id": "nur-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "nur-freetime",
+      "label": "Freetime & Work/Life Balance"
+    },
+    {
+      "id": "nur-welcome",
+      "label": "Welcome"
+    },
+    {
+      "id": "nur-break",
+      "label": "Breaktime"
+    },
+    {
+      "id": "nur-care",
+      "label": "Nursing Care"
+    },
+    {
+      "id": "nur-fnb",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "senior": [
+    {
+      "id": "sen-welcome",
+      "label": "Welcome Residents"
+    },
+    {
+      "id": "sen-activities",
+      "label": "Activities"
+    },
+    {
+      "id": "sen-breakfast",
+      "label": "Breakfast"
+    },
+    {
+      "id": "sen-dinner",
+      "label": "Dinner"
+    },
+    {
+      "id": "sen-lunch",
+      "label": "Lunch Break"
+    },
+    {
+      "id": "sen-break",
+      "label": "Breaktime"
+    }
+  ],
+  "patient": [
+    {
+      "id": "pat-rest",
+      "label": "Rest & Personal Balance"
+    },
+    {
+      "id": "pat-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "pat-leave",
+      "label": "Leaving the Hospital"
+    },
+    {
+      "id": "pat-admission",
+      "label": "Welcome and Admission"
+    },
+    {
+      "id": "pat-care",
+      "label": "Care and Daily Routine"
+    },
+    {
+      "id": "pat-lunch",
+      "label": "Lunch Break"
+    },
+    {
+      "id": "pat-snack",
+      "label": "Snack"
+    }
+  ],
+  "operator-heal": [
+    {
+      "id": "op-fm-round",
+      "label": "Kitchen / Back Kitchen: FM Checking Round"
+    },
+    {
+      "id": "op-kick-off",
+      "label": "Kick-off & Early Check"
+    },
+    {
+      "id": "op-order-planning",
+      "label": "Order, Planning & Maintenance Management"
+    },
+    {
+      "id": "op-office-time",
+      "label": "Office Time"
+    },
+    {
+      "id": "op-food-service",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "client-heal": [
+    {
+      "id": "cli-welcome",
+      "label": "Welcome & Admission"
+    },
+    {
+      "id": "cli-meetings",
+      "label": "Internal Meetings & Alignment"
+    },
+    {
+      "id": "cli-kickoff",
+      "label": "Kick off & Early Check"
+    },
+    {
+      "id": "cli-improvement",
+      "label": "Improvement Sessions & Forward Planning"
+    },
+    {
+      "id": "cli-review",
+      "label": "Service Review & Site Rounds"
+    },
+    {
+      "id": "cli-lunch",
+      "label": "Lunch & Stakeholder Engagement"
+    }
+  ],
+  "sport-fan": [
+    {
+      "id": "sf-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "sf-waiting",
+      "label": "Waiting for the Game"
+    },
+    {
+      "id": "sf-welcome",
+      "label": "Welcome Area"
+    },
+    {
+      "id": "sf-halftime",
+      "label": "Halftime Activities"
+    },
+    {
+      "id": "sf-after",
+      "label": "After Event"
+    },
+    {
+      "id": "sf-match",
+      "label": "Social Time / Match Time"
+    }
+  ],
+  "participant": [
+    {
+      "id": "par-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "par-arrival",
+      "label": "Arrival & Access"
+    },
+    {
+      "id": "par-nav",
+      "label": "Navigating the Show"
+    },
+    {
+      "id": "par-after",
+      "label": "After Event"
+    },
+    {
+      "id": "par-talk",
+      "label": "Attending a Talk or a Demo"
+    },
+    {
+      "id": "par-net",
+      "label": "Networking & Breaktime"
+    }
+  ],
+  "vip-guest": [
+    {
+      "id": "vip-commute",
+      "label": "Prep & Commute"
+    },
+    {
+      "id": "vip-lounge",
+      "label": "Private Lounge Entry"
+    },
+    {
+      "id": "vip-arrival",
+      "label": "Arrival & Access"
+    },
+    {
+      "id": "vip-eat",
+      "label": "Eat & Drink"
+    },
+    {
+      "id": "vip-networking",
+      "label": "Networking & Event Time"
+    },
+    {
+      "id": "vip-after",
+      "label": "After Event"
+    }
+  ],
+  "tourist": [
+    {
+      "id": "tou-commute",
+      "label": "Prep & Commute"
+    },
+    {
+      "id": "tou-welcome",
+      "label": "Welcome & Orientation"
+    },
+    {
+      "id": "tou-depart",
+      "label": "Departure"
+    },
+    {
+      "id": "tou-visit",
+      "label": "Visit"
+    },
+    {
+      "id": "tou-snack",
+      "label": "Snack"
+    },
+    {
+      "id": "tou-eat",
+      "label": "Eat & Drink"
+    }
+  ],
+  "operator-play": [
+    {
+      "id": "op-fm-round",
+      "label": "Kitchen / Back Kitchen: FM Checking Round"
+    },
+    {
+      "id": "op-kick-off",
+      "label": "Kick-off & Early Check"
+    },
+    {
+      "id": "op-order-planning",
+      "label": "Order, Planning & Maintenance Management"
+    },
+    {
+      "id": "op-office-time",
+      "label": "Office Time"
+    },
+    {
+      "id": "op-food-service",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "client-play": [
+    {
+      "id": "cli-welcome",
+      "label": "Welcome & Admission"
+    },
+    {
+      "id": "cli-meetings",
+      "label": "Internal Meetings & Alignment"
+    },
+    {
+      "id": "cli-kickoff",
+      "label": "Kick off & Early Check"
+    },
+    {
+      "id": "cli-improvement",
+      "label": "Improvement Sessions & Forward Planning"
+    },
+    {
+      "id": "cli-review",
+      "label": "Service Review & Site Rounds"
+    },
+    {
+      "id": "cli-lunch",
+      "label": "Lunch & Stakeholder Engagement"
+    }
+  ],
+  "student": [
+    {
+      "id": "stu-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "stu-welcome",
+      "label": "Welcome Area"
+    },
+    {
+      "id": "stu-freetime",
+      "label": "Freetime & Studies/Life Balance"
+    },
+    {
+      "id": "stu-studies",
+      "label": "Studies"
+    },
+    {
+      "id": "stu-fnb",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "schoolchild": [
+    {
+      "id": "sch-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "sch-welcome",
+      "label": "Welcome Area"
+    },
+    {
+      "id": "sch-freetime",
+      "label": "Freetime"
+    },
+    {
+      "id": "sch-class",
+      "label": "In class"
+    },
+    {
+      "id": "sch-fnb",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "parent": [
+    {
+      "id": "lp-weekly",
+      "label": "Weekly Preparation"
+    },
+    {
+      "id": "lp-prep",
+      "label": "Prep & Commute"
+    },
+    {
+      "id": "lp-evening",
+      "label": "Evening Routine"
+    },
+    {
+      "id": "lp-school",
+      "label": "During School Day"
+    },
+    {
+      "id": "lp-pickup",
+      "label": "Pick-up Time"
+    },
+    {
+      "id": "lp-meals",
+      "label": "Meal Visibility"
+    }
+  ],
+  "teacher": [
+    {
+      "id": "tea-commute",
+      "label": "Commute"
+    },
+    {
+      "id": "tea-freetime",
+      "label": "Freetime & Work/Life Balance"
+    },
+    {
+      "id": "tea-arrival",
+      "label": "Arrival to the School/Campus"
+    },
+    {
+      "id": "tea-teaching",
+      "label": "Teaching"
+    },
+    {
+      "id": "tea-fnb",
+      "label": "Food & Beverage Area"
+    },
+    {
+      "id": "tea-break",
+      "label": "Breaktime"
+    }
+  ],
+  "operator-learn": [
+    {
+      "id": "op-fm-round",
+      "label": "Kitchen / Back Kitchen: FM Checking Round"
+    },
+    {
+      "id": "op-kick-off",
+      "label": "Kick-off & Early Check"
+    },
+    {
+      "id": "op-order-planning",
+      "label": "Order, Planning & Maintenance Management"
+    },
+    {
+      "id": "op-office-time",
+      "label": "Office Time"
+    },
+    {
+      "id": "op-food-service",
+      "label": "Food & Beverage Area"
+    }
+  ],
+  "client-learn": [
+    {
+      "id": "cli-welcome",
+      "label": "Welcome & Admission"
+    },
+    {
+      "id": "cli-meetings",
+      "label": "Internal Meetings & Alignment"
+    },
+    {
+      "id": "cli-kickoff",
+      "label": "Kick off & Early Check"
+    },
+    {
+      "id": "cli-improvement",
+      "label": "Improvement Sessions & Forward Planning"
+    },
+    {
+      "id": "cli-review",
+      "label": "Service Review & Site Rounds"
+    },
+    {
+      "id": "cli-lunch",
+      "label": "Lunch & Stakeholder Engagement"
+    }
+  ]
+}

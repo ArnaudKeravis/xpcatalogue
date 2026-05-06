@@ -14,6 +14,8 @@ import {
   excelDescriptionBySolutionId,
 } from './xpFlowAdapter';
 import { mergeTddiV2IntoCatalogue } from './tddiV2CatalogueMerge';
+import { mergeModulesExcelSoT } from './modulesExcelMerge';
+import { applySolutionOcrOverrides } from './solutionOcrMerge';
 import { applyPersonaMomentModuleFill } from './personaMomentModules';
 
 export const AREA_CONFIGS: Record<Area, AreaConfig> = {
@@ -580,7 +582,8 @@ for (const [, def] of Object.entries(PERSONA_JOURNEYS)) {
 }
 
 const TDDI_MERGED = mergeTddiV2IntoCatalogue(MERGED_MODULES, MERGED_JOURNEY_STEPS, SOLUTIONS_CATALOG);
-const FINAL_JOURNEY_STEPS = applyPersonaMomentModuleFill(TDDI_MERGED.journeySteps, TDDI_MERGED.modules);
+const MODULES_WITH_EXCEL_SOT = mergeModulesExcelSoT(TDDI_MERGED.modules);
+const FINAL_JOURNEY_STEPS = applyPersonaMomentModuleFill(TDDI_MERGED.journeySteps, MODULES_WITH_EXCEL_SOT);
 
 /** Excel Solutions sheet body text (same source as the old infographic cards); no card images at runtime. */
 const EXCEL_SOLUTION_BODY = excelDescriptionBySolutionId();
@@ -590,7 +593,7 @@ function withExcelSolutionDescription(s: Solution): Solution {
   const out: Solution = { ...s };
   delete out.descriptionImage;
   if (fromExcel) out.description = fromExcel;
-  return out;
+  return applySolutionOcrOverrides(out);
 }
 
 const MERGED_PERSONAS: Persona[] = CATALOGUE_PERSONAS.map((p) => {
@@ -616,7 +619,7 @@ export const FALLBACK_DATA: CatalogueData = {
     ...TDDI_MERGED.extraSolutions.map(withExcelSolutionDescription),
   ]),
   personas: MERGED_PERSONAS,
-  modules: TDDI_MERGED.modules,
+  modules: MODULES_WITH_EXCEL_SOT,
   areas: AREA_CONFIGS,
   journeySteps: FINAL_JOURNEY_STEPS,
   lastUpdated: new Date().toISOString(),

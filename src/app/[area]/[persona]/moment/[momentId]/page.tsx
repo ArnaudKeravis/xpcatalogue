@@ -27,6 +27,8 @@ import { getCatalogueData } from '@/lib/notion';
 import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import { pickFirstRealHero } from '@/lib/data/solutionHeroImage';
+import { solutionsForModule } from '@/lib/data/moduleSolutions';
+import { MOMENT_EDITORIAL } from '@/lib/data/momentEditorial.generated';
 import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
 import type { Area, Module, Solution } from '@/lib/data/types';
 
@@ -99,7 +101,10 @@ export default async function MomentPage({ params }: Props) {
   const momentIsoImage = resolveJourneyMomentImage(persona.id, step.id);
   const heroImageSrc = momentIsoImage ?? mapImage;
   const heroIsVector = Boolean(heroImageSrc?.endsWith('.svg'));
-  const portraitSrc = resolvePersonaImage('listing', persona.id, persona.photo);
+  const portraitSrc = resolvePersonaImage('face', persona.id, persona.photo);
+  const editorial = MOMENT_EDITORIAL[persona.id]?.[step.id];
+  const momentSubtitle = editorial?.subtitle?.trim();
+  const momentBody = editorial?.body?.trim() || step.description;
   const eyebrow = persona.profileEyebrow ?? 'Consumer';
 
   // Locate this moment's hotspot on the journey artwork. We use it to (a) draw
@@ -111,9 +116,7 @@ export default async function MomentPage({ params }: Props) {
     ? { left: hotspot.left + (hotspot.w ?? 0) / 2, top: hotspot.top + (hotspot.h ?? 0) / 2 }
     : null;
 
-  const solutionsByModule = (moduleName: string): Solution[] =>
-    solutions.filter((s) => s.module === moduleName);
-  const solutionsCountFor = (moduleName: string) => solutionsByModule(moduleName).length;
+  const solutionsByModule = (m: Module): Solution[] => solutionsForModule(m, solutions);
 
   // Position in journey → Before / During / After framing
   const stepIdx = persona.steps.indexOf(step.id);
@@ -254,6 +257,14 @@ export default async function MomentPage({ params }: Props) {
               >
                 {step.label}
               </p>
+              {momentSubtitle ? (
+                <p
+                  className="text-xs font-semibold leading-snug text-[var(--blue)]/75"
+                  style={{ fontFamily: 'var(--font-body)' }}
+                >
+                  {momentSubtitle}
+                </p>
+              ) : null}
 
               {/* Moment scene — a zoomed crop of the journey artwork at this
                   moment's hotspot. Gives every moment a bespoke illustration
@@ -304,6 +315,14 @@ export default async function MomentPage({ params }: Props) {
                   >
                     {step.label}
                   </h1>
+                  {momentSubtitle ? (
+                    <p
+                      className="mt-2 max-w-3xl text-sm font-semibold text-[var(--blue)]/80 md:text-base"
+                      style={{ fontFamily: 'var(--font-heading)' }}
+                    >
+                      {momentSubtitle}
+                    </p>
+                  ) : null}
                 </div>
                 <div className="flex shrink-0 items-center gap-2 print:hidden">
                   <FavouriteButton
@@ -315,7 +334,7 @@ export default async function MomentPage({ params }: Props) {
                   />
                   <ShareButton
                     title={`${step.label} — ${persona.fullName}`}
-                    text={step.description}
+                    text={momentBody}
                     url={momentHref}
                     variant="icon"
                   />
@@ -329,12 +348,12 @@ export default async function MomentPage({ params }: Props) {
                 </div>
               </div>
 
-              {step.description ? (
+              {momentBody ? (
                 <p
                   className="mt-3 max-w-3xl text-sm font-semibold leading-relaxed text-[var(--blue)]/80 md:text-base"
                   style={{ fontFamily: 'var(--font-body)' }}
                 >
-                  {step.description}
+                  {momentBody}
                 </p>
               ) : null}
 
@@ -398,12 +417,12 @@ export default async function MomentPage({ params }: Props) {
               <Stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {moduleCards.map((mod) => {
                   const href = `/modules/${mod.id}?area=${params.area}&persona=${params.persona}&momentId=${encodeURIComponent(step.id)}`;
-                  const modSolutions = solutionsByModule(mod.name);
+                  const modSolutions = solutionsByModule(mod);
                   const count = modSolutions.length;
                   const { Icon: ModIcon, weight: modWeight } = pickModuleVisual(mod);
-                  // Prefer a real solution photo for this module; fall back to the
-                  // Phosphor-on-gradient starter tile when none has been uploaded yet.
+                  // Prefer Excel module art, then a real solution hero, then Phosphor on gradient.
                   const heroSolution = pickFirstRealHero(modSolutions);
+                  const coverSrc = mod.coverImage;
                   return (
                     <StaggerItem key={mod.id}>
                       <Link
@@ -415,7 +434,29 @@ export default async function MomentPage({ params }: Props) {
                           style={{ background: mod.gradient }}
                           aria-hidden
                         >
-                          {heroSolution ? (
+                          {coverSrc ? (
+                            <>
+                              <img
+                                src={coverSrc}
+                                alt=""
+                                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[var(--motion-lg)] ease-[var(--ease-out-quint)] group-hover:scale-[1.04]"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                              <span
+                                className="pointer-events-none absolute inset-0"
+                                style={{
+                                  background:
+                                    'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%)',
+                                }}
+                              />
+                              <span
+                                className="absolute bottom-2 left-2 flex h-7 w-7 items-center justify-center rounded-lg bg-white/95 text-[var(--blue)] shadow-[0_4px_10px_rgba(0,0,0,0.18)] backdrop-blur-sm"
+                              >
+                                <ModIcon size={16} weight={modWeight} />
+                              </span>
+                            </>
+                          ) : heroSolution ? (
                             <>
                               <img
                                 src={heroSolution.heroImage!}

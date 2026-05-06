@@ -5,6 +5,7 @@ import { SolutionCard } from '@/components/catalogue/SolutionCard';
 import { ModuleIcon } from '@/components/catalogue/ModuleIcon';
 import { PillLink } from '@/components/ui/PillLink';
 import { getCatalogueData } from '@/lib/notion';
+import { solutionsForModule } from '@/lib/data/moduleSolutions';
 import type { Area, Module, Solution } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -38,10 +39,7 @@ export default async function ModulePage({ params, searchParams }: Props) {
 
   // A solution belongs to a module when its `module` field matches by name
   // OR the module config explicitly lists it in `solutionIds` (Excel flow mapping).
-  const mappedIds = new Set(mod.solutionIds ?? []);
-  const moduleSolutions: Solution[] = solutions.filter(
-    (s) => s.module === mod.name || mappedIds.has(s.id)
-  );
+  const moduleSolutions: Solution[] = solutionsForModule(mod, solutions);
   if (moduleSolutions.length === 0) notFound();
 
   // Optional back-context from query string — preserves the

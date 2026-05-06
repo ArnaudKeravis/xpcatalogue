@@ -31,7 +31,8 @@ const MODULE_NAME_ALIASES: Record<string, string> = {
   FMChecking: 'FM Checking',
 };
 
-function canonModuleName(name: string): string {
+/** Normalizes Excel / editorial module labels so catalogue keys stay consistent. */
+export function canonModuleName(name: string): string {
   const trimmed = name.trim();
   return MODULE_NAME_ALIASES[trimmed] ?? trimmed;
 }

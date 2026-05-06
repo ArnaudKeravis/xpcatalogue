@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate:modules-sot": "python3 scripts/generate_modules_excel_sot.py",
+    "generate:solution-ocr": "python3 scripts/ocr_solution_descriptions.py",
+    "sync:solution-heroes": "python3 scripts/sync_solution_hero_images.py"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.7",

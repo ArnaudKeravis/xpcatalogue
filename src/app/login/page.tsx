@@ -1,7 +1,6 @@
 'use client';
 
 import { ArrowRight, LockKey } from '@phosphor-icons/react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useId, useState, type FormEvent } from 'react';
 
@@ -101,13 +100,6 @@ export default function LoginPage() {
         <p className="mt-5 text-xs text-[var(--grey-subtle)]">
           Pilot — Internal use only
         </p>
-        <Link
-          href="/standard-offer/tddi-deck"
-          className="mt-4 inline-flex items-center justify-center gap-2 text-xs font-semibold text-[var(--blue-primary)] underline underline-offset-2 transition-colors hover:text-[var(--blue-solid)]"
-        >
-          Open TDDI Standard Offer — immersive story (no login)
-          <ArrowRight size={14} weight="bold" aria-hidden />
-        </Link>
       </div>
     </main>
   );

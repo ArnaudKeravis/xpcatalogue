@@ -84,7 +84,6 @@ export async function Footer() {
                 href: COLLECTION_META['standard-offer'].catalogueHref!,
                 label: 'Standard Offer + grid',
               },
-              { href: '/standard-offer/tddi-deck', label: 'TDDI · interactive story' },
               { href: COLLECTION_META['big-bets'].href, label: 'Big Bets' },
               { href: COLLECTION_META['big-bets'].catalogueHref!, label: 'Big Bets + grid' },
               { href: '/search-guide', label: 'Search guide' },
@@ -136,12 +135,6 @@ export async function Footer() {
         <div className="mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-2 px-4 py-4 text-[11px] text-[var(--blue)]/50 md:flex-row md:items-center md:px-8">
           <p className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4">
             <span>© {new Date().getFullYear()} Sodexo — internal showcase. Data sourced from Notion.</span>
-            <Link
-              href="/standard-offer/tddi-deck"
-              className="text-[var(--blue)]/60 underline-offset-4 transition-colors hover:text-[var(--blue-primary)] hover:underline"
-            >
-              TDDI Standard Offer — immersive story
-            </Link>
           </p>
           <p>
             Built with Next.js, Tailwind, Phosphor &amp; love for humans who live the moments.

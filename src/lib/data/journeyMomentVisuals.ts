@@ -1,5 +1,8 @@
+import { MOMENT_HERO_RASTER } from '@/lib/data/momentHeroRaster.generated';
+
 /**
- * Per-moment isometric SVGs under `public/images/catalogue/assets/journeys/moments/`.
+ * Per-moment hero art: Excel-synced rasters first (`momentHeroRaster.generated.ts`),
+ * then legacy isometric SVGs under `public/images/catalogue/assets/journeys/moments/`.
  *
  * Personas that follow the shared WORK / HEAL / LEARN / PLAY step orders map
  * by step index → `{stem}-{n}.svg`. When `n` exceeds numbered assets, falls
@@ -83,6 +86,9 @@ const PLAY_MOMENT_STEMS: Record<string, { stem: string; max: number }> = {
  * Returns `undefined` when only the full journey map should be shown.
  */
 export function resolveJourneyMomentImage(personaId: string, stepId: string): string | undefined {
+  const raster = MOMENT_HERO_RASTER[personaId]?.[stepId];
+  if (raster) return raster;
+
   const w = resolveOrdered(personaId, stepId, WORK_ORDER, WORK_MOMENT_STEMS);
   if (w) return w;
 

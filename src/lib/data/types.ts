@@ -146,6 +146,11 @@ export interface Module {
   description: string;
   gradient: string;       // CSS gradient string
   solutionIds: string[];
+  /**
+   * Tile image from Sodexo `Modules.xlsx` / `Modules_Images` — path under `public/`.
+   * When set, moment/module cards prefer this over solution hero photography.
+   */
+  coverImage?: string;
   /** Optional Sodexo TDDI V2 database fields merged at catalogue load time. */
   tddi?: ModuleTddiMeta;
 }
