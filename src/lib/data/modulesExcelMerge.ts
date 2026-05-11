@@ -1,11 +1,11 @@
 /**
- * Merge Sodexo `Modules.xlsx` (generated into {@link MODULES_EXCEL_SOT}) into the live
- * module catalogue: descriptions, solution wiring, and catalogue tile images.
+ * Sodexo `Modules.xlsx` (generated into {@link MODULES_EXCEL_SOT}) drives the catalogue
+ * module list: names, domains, descriptions, tile images, and solution wiring.
  */
 
 import type { Module } from './types';
 import { MODULES_EXCEL_SOT, type ModulesExcelRow } from './modulesExcelSoT.generated';
-import { canonModuleName, resolveSolutionId } from './xpFlowAdapter';
+import { canonModuleName } from './xpFlowAdapter';
 
 function norm(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -93,28 +93,37 @@ function parseSolutionNames(raw: string): string[] {
     .filter(Boolean);
 }
 
-function resolveSolutionIdsFromRow(row: ModulesExcelRow): string[] {
-  const ids = parseSolutionNames(row.solutionNamesRaw)
-    .map((n) => resolveSolutionId(n))
-    .filter((v): v is string => Boolean(v));
-  return Array.from(new Set(ids));
-}
-
 function makeModuleFromExcelRow(
   row: ModulesExcelRow,
-  solutionIds: string[],
   coverImage: string | undefined,
 ): Module {
   const name = row.name.trim();
+  const linkedSolutionsExcel = parseSolutionNames(row.solutionNamesRaw);
   return {
     id: slugify(name),
     name,
     icon: '📦',
     gradient: gradientForDomain(row.domain),
     description: row.description.trim(),
-    solutionIds,
+    solutionIds: [],
     coverImage,
+    domain: row.domain.trim(),
+    linkedSolutionsExcel,
   };
+}
+
+/** Catalogue modules keyed by Excel **Name of the Module** — one row per sheet entry, no merge with legacy lists. */
+export function modulesRecordFromExcelSoT(): Record<string, Module> {
+  const out: Record<string, Module> = {};
+  for (const row of MODULES_EXCEL_SOT) {
+    const name = row.name.trim();
+    if (!name) continue;
+    const coverImage = row.imageKey.trim()
+      ? moduleCoverImagePublicPath(row.imageKey.trim())
+      : undefined;
+    out[name] = makeModuleFromExcelRow(row, coverImage);
+  }
+  return out;
 }
 
 function resolveMergeTarget(
@@ -139,7 +148,6 @@ export function mergeModulesExcelSoT(modules: Record<string, Module>): Record<st
   const out: Record<string, Module> = { ...modules };
 
   for (const row of MODULES_EXCEL_SOT) {
-    const ids = resolveSolutionIdsFromRow(row);
     const coverImage = row.imageKey.trim()
       ? moduleCoverImagePublicPath(row.imageKey.trim())
       : undefined;
@@ -149,24 +157,22 @@ export function mergeModulesExcelSoT(modules: Record<string, Module>): Record<st
       const prev = out[target.key];
       if (!prev) {
         const name = row.name.trim();
-        if (!out[name]) out[name] = makeModuleFromExcelRow(row, ids, coverImage);
+        if (!out[name]) out[name] = makeModuleFromExcelRow(row, coverImage);
         continue;
       }
-      const solutionIds =
-        ids.length > 0
-          ? Array.from(new Set([...(prev.solutionIds ?? []), ...ids]))
-          : (prev.solutionIds ?? []);
       const description = row.description.trim() || prev.description;
+      const linkedSolutionsExcel = parseSolutionNames(row.solutionNamesRaw);
       out[target.key] = {
         ...prev,
         description,
-        solutionIds,
+        solutionIds: [],
+        linkedSolutionsExcel,
         coverImage: coverImage ?? prev.coverImage,
       };
     } else {
       const name = target.displayName;
       if (out[name]) continue;
-      out[name] = makeModuleFromExcelRow(row, ids, coverImage);
+      out[name] = makeModuleFromExcelRow(row, coverImage);
     }
   }
 

@@ -1,4 +1,5 @@
 import type { JourneyStep } from '@/lib/data/types';
+import { journeyStepReferencesModule } from '@/lib/data/moduleJourneyResolve';
 
 /** Journey moments (steps) that include this module name, for the given persona journey. */
 export function getMomentsForModuleName(
@@ -6,7 +7,7 @@ export function getMomentsForModuleName(
   personaJourneySteps: JourneyStep[]
 ): { id: string; label: string }[] {
   return personaJourneySteps
-    .filter((s) => s.modules.some((m) => m === moduleName))
+    .filter((s) => journeyStepReferencesModule(s, moduleName))
     .map((s) => ({ id: s.id, label: s.label }));
 }
 

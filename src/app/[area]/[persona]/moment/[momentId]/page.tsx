@@ -24,6 +24,7 @@ import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { MomentScene } from '@/components/catalogue/MomentScene';
 import { getCatalogueData } from '@/lib/notion';
+import { catalogueModuleForJourneyLabel } from '@/lib/data/moduleJourneyResolve';
 import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import { pickFirstRealHero } from '@/lib/data/solutionHeroImage';
@@ -61,10 +62,6 @@ interface Props {
   params: { area: string; persona: string; momentId: string };
 }
 
-function moduleByName(modules: Record<string, Module>, name: string): Module | undefined {
-  return Object.values(modules).find((m) => m.name === name);
-}
-
 function MomentIcon({
   momentId,
   weight,
@@ -94,7 +91,7 @@ export default async function MomentPage({ params }: Props) {
   if (!step) notFound();
 
   const moduleCards = step.modules
-    .map((name) => moduleByName(modules, name))
+    .map((name) => catalogueModuleForJourneyLabel(modules, name))
     .filter((m): m is Module => Boolean(m));
 
   const mapImage = persona.journeyMapImage;
@@ -461,7 +458,8 @@ export default async function MomentPage({ params }: Props) {
                               <img
                                 src={heroSolution.heroImage!}
                                 alt=""
-                                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[var(--motion-lg)] ease-[var(--ease-out-quint)] group-hover:scale-[1.04]"
+                                className="absolute inset-0 h-full w-full object-contain object-center p-2 transition-transform duration-[var(--motion-lg)] ease-[var(--ease-out-quint)] group-hover:scale-[1.02]"
+                                style={{ background: 'linear-gradient(180deg,#f5f7fb 0%,#eef2fa 100%)' }}
                                 loading="lazy"
                                 decoding="async"
                               />

@@ -113,7 +113,7 @@ export function globalSearch(data: CatalogueData, rawQuery: string): GlobalSearc
         id: m.id,
         name: m.name,
         description: m.description,
-        solutionCount: m.solutionIds.length,
+        solutionCount: m.linkedSolutionsExcel?.length ?? m.solutionIds.length,
         href: `/solutions?module=${encodeURIComponent(m.name)}`,
         score,
       });

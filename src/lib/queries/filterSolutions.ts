@@ -1,4 +1,5 @@
-import type { Area, Solution, SolutionCollection, SolutionStatus, SolutionType } from '@/lib/data/types';
+import type { Area, Module, Solution, SolutionCollection, SolutionStatus, SolutionType } from '@/lib/data/types';
+import { solutionsForModule } from '@/lib/data/moduleSolutions';
 
 export interface SolutionFilterParams {
   q?: string;
@@ -21,7 +22,11 @@ export interface SolutionFilterParams {
   collections?: SolutionCollection[];
 }
 
-export function filterSolutions(solutions: Solution[], p: SolutionFilterParams): Solution[] {
+export function filterSolutions(
+  solutions: Solution[],
+  p: SolutionFilterParams,
+  modulesByName?: Record<string, Module>,
+): Solution[] {
   let list = solutions;
 
   const q = p.q?.trim().toLowerCase();
@@ -36,7 +41,12 @@ export function filterSolutions(solutions: Solution[], p: SolutionFilterParams):
     );
   }
   if (p.module) {
-    list = list.filter((s) => s.module === p.module);
+    const mod = modulesByName?.[p.module];
+    if (mod) {
+      list = list.filter((s) => solutionsForModule(mod, [s]).length > 0);
+    } else {
+      list = list.filter((s) => s.module === p.module);
+    }
   }
   if (p.modules && p.modules.length > 0) {
     const allowed = new Set(p.modules);

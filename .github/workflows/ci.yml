@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python deps (Excel generators)
+        run: pip install openpyxl
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run build
+
+      - name: Verify Excel SoT (regenerate + strict module↔solution tokens)
+        if: ${{ hashFiles('excel-source/Classeur Solutions.xlsx') != '' && hashFiles('excel-source/Classeur Modules.xlsx') != '' }}
+        env:
+          EXCEL_SOLUTIONS_PATH: ${{ github.workspace }}/excel-source/Classeur Solutions.xlsx
+          EXCEL_MODULES_PATH: ${{ github.workspace }}/excel-source/Classeur Modules.xlsx
+          CHECK_GENERATED_DIFF: "1"
+        run: npm run ci:verify-excel-so

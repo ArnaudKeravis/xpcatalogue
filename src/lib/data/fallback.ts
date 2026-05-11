@@ -1,6 +1,6 @@
 // Static fallback used when Notion is unavailable + static area/module/journey config
 
-import type { Area, AreaConfig, CatalogueData, JourneyStep, Module, Persona, Solution } from './types';
+import type { Area, AreaConfig, CatalogueData, JourneyStep, Module, Persona } from './types';
 import { CATALOGUE_PERSONAS } from './personaDefinitions';
 import { SOLUTIONS_CATALOG } from './solutionsCatalog';
 import { enrichSolutionsWithCollections } from './collections';
@@ -11,11 +11,10 @@ import {
   consumerModuleNamesByMoment,
   CONSUMER_MOMENT_TO_STEP,
   effectiveConsumerMomentDescription,
-  excelDescriptionBySolutionId,
 } from './xpFlowAdapter';
 import { mergeTddiV2IntoCatalogue } from './tddiV2CatalogueMerge';
-import { mergeModulesExcelSoT } from './modulesExcelMerge';
-import { applySolutionOcrOverrides } from './solutionOcrMerge';
+import { modulesRecordFromExcelSoT } from './modulesExcelMerge';
+import { buildSolutionsCatalogueFromExcel } from './solutionsFromExcel';
 import { applyPersonaMomentModuleFill } from './personaMomentModules';
 
 export const AREA_CONFIGS: Record<Area, AreaConfig> = {
@@ -582,19 +581,11 @@ for (const [, def] of Object.entries(PERSONA_JOURNEYS)) {
 }
 
 const TDDI_MERGED = mergeTddiV2IntoCatalogue(MERGED_MODULES, MERGED_JOURNEY_STEPS, SOLUTIONS_CATALOG);
-const MODULES_WITH_EXCEL_SOT = mergeModulesExcelSoT(TDDI_MERGED.modules);
+const MODULES_WITH_EXCEL_SOT = modulesRecordFromExcelSoT();
 const FINAL_JOURNEY_STEPS = applyPersonaMomentModuleFill(TDDI_MERGED.journeySteps, MODULES_WITH_EXCEL_SOT);
 
-/** Excel Solutions sheet body text (same source as the old infographic cards); no card images at runtime. */
-const EXCEL_SOLUTION_BODY = excelDescriptionBySolutionId();
-
-function withExcelSolutionDescription(s: Solution): Solution {
-  const fromExcel = EXCEL_SOLUTION_BODY[s.id]?.trim();
-  const out: Solution = { ...s };
-  delete out.descriptionImage;
-  if (fromExcel) out.description = fromExcel;
-  return applySolutionOcrOverrides(out);
-}
+/** Classeur `Solutions.xlsx` → canonical solution catalogue (single source of truth). */
+const SOLUTIONS_FROM_EXCEL_CLASSEUR = buildSolutionsCatalogueFromExcel();
 
 const MERGED_PERSONAS: Persona[] = CATALOGUE_PERSONAS.map((p) => {
   const def = PERSONA_JOURNEYS[p.id];
@@ -612,12 +603,8 @@ export const STEP_LABEL: Record<string, string> = Object.fromEntries(
   Object.values(FINAL_JOURNEY_STEPS).map((s) => [s.id, s.label])
 );
 
-// Solutions mirror `solutionsCatalog.ts`; long-form description comes from Excel (`xpCatalogueFlow`).
 export const FALLBACK_DATA: CatalogueData = {
-  solutions: enrichSolutionsWithCollections([
-    ...SOLUTIONS_CATALOG.map(withExcelSolutionDescription),
-    ...TDDI_MERGED.extraSolutions.map(withExcelSolutionDescription),
-  ]),
+  solutions: enrichSolutionsWithCollections(SOLUTIONS_FROM_EXCEL_CLASSEUR),
   personas: MERGED_PERSONAS,
   modules: MODULES_WITH_EXCEL_SOT,
   areas: AREA_CONFIGS,

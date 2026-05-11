@@ -172,14 +172,16 @@ export function SolutionCard({ solution, siblings, module, hideModuleRail = fals
                 className="rounded-full border-2 border-[var(--blue)] px-3 py-1 text-xs font-bold text-[var(--teal)]"
                 style={{ fontFamily: 'var(--font-body)' }}
               >
-                {current.type}
+                {current.catalogueTag ?? current.type}
               </span>
-              <span
-                className="rounded-full border-2 px-3 py-1 text-xs font-bold"
-                style={{ borderColor: sc, color: sc, fontFamily: 'var(--font-body)' }}
-              >
-                {current.status}
-              </span>
+              {!current.excelSolutionsSheet ? (
+                <span
+                  className="rounded-full border-2 px-3 py-1 text-xs font-bold"
+                  style={{ borderColor: sc, color: sc, fontFamily: 'var(--font-body)' }}
+                >
+                  {current.status}
+                </span>
+              ) : null}
               {current.hashtags.map((h) => (
                 <span
                   key={h}
@@ -191,18 +193,24 @@ export function SolutionCard({ solution, siblings, module, hideModuleRail = fals
               ))}
             </div>
 
-            <div
-              className="flex flex-wrap items-center gap-1"
-              role="group"
-              aria-label={`Deployed in ${current.flags.length} Sodexo region${current.flags.length === 1 ? '' : 's'}`}
-            >
-              <span className="mr-1 text-xs font-bold text-[var(--blue)]">Sodexo Regions:</span>
-              {current.flags.map((f) => (
-                <span key={f} className="text-xl" aria-hidden>
-                  {f}
-                </span>
-              ))}
-            </div>
+            {current.regionsAndCountry ? (
+              <p className="text-xs leading-relaxed text-gray-600" style={{ fontFamily: 'var(--font-body)' }}>
+                <span className="font-bold text-[var(--blue)]">Regions and country:</span> {current.regionsAndCountry}
+              </p>
+            ) : (
+              <div
+                className="flex flex-wrap items-center gap-1"
+                role="group"
+                aria-label={`Deployed in ${current.flags.length} Sodexo region${current.flags.length === 1 ? '' : 's'}`}
+              >
+                <span className="mr-1 text-xs font-bold text-[var(--blue)]">Sodexo Regions:</span>
+                {current.flags.map((f) => (
+                  <span key={f} className="text-xl" aria-hidden>
+                    {f}
+                  </span>
+                ))}
+              </div>
+            )}
 
             <Section icon={<Info size={20} weight="fill" color="var(--blue)" />} title="Context">
               <p className="text-xs leading-relaxed text-gray-600">{current.context}</p>
@@ -214,19 +222,23 @@ export function SolutionCard({ solution, siblings, module, hideModuleRail = fals
 
             <div className="grid grid-cols-2 gap-3">
               <Section icon={<ChartBar size={20} weight="fill" color="var(--blue)" />} title="Deployment & KPIs">
-                <div className="mt-1 grid grid-cols-2 gap-2">
-                  {current.kpis.map((k, i) => (
-                    <div key={i} className="rounded-lg bg-[#f0f4ff] p-2.5">
-                      <div
-                        className="tabular text-xl font-extrabold text-[var(--blue-primary)]"
-                        style={{ fontFamily: 'var(--font-heading)' }}
-                      >
-                        {k.v}
+                {current.kpis.length === 1 && !String(current.kpis[0].v ?? '').trim() ? (
+                  <p className="whitespace-pre-wrap text-xs leading-relaxed text-gray-600">{current.kpis[0].l}</p>
+                ) : (
+                  <div className="mt-1 grid grid-cols-2 gap-2">
+                    {current.kpis.map((k, i) => (
+                      <div key={i} className="rounded-lg bg-[#f0f4ff] p-2.5">
+                        <div
+                          className="tabular text-xl font-extrabold text-[var(--blue-primary)]"
+                          style={{ fontFamily: 'var(--font-heading)' }}
+                        >
+                          {k.v}
+                        </div>
+                        <div className="mt-0.5 text-[10px] text-gray-500">{k.l}</div>
                       </div>
-                      <div className="mt-0.5 text-[10px] text-gray-500">{k.l}</div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </Section>
 
               <Section icon={<Phone size={20} weight="fill" color="var(--blue)" />} title="Contact">
@@ -283,7 +295,7 @@ export function SolutionCard({ solution, siblings, module, hideModuleRail = fals
               onClick={handleDownload}
             />
             <p className="text-right text-xs text-gray-400" style={{ fontFamily: 'var(--font-body)' }}>
-              ↻ Synced from Notion
+              {current.excelSolutionsSheet ? '↻ Classeur Solutions.xlsx' : '↻ Synced from Notion'}
             </p>
           </aside>
         </div>

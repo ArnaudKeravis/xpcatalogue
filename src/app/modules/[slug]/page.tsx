@@ -40,7 +40,6 @@ export default async function ModulePage({ params, searchParams }: Props) {
   // A solution belongs to a module when its `module` field matches by name
   // OR the module config explicitly lists it in `solutionIds` (Excel flow mapping).
   const moduleSolutions: Solution[] = solutionsForModule(mod, solutions);
-  if (moduleSolutions.length === 0) notFound();
 
   // Optional back-context from query string — preserves the
   //  Area → Persona → Moment → Module breadcrumb the user came from.
@@ -72,6 +71,7 @@ export default async function ModulePage({ params, searchParams }: Props) {
 
   // Primary solution: the first (preserves deep-link stability for now).
   const [primary, ...siblings] = moduleSolutions;
+  const linkedExcel = mod.linkedSolutionsExcel ?? [];
 
   // Sibling modules: 4 others from the same catalogue, excluding this one.
   // We prefer modules with the highest solution count so the peek feels rich.
@@ -128,8 +128,16 @@ export default async function ModulePage({ params, searchParams }: Props) {
               className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--blue)]/60"
               style={{ fontFamily: 'var(--font-heading)' }}
             >
-              Module · All solutions · {moduleSolutions.length}
+              Module · All solutions · {linkedExcel.length > 0 ? linkedExcel.length : moduleSolutions.length}
             </p>
+            {mod.domain ? (
+              <p
+                className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--blue)]/50"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                {mod.domain}
+              </p>
+            ) : null}
             <h1
               className="truncate text-2xl font-extrabold text-[var(--blue)] md:text-3xl"
               style={{ fontFamily: 'var(--font-heading)' }}
@@ -155,7 +163,29 @@ export default async function ModulePage({ params, searchParams }: Props) {
       </header>
 
       <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <SolutionCard solution={primary} siblings={siblings} module={mod} hideModuleRail />
+        {moduleSolutions.length > 0 ? (
+          <SolutionCard solution={primary} siblings={siblings} module={mod} hideModuleRail />
+        ) : (
+          <section
+            className="mx-auto w-full max-w-[960px] flex-1 px-6 py-10 md:px-10"
+            aria-label="Solutions listed for this module"
+          >
+            <p
+              className="text-sm font-semibold text-[var(--blue)]"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              Solutions in the module
+            </p>
+            <ul
+              className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-[var(--blue)]/80"
+              style={{ fontFamily: 'var(--font-body)' }}
+            >
+              {linkedExcel.map((label) => (
+                <li key={label}>{label}</li>
+              ))}
+            </ul>
+          </section>
+        )}
       </main>
 
       {/* ── Sibling modules peek ───────────────────────────────────

@@ -39,7 +39,11 @@ export interface Solution {
   name: string;
   module: string;
   type: SolutionType;
+  /** Excel **Tag for catalogue** — shown instead of `type` when present (Solutions sheet). */
+  catalogueTag?: string;
   status: SolutionStatus;
+  /** Row authored from Classeur Solutions.xlsx — hides legacy catalogue-only chrome where relevant. */
+  excelSolutionsSheet?: boolean;
   hashtags: string[];
   flags: string[];
   img: string;            // emoji fallback (module tile)
@@ -54,6 +58,8 @@ export interface Solution {
   kpis: KPI[];
   contact: string;
   benefits: Benefits;
+  /** Excel **Regions and country** cell (verbatim). */
+  regionsAndCountry?: string;
   url?: string;
   areas: Area[];
   notionId?: string;
@@ -146,6 +152,14 @@ export interface Module {
   description: string;
   gradient: string;       // CSS gradient string
   solutionIds: string[];
+  /**
+   * Excel **Domain / Macro Personae** — populated only from `Modules.xlsx`.
+   */
+  domain?: string;
+  /**
+   * Verbatim solution labels from Excel **Solutions in the module** (split on commas/semicolons).
+   */
+  linkedSolutionsExcel?: readonly string[];
   /**
    * Tile image from Sodexo `Modules.xlsx` / `Modules_Images` — path under `public/`.
    * When set, moment/module cards prefer this over solution hero photography.

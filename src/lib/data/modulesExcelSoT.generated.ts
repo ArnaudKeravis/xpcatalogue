@@ -1,5 +1,5 @@
 /**
- * Auto-generated from Sodexo `Modules.xlsx` — do not edit by hand.
+ * Auto-generated from the Sodexo Modules workbook — do not edit by hand.
  * Source rows: 53
  */
 

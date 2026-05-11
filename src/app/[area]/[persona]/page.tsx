@@ -9,6 +9,7 @@ import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { getMomentsForModuleName } from '@/lib/queries/journey';
 import { getCatalogueData } from '@/lib/notion';
+import { catalogueModuleForJourneyLabel } from '@/lib/data/moduleJourneyResolve';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Area, JourneyStep } from '@/lib/data/types';
 
@@ -44,10 +45,18 @@ export default async function PersonaPage({ params }: Props) {
     .filter((s): s is JourneyStep => Boolean(s));
 
   // Only show modules that actually apply to this persona's journey.
+  // Labels on steps come from XP flow / editorial maps; catalogue names come from Classeur Modules.xlsx — compare with normalization.
   const journeyModuleNames = new Set(steps.flatMap((s) => s.modules));
   const allModules = Object.values(modules);
-  const relevantModules = allModules
-    .filter((m) => journeyModuleNames.has(m.name))
+  const seen = new Set<string>();
+  const relevantModules = Array.from(journeyModuleNames)
+    .map((label) => catalogueModuleForJourneyLabel(modules, label))
+    .filter((m): m is NonNullable<typeof m> => Boolean(m))
+    .filter((m) => {
+      if (seen.has(m.id)) return false;
+      seen.add(m.id);
+      return true;
+    })
     .sort((a, b) => a.name.localeCompare(b.name));
   const totalModuleCount = allModules.length;
 

@@ -6,7 +6,6 @@ import {
   filterSolutions,
   rankedFlags,
   rankedHashtags,
-  uniqueModules,
   uniqueStatuses,
   uniqueTypes,
 } from '@/lib/queries/filterSolutions';
@@ -55,7 +54,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
   const catalogue = await getCatalogueData();
   const { solutions, areas, personas, journeySteps, modules: modulesByName } = catalogue;
 
-  const modules = uniqueModules(solutions);
+  const modules = Object.keys(modulesByName).sort((a, b) => a.localeCompare(b));
   const statuses = uniqueStatuses(solutions);
   const types = uniqueTypes(solutions);
   const hashtags = rankedHashtags(solutions);
@@ -117,17 +116,21 @@ export default async function SolutionsPage({ searchParams }: Props) {
     .map(parseCollectionKey)
     .filter((c): c is SolutionCollection => Boolean(c));
 
-  const filtered = filterSolutions(solutions, {
-    q,
-    module: mod,
-    modules: moduleWhitelist,
-    area,
-    status,
-    type,
-    hashtags: hashtagFilter,
-    flags: flagFilter,
-    collections: collectionFilter.length > 0 ? collectionFilter : undefined,
-  });
+  const filtered = filterSolutions(
+    solutions,
+    {
+      q,
+      module: mod,
+      modules: moduleWhitelist,
+      area,
+      status,
+      type,
+      hashtags: hashtagFilter,
+      flags: flagFilter,
+      collections: collectionFilter.length > 0 ? collectionFilter : undefined,
+    },
+    modulesByName,
+  );
 
   // When exactly one curated collection is selected and nothing else is filtering, we
   // promote the collection to an editorial hero instead of a generic "Solutions — …" title.

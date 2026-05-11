@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Emit src/lib/data/modulesExcelSoT.generated.ts from Modules.xlsx (Sodexo catalogue SoT)."""
+"""Emit src/lib/data/modulesExcelSoT.generated.ts from the Sodexo Modules workbook (SoT)."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ except ImportError as e:
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "src/lib/data/modulesExcelSoT.generated.ts"
-DEFAULT_XLSX = Path.home() / "Downloads/Modules.xlsx"
+DEFAULT_XLSX = Path.home() / "Downloads/Classeur Modules.xlsx"
 
 
 def esc(s: str) -> str:
@@ -73,7 +73,7 @@ def main() -> None:
 
     lines = [
         "/**",
-        " * Auto-generated from Sodexo `Modules.xlsx` — do not edit by hand.",
+        " * Auto-generated from the Sodexo Modules workbook — do not edit by hand.",
         f" * Source rows: {len(rows)}",
         " */",
         "",

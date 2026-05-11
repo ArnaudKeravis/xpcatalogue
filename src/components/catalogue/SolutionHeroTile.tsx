@@ -46,12 +46,15 @@ export function SolutionHeroTile({
       style={{ background: gradient }}
     >
       {hasImage ? (
-        <img
-          src={solution.heroImage!}
-          alt={alt ?? ''}
-          className="absolute inset-0 h-full w-full object-cover object-center"
-          loading="lazy"
-        />
+        <div className="absolute inset-0 flex items-center justify-center bg-[#eef2fa] p-3">
+          <img
+            src={solution.heroImage!}
+            alt={alt ?? ''}
+            className="max-h-full max-w-full object-contain object-center"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       ) : (
         <>
           {/* Spotlight — lifts the icon off the flat gradient */}
