@@ -147,18 +147,18 @@ export default async function AreaPage({ params }: Props) {
           aria-hidden
         />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col gap-6 px-6 py-6 md:px-10 md:py-8 lg:grid lg:grid-cols-[minmax(0,38%)_minmax(0,62%)] lg:gap-10">
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col gap-6 px-6 py-6 md:px-10 md:py-8 lg:grid lg:grid-cols-[minmax(0,38%)_minmax(0,62%)] lg:gap-10 lg:items-start">
           {/* ── Left column: area identity + iso illustration ──────── */}
-          <section className="flex min-h-0 flex-col">
-            <div className="flex flex-wrap items-end gap-3">
+          <section className="flex min-h-0 w-full min-w-0 flex-col">
+            <div className="flex max-w-2xl flex-wrap items-end gap-3">
               <h1
-                className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-extrabold leading-none tracking-tight"
+                className="text-[clamp(2.25rem,4vw,3.25rem)] font-extrabold leading-none tracking-tight"
                 style={{ fontFamily: 'var(--font-heading)', color: areaConfig.color }}
               >
                 {areaConfig.label}
               </h1>
               <p
-                className="mb-1 max-w-md text-[clamp(0.9rem,1.4vw,1.125rem)] font-semibold leading-snug text-[var(--blue)]"
+                className="mb-1 max-w-md text-[clamp(0.9rem,1.25vw,1.0625rem)] font-semibold leading-snug text-[var(--blue)]"
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
                 {areaConfig.tagline}
@@ -166,11 +166,11 @@ export default async function AreaPage({ params }: Props) {
             </div>
 
             {areaConfig.isometricUrl ? (
-              <div className="mt-4 flex min-h-0 flex-1 items-center justify-center lg:mt-6">
+              <div className="mt-4 flex w-full items-center justify-center lg:mt-6 lg:max-h-[min(52vh,520px)]">
                 <img
                   src={areaConfig.isometricUrl}
                   alt={`${areaConfig.label} isometric illustration`}
-                  className="max-h-full w-auto max-w-full object-contain"
+                  className="h-auto w-full max-h-[min(48vh,420px)] max-w-md object-contain sm:max-h-[min(50vh,460px)] sm:max-w-lg lg:max-h-[min(52vh,500px)] lg:max-w-xl"
                   loading="eager"
                 />
               </div>
@@ -178,10 +178,10 @@ export default async function AreaPage({ params }: Props) {
           </section>
 
           {/* ── Right column: personas 3×2 ─────────────────────────── */}
-          <section className="flex min-h-0 flex-col">
-            <div>
+          <section className="flex min-h-0 w-full min-w-0 flex-col">
+            <div className="max-w-3xl">
               <h2
-                className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-extrabold text-[var(--blue)]"
+                className="text-[clamp(1.125rem,1.75vw,1.375rem)] font-extrabold text-[var(--blue)]"
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
                 Key personas in{' '}

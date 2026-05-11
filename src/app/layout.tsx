@@ -8,7 +8,6 @@ import { FooterSlot } from '@/components/layout/ChromeSlot';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { MobileTabBar } from '@/components/layout/MobileTabBar';
-import { themeInitScript } from '@/components/ui/ThemeToggle';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -29,10 +28,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={openSans.variable} suppressHydrationWarning>
-      <head>
-        {/* Run BEFORE paint to set data-theme from localStorage — prevents FOUC flash. */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className="flex min-h-screen flex-col bg-[var(--surface)] font-body antialiased">
         <a
           href="#main-content"

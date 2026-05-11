@@ -3,8 +3,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-export type Theme = 'light' | 'dark' | 'system';
-
 export type FavouriteKind = 'persona' | 'solution' | 'moment';
 
 export interface FavouriteItem {
@@ -23,11 +21,6 @@ export interface FavouriteItem {
 }
 
 interface Store {
-  /* ── Theme ───────────────────────────────────────────── */
-  theme: Theme;
-  setTheme: (t: Theme) => void;
-
-  /* ── Favourites ──────────────────────────────────────── */
   favourites: FavouriteItem[];
   toggleFavourite: (item: Omit<FavouriteItem, 'addedAt'>) => void;
   isFavourite: (kind: FavouriteKind, id: string) => boolean;
@@ -37,9 +30,6 @@ interface Store {
 export const useStore = create<Store>()(
   persist(
     (set, get) => ({
-      theme: 'system',
-      setTheme: (t) => set({ theme: t }),
-
       favourites: [],
       toggleFavourite: (item) => {
         const list = get().favourites;
@@ -55,9 +45,24 @@ export const useStore = create<Store>()(
     }),
     {
       name: 'sodexo-xp-catalogue',
-      version: 1,
+      version: 2,
+      migrate: (persistedState: unknown) => {
+        const p = persistedState as { favourites?: FavouriteItem[] } | null | undefined;
+        const fav = p?.favourites;
+        return {
+          favourites: Array.isArray(fav) ? fav : [],
+        };
+      },
+      /** Strip legacy `theme` (and any other unknown keys) from old persisted blobs without `version`. */
+      merge: (persistedState: unknown, currentState: Store) => {
+        const p = persistedState as { favourites?: FavouriteItem[] } | null | undefined;
+        return {
+          ...currentState,
+          favourites: Array.isArray(p?.favourites) ? p.favourites : currentState.favourites,
+        };
+      },
       storage: createJSONStorage(() => (typeof window !== 'undefined' ? localStorage : dummyStorage)),
-      partialize: (s) => ({ theme: s.theme, favourites: s.favourites }),
+      partialize: (s) => ({ favourites: s.favourites }),
     }
   )
 );

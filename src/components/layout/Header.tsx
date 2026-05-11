@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { GlobalSearch } from '@/components/catalogue/GlobalSearch';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useStore } from '@/lib/store';
 
 /** Local brand mark — `public/images/catalogue/assets/brand/xp-catalogue-mark.svg` */
@@ -169,8 +168,6 @@ export function Header() {
               </Link>
             );
           })}
-          <div className="mx-1 h-5 w-px bg-[var(--grey-border)]" aria-hidden />
-          <ThemeToggle />
         </nav>
 
         {/* Mobile: compact search launcher + menu button */}
@@ -231,15 +228,6 @@ export function Header() {
                 </Link>
               );
             })}
-            <div className="mt-2 flex items-center justify-between gap-3 border-t border-[var(--grey-border)] pt-3">
-              <span
-                className="text-[11px] font-semibold uppercase tracking-wider text-[var(--blue)]/60"
-                style={{ fontFamily: 'var(--font-body)' }}
-              >
-                Appearance
-              </span>
-              <ThemeToggle />
-            </div>
           </nav>
         </div>
       ) : null}
