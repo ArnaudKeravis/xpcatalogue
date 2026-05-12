@@ -37,9 +37,9 @@ export default async function ModulePage({ params, searchParams }: Props) {
   const mod = findModuleBySlug(modules, params.slug);
   if (!mod) notFound();
 
-  // A solution belongs to a module when its `module` field matches by name
-  // OR the module config explicitly lists it in `solutionIds` (Excel flow mapping).
+  /** Solutions for this module: Modules sheet Column C only (`linkedSolutionsExcel` → exact `Solution.name`). */
   const moduleSolutions: Solution[] = solutionsForModule(mod, solutions);
+  const resolvedCount = (m: Module) => solutionsForModule(m, solutions).length;
 
   // Optional back-context from query string — preserves the
   //  Area → Persona → Moment → Module breadcrumb the user came from.
@@ -76,8 +76,8 @@ export default async function ModulePage({ params, searchParams }: Props) {
   // Sibling modules: 4 others from the same catalogue, excluding this one.
   // We prefer modules with the highest solution count so the peek feels rich.
   const siblingModules = Object.values(modules)
-    .filter((m) => m.id !== mod.id && (m.solutionIds?.length ?? 0) > 0)
-    .sort((a, b) => (b.solutionIds?.length ?? 0) - (a.solutionIds?.length ?? 0))
+    .filter((m) => m.id !== mod.id && resolvedCount(m) > 0)
+    .sort((a, b) => resolvedCount(b) - resolvedCount(a))
     .slice(0, 4);
 
   return (
@@ -239,8 +239,8 @@ export default async function ModulePage({ params, searchParams }: Props) {
                         className="mt-0.5 tabular text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--blue)]/55"
                         style={{ fontFamily: 'var(--font-body)' }}
                       >
-                        {m.solutionIds?.length ?? 0} solution
-                        {(m.solutionIds?.length ?? 0) === 1 ? '' : 's'}
+                        {resolvedCount(m)} solution
+                        {resolvedCount(m) === 1 ? '' : 's'}
                       </p>
                     </div>
                   </Link>

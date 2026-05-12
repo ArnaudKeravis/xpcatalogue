@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { JourneyStep } from '@/lib/data/types';
+import { momentPersonaTopUrl } from '@/lib/data/momentPersonaTop.generated';
 import { JourneyStepIcon } from './JourneyStepIcon';
 
 interface Props {
@@ -27,16 +28,30 @@ export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
       >
         {steps.map((step, i) => {
           const href = `/${area}/${personaId}/moment/${step.id}`;
+          const personaTop = momentPersonaTopUrl(personaId, step.id);
           return (
             <li
               key={step.id}
               className="relative shrink-0 snap-start"
-              style={{ flexBasis: '180px' }}
+              style={{ flexBasis: personaTop ? '196px' : '180px' }}
             >
               <Link
                 href={href}
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-3 transition-all duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
               >
+                {personaTop ? (
+                  <div className="-mx-3 -mt-3 mb-2 overflow-hidden rounded-t-2xl border-b border-[var(--grey-border)] bg-[var(--surface)]">
+                    <img
+                      src={personaTop}
+                      alt=""
+                      width={400}
+                      height={160}
+                      className="h-[4.5rem] w-full object-cover object-[center_15%]"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                ) : null}
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <JourneyStepIcon step={step} accent={accentColor} size={32} />
                   <span

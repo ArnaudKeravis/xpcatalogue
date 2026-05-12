@@ -3,7 +3,7 @@
  * module list: names, domains, descriptions, tile images, and solution wiring.
  */
 
-import type { Module } from './types';
+import type { Module, Solution } from './types';
 import { MODULES_EXCEL_SOT, type ModulesExcelRow } from './modulesExcelSoT.generated';
 import { canonModuleName } from './xpFlowAdapter';
 
@@ -122,6 +122,35 @@ export function modulesRecordFromExcelSoT(): Record<string, Module> {
       ? moduleCoverImagePublicPath(row.imageKey.trim())
       : undefined;
     out[name] = makeModuleFromExcelRow(row, coverImage);
+  }
+  return out;
+}
+
+/**
+ * Fills {@link Module.solutionIds} **only** from {@link Module.linkedSolutionsExcel}
+ * (Modules sheet Column C), in list order, matching each label to {@link Solution.name}
+ * (trimmed) in the given catalogue. No other source contributes ids.
+ */
+export function wireModuleSolutionIdsFromExcelLinks(
+  modules: Record<string, Module>,
+  solutions: readonly Solution[],
+): Record<string, Module> {
+  const byName = new Map<string, string>();
+  for (const s of solutions) {
+    byName.set(s.name.trim(), s.id);
+  }
+  const out: Record<string, Module> = {};
+  for (const [key, mod] of Object.entries(modules)) {
+    const ids: string[] = [];
+    const seen = new Set<string>();
+    for (const label of mod.linkedSolutionsExcel ?? []) {
+      const id = byName.get(label.trim());
+      if (id && !seen.has(id)) {
+        seen.add(id);
+        ids.push(id);
+      }
+    }
+    out[key] = { ...mod, solutionIds: ids };
   }
   return out;
 }

@@ -12,6 +12,7 @@
  */
 
 import type { JourneyStep, Module } from './types';
+import { EXCEL_JOURNEY_STEP_IDS } from './journeyStepsFromExcel.generated';
 
 /** Journey step ids that already get rich module wiring elsewhere — do not override. */
 export const MOMENT_IDS_WITH_BUILTIN_MODULE_WIRING = new Set<string>([
@@ -339,12 +340,14 @@ function mergeExtra(
   steps: Record<string, JourneyStep>,
   extra: Record<string, readonly string[]>,
   validModuleNames: Set<string>,
+  skipMomentId?: (id: string) => boolean,
 ): Record<string, JourneyStep> {
   const out: Record<string, JourneyStep> = {};
   for (const [id, step] of Object.entries(steps)) {
     out[id] = { ...step, modules: [...step.modules] };
   }
   for (const [momentId, names] of Object.entries(extra)) {
+    if (skipMomentId?.(momentId)) continue;
     const step = out[momentId];
     if (!step) continue;
     const filtered = names.filter((n) => validModuleNames.has(n));
@@ -365,8 +368,9 @@ export function applyPersonaMomentModuleFill(
   modules: Record<string, Module>,
 ): Record<string, JourneyStep> {
   const valid = new Set(Object.keys(modules));
-  let merged = mergeExtra(steps, PERSONA_MOMENT_EXTRA_MODULES, valid);
-  merged = mergeExtra(merged, LEGACY_AREA_MOMENT_EXTRA_MODULES, valid);
+  const skipExcel = (id: string) => EXCEL_JOURNEY_STEP_IDS.has(id);
+  let merged = mergeExtra(steps, PERSONA_MOMENT_EXTRA_MODULES, valid, skipExcel);
+  merged = mergeExtra(merged, LEGACY_AREA_MOMENT_EXTRA_MODULES, valid, skipExcel);
 
   for (const id of Array.from(MOMENT_IDS_WITH_BUILTIN_MODULE_WIRING)) {
     const original = steps[id];

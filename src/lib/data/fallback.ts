@@ -13,9 +13,10 @@ import {
   effectiveConsumerMomentDescription,
 } from './xpFlowAdapter';
 import { mergeTddiV2IntoCatalogue } from './tddiV2CatalogueMerge';
-import { modulesRecordFromExcelSoT } from './modulesExcelMerge';
+import { modulesRecordFromExcelSoT, wireModuleSolutionIdsFromExcelLinks } from './modulesExcelMerge';
 import { buildSolutionsCatalogueFromExcel } from './solutionsFromExcel';
 import { applyPersonaMomentModuleFill } from './personaMomentModules';
+import { JOURNEY_STEPS_FROM_EXCEL } from './journeyStepsFromExcel.generated';
 
 export const AREA_CONFIGS: Record<Area, AreaConfig> = {
   work: {
@@ -580,12 +581,19 @@ for (const [, def] of Object.entries(PERSONA_JOURNEYS)) {
   }
 }
 
-const TDDI_MERGED = mergeTddiV2IntoCatalogue(MERGED_MODULES, MERGED_JOURNEY_STEPS, SOLUTIONS_CATALOG);
-const MODULES_WITH_EXCEL_SOT = modulesRecordFromExcelSoT();
-const FINAL_JOURNEY_STEPS = applyPersonaMomentModuleFill(TDDI_MERGED.journeySteps, MODULES_WITH_EXCEL_SOT);
+/** Classeur *Personae Journey* — canonical steps + module wiring (overrides stubs). */
+for (const [id, step] of Object.entries(JOURNEY_STEPS_FROM_EXCEL)) {
+  MERGED_JOURNEY_STEPS[id] = step;
+}
 
 /** Classeur `Solutions.xlsx` → canonical solution catalogue (single source of truth). */
 const SOLUTIONS_FROM_EXCEL_CLASSEUR = buildSolutionsCatalogueFromExcel();
+const MODULES_WITH_EXCEL_SOT = wireModuleSolutionIdsFromExcelLinks(
+  modulesRecordFromExcelSoT(),
+  SOLUTIONS_FROM_EXCEL_CLASSEUR,
+);
+const TDDI_MERGED = mergeTddiV2IntoCatalogue(MERGED_MODULES, MERGED_JOURNEY_STEPS, SOLUTIONS_CATALOG);
+const FINAL_JOURNEY_STEPS = applyPersonaMomentModuleFill(TDDI_MERGED.journeySteps, MODULES_WITH_EXCEL_SOT);
 
 const MERGED_PERSONAS: Persona[] = CATALOGUE_PERSONAS.map((p) => {
   const def = PERSONA_JOURNEYS[p.id];
