@@ -16,13 +16,13 @@ export function AreaVillageCard({ area, className }: Props) {
     <Link
       href={`/${area.id}`}
       className={cn(
-        'group flex max-w-[282px] flex-col gap-2.5 rounded-brand-xl border border-white/40 bg-[rgba(255,255,255,0.3)] px-[18px] py-4 shadow-[0px_4px_25px_0px_rgba(0,0,128,0.15)] backdrop-blur-[7.9px] transition-transform hover:-translate-y-1 hover:shadow-[0px_8px_28px_0px_rgba(0,0,128,0.18)]',
+        'group flex w-full max-w-[320px] flex-col gap-2.5 rounded-brand-xl border border-white/40 bg-[rgba(255,255,255,0.42)] px-[18px] py-4 shadow-[0px_4px_25px_0px_rgba(0,0,128,0.15)] backdrop-blur-[7.9px] transition-transform hover:-translate-y-1 hover:shadow-[0px_8px_28px_0px_rgba(0,0,128,0.18)] sm:max-w-none',
         className
       )}
     >
       <div className="flex items-center justify-center gap-[15px] pl-2 pr-1">
         <span
-          className="whitespace-nowrap text-[clamp(1.25rem,2.2vw,2rem)] font-bold text-[var(--blue-primary)]"
+          className="whitespace-nowrap text-[clamp(1.125rem,2vw,1.65rem)] font-bold text-[var(--blue-primary)]"
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {area.label}
@@ -44,7 +44,7 @@ export function AreaVillageCard({ area, className }: Props) {
         />
       </div>
       <div
-        className="w-full text-[clamp(1rem,1.6vw,1.25rem)] leading-normal text-[var(--blue)]"
+        className="w-full break-words text-[clamp(0.9375rem,1.25vw,1.0625rem)] leading-relaxed text-[var(--blue)] [&_p]:mb-2 [&_p:last-child]:mb-0"
         style={{ fontFamily: 'var(--font-body)' }}
         dangerouslySetInnerHTML={{ __html: area.description }}
       />
