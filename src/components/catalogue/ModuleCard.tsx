@@ -53,44 +53,15 @@ export function ModuleCard({ module, href, compact, momentLinks }: Props) {
   return (
     <Link
       href={href}
-      className="block cursor-pointer overflow-hidden rounded-[18px] bg-white transition-all hover:-translate-y-1"
-      style={{ boxShadow: 'var(--shadow-card)' }}
+      className="block cursor-pointer overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(41,56,150,0.14)]"
+      style={{ boxShadow: 'var(--shadow-sm)' }}
     >
+      {/* Match persona journey module tiles: icon on solid catalogue blue (no cover photos — URLs often 404). */}
       <div
-        className="relative flex h-24 items-center justify-center overflow-hidden"
-        style={{ background: module.gradient }}
+        className="relative flex h-12 w-full shrink-0 items-center justify-center bg-[var(--blue)]"
         aria-hidden
       >
-        {module.coverImage ? (
-          <>
-            <img
-              src={module.coverImage}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover object-center"
-              loading="lazy"
-              decoding="async"
-            />
-            <span
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%)',
-              }}
-            />
-            <Icon size={44} weight={weight} color="#ffffff" style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.35))' }} />
-          </>
-        ) : (
-          <>
-            <span
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
-              }}
-            />
-            <Icon size={44} weight={weight} color="#ffffff" />
-          </>
-        )}
+        <Icon size={18} weight={weight} className="text-white/95" />
       </div>
       <div className="p-3">
         <div className="mb-1 text-base font-bold text-[var(--blue)]">{module.name}</div>
