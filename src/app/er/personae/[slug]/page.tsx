@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { PersonaExperienceBody } from '@/components/catalogue/PersonaExperienceBody';
 import { erBoKAsPersona, erBoKOrClientBySlug, ER_OPERATOR_SLUG } from '@/lib/data/er';
 import { getCatalogueData } from '@/lib/notion';
-import { erPaths, readErSegment } from '@/lib/erNav';
+import { erPaths, readErLinkMode } from '@/lib/erNav';
 
 export const revalidate = 3600;
 
@@ -32,8 +32,8 @@ export default async function ErPersonaDetailPage({ params }: Props) {
   const wc = personas.find((p) => p.area === 'work' && p.id === 'white-collar');
   if (!wc) notFound();
 
-  const erSegment = readErSegment(headers());
-  const personaHref = erPaths.persona(erSegment, params.slug);
+  const erLinkMode = readErLinkMode(headers());
+  const personaHref = erPaths.persona(erLinkMode, params.slug);
 
   if (params.slug === ER_OPERATOR_SLUG) {
     const op = personas.find((p) => p.area === 'work' && p.id === 'operator-work');

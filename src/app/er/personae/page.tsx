@@ -6,7 +6,7 @@ import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { ER_BOK_PERSONAS } from '@/lib/data/er';
 import { ER_CLIENT_BOK } from '@/lib/data/er';
 import { getCatalogueData } from '@/lib/notion';
-import { erPaths, readErSegment } from '@/lib/erNav';
+import { erPaths, readErLinkMode } from '@/lib/erNav';
 
 export const revalidate = 3600;
 
@@ -15,7 +15,7 @@ export default async function ErPersonaePage() {
   const work = data.areas.work;
   if (!work) notFound();
 
-  const erSegment = readErSegment(headers());
+  const erLinkMode = readErLinkMode(headers());
   const operator = data.personas.find((p) => p.id === 'operator-work' && p.area === 'work');
 
   return (
@@ -30,7 +30,7 @@ export default async function ErPersonaePage() {
         <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col gap-6 px-6 py-6 md:px-10 md:py-8 lg:grid lg:grid-cols-[minmax(0,38%)_minmax(0,62%)] lg:gap-10">
           <section className="flex min-h-0 flex-col">
             <nav className="text-xs font-semibold text-[var(--blue)]/60">
-              <Link href={erPaths.home(erSegment)} className="hover:underline">
+              <Link href={erPaths.home(erLinkMode)} className="hover:underline">
                 Home
               </Link>
               <span className="px-1">/</span>
@@ -89,7 +89,7 @@ export default async function ErPersonaePage() {
               {ER_BOK_PERSONAS.map((bp) => (
                 <StaggerItem key={bp.id} className="min-h-0">
                   <BoKPortraitCard
-                    href={erPaths.persona(erSegment, bp.id)}
+                    href={erPaths.persona(erLinkMode, bp.id)}
                     profileKey={bp.profileKey}
                     name={bp.name}
                     role={bp.role}
@@ -99,7 +99,7 @@ export default async function ErPersonaePage() {
               ))}
               <StaggerItem key="client" className="min-h-0">
                 <BoKPortraitCard
-                  href={erPaths.persona(erSegment, 'client')}
+                  href={erPaths.persona(erLinkMode, 'client')}
                   profileKey={ER_CLIENT_BOK.profileKey}
                   name={ER_CLIENT_BOK.name}
                   role={ER_CLIENT_BOK.role}
@@ -110,7 +110,7 @@ export default async function ErPersonaePage() {
                 <StaggerItem key="operator" className="min-h-0">
                   <PersonaPortraitCard
                     persona={operator}
-                    href={erPaths.persona(erSegment, 'operator')}
+                    href={erPaths.persona(erLinkMode, 'operator')}
                     areaConfig={work}
                   />
                 </StaggerItem>

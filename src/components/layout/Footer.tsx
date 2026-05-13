@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { erPaths, type ErLinkMode } from '@/lib/erNav';
 import { getCatalogueData } from '@/lib/notion';
 import { COLLECTION_META } from '@/lib/data/collections';
 
@@ -6,8 +7,9 @@ import { COLLECTION_META } from '@/lib/data/collections';
  * Global footer. Async server component so we can show live counts from
  * the catalogue without client-side fetching. Rendered on every non-hero page.
  */
-export async function Footer() {
+export async function Footer({ erLinkMode = 'global' }: { erLinkMode?: ErLinkMode }) {
   const data = await getCatalogueData().catch(() => null);
+  const mini = erLinkMode !== 'global';
 
   const counts = data
     ? {
@@ -22,13 +24,44 @@ export async function Footer() {
     ? formatRelative(new Date(data.lastUpdated))
     : null;
 
+  const globalBrowse = [
+    { href: '/areas', label: 'All areas' },
+    { href: '/work', label: 'Work' },
+    { href: '/learn', label: 'Learn' },
+    { href: '/heal', label: 'Heal' },
+    { href: '/play', label: 'Play' },
+    { href: '/solutions', label: 'All solutions' },
+    { href: COLLECTION_META['standard-offer'].href, label: 'Standard Offer' },
+    {
+      href: COLLECTION_META['standard-offer'].catalogueHref!,
+      label: 'Standard Offer + grid',
+    },
+    { href: COLLECTION_META['big-bets'].href, label: 'Big Bets' },
+    { href: COLLECTION_META['big-bets'].catalogueHref!, label: 'Big Bets + grid' },
+    { href: '/search-guide', label: 'Search guide' },
+    { href: '/saved', label: 'My saved' },
+    { href: '/login', label: 'Sign in' },
+  ];
+
+  const erBrowse = [
+    { href: erPaths.home(erLinkMode), label: 'E&R home' },
+    { href: erPaths.personae(erLinkMode), label: 'Personae' },
+    { href: erPaths.needs(erLinkMode), label: 'User needs' },
+    { href: erPaths.ifm(erLinkMode), label: 'IFM value case' },
+    { href: erPaths.journey(erLinkMode), label: 'Home-to-home journey' },
+    { href: erPaths.moments(erLinkMode), label: 'Moments' },
+    { href: erPaths.operatorLens(erLinkMode), label: 'Operator view' },
+    { href: '/solutions', label: 'Solutions (catalogue)' },
+    { href: '/saved', label: 'My saved' },
+    { href: '/login', label: 'Sign in' },
+  ];
+
   return (
     <footer
       className="mt-12 border-t border-[var(--grey-border)] bg-[var(--surface-card)] backdrop-blur"
       style={{ fontFamily: 'var(--font-body)' }}
     >
       <div className="mx-auto grid w-full max-w-[1600px] gap-8 px-4 py-10 md:grid-cols-3 md:px-8">
-        {/* Trust */}
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/50">
             Curated by
@@ -37,7 +70,9 @@ export async function Footer() {
             Sodexo Digital, AI &amp; Innovation
           </p>
           <p className="mt-1 text-xs text-[var(--blue)]/60">
-            Designed to surface the human experience behind every solution.
+            {mini
+              ? 'Energy & Resources segment — IFM storytelling, BoK personae, and workforce journeys.'
+              : 'Designed to surface the human experience behind every solution.'}
           </p>
           {counts ? (
             <dl className="mt-4 grid grid-cols-4 gap-2 text-center">
@@ -66,31 +101,13 @@ export async function Footer() {
           ) : null}
         </div>
 
-        {/* Browse */}
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/50">
-            Browse
+            {mini ? 'This site' : 'Browse'}
           </p>
           <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs font-semibold">
-            {[
-              { href: '/areas', label: 'All areas' },
-              { href: '/work', label: 'Work' },
-              { href: '/learn', label: 'Learn' },
-              { href: '/heal', label: 'Heal' },
-              { href: '/play', label: 'Play' },
-              { href: '/solutions', label: 'All solutions' },
-              { href: COLLECTION_META['standard-offer'].href, label: 'Standard Offer' },
-              {
-                href: COLLECTION_META['standard-offer'].catalogueHref!,
-                label: 'Standard Offer + grid',
-              },
-              { href: COLLECTION_META['big-bets'].href, label: 'Big Bets' },
-              { href: COLLECTION_META['big-bets'].catalogueHref!, label: 'Big Bets + grid' },
-              { href: '/search-guide', label: 'Search guide' },
-              { href: '/saved', label: 'My saved' },
-              { href: '/login', label: 'Sign in' },
-            ].map((link) => (
-              <li key={link.href}>
+            {(mini ? erBrowse : globalBrowse).map((link) => (
+              <li key={link.href + link.label}>
                 <Link
                   href={link.href}
                   className="text-[var(--blue)]/70 transition-colors hover:text-[var(--blue)]"
@@ -102,7 +119,6 @@ export async function Footer() {
           </ul>
         </div>
 
-        {/* Act */}
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--blue)]/50">
             Contribute
@@ -130,15 +146,12 @@ export async function Footer() {
         </div>
       </div>
 
-      {/* Fine print */}
       <div className="border-t border-[var(--grey-border)]">
         <div className="mx-auto flex w-full max-w-[1600px] flex-col items-start justify-between gap-2 px-4 py-4 text-[11px] text-[var(--blue)]/50 md:flex-row md:items-center md:px-8">
           <p className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4">
             <span>© {new Date().getFullYear()} Sodexo — internal showcase. Data sourced from Notion.</span>
           </p>
-          <p>
-            Built with Next.js, Tailwind, Phosphor &amp; love for humans who live the moments.
-          </p>
+          <p>Built with Next.js, Tailwind, Phosphor &amp; love for humans who live the moments.</p>
         </div>
       </div>
     </footer>

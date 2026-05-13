@@ -10,7 +10,7 @@ import {
 } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useStore } from '@/lib/store';
 
 interface Tab {
@@ -50,54 +50,76 @@ const TABS_MAIN: Tab[] = [
   },
 ];
 
-const TABS_ER: Tab[] = [
-  { href: '/', label: 'Home', Icon: House, match: (p) => p === '/' },
-  {
-    href: '/personae',
-    label: 'Personae',
-    Icon: UsersThree,
-    match: (p) =>
-      p === '/personae' ||
-      /^\/personae\//.test(p) ||
-      p === '/er/personae' ||
-      p.startsWith('/er/personae/'),
-  },
-  {
-    href: '#search',
-    label: 'Search',
-    Icon: MagnifyingGlass,
-    match: () => false,
-    openSearch: true,
-  },
-  {
-    href: '/solutions',
-    label: 'Catalogue',
-    Icon: SquaresFour,
-    match: (p) => p.startsWith('/solutions'),
-  },
-  {
-    href: '/saved',
-    label: 'Saved',
-    Icon: Heart,
-    match: (p) => p.startsWith('/saved'),
-  },
-];
+function buildErTabs(erHomeHref: string, erPersonaeHref: string): Tab[] {
+  return [
+    {
+      href: erHomeHref,
+      label: 'Home',
+      Icon: House,
+      match: (p) =>
+        p === erHomeHref ||
+        p === '/er' ||
+        p === '/er/segment-home' ||
+        (erHomeHref === '/' && p === '/'),
+    },
+    {
+      href: erPersonaeHref,
+      label: 'Personae',
+      Icon: UsersThree,
+      match: (p) =>
+        p === erPersonaeHref ||
+        p === '/er/personae' ||
+        /^\/personae(\/|$)/.test(p) ||
+        p.startsWith('/er/personae/'),
+    },
+    {
+      href: '#search',
+      label: 'Search',
+      Icon: MagnifyingGlass,
+      match: () => false,
+      openSearch: true,
+    },
+    {
+      href: '/solutions',
+      label: 'Catalogue',
+      Icon: SquaresFour,
+      match: (p) => p.startsWith('/solutions'),
+    },
+    {
+      href: '/saved',
+      label: 'Saved',
+      Icon: Heart,
+      match: (p) => p.startsWith('/saved'),
+    },
+  ];
+}
 
 /**
  * Persistent bottom tab bar on < md viewports. Fires a custom `sdx:open-search`
  * event so the Header's global search can pop open (keeps single-source search).
  */
-export function MobileTabBar({ erSegment = false }: { erSegment?: boolean }) {
+export function MobileTabBar({
+  erSegment = false,
+  erHomeHref = '/',
+  erPersonaeHref = '/personae',
+}: {
+  erSegment?: boolean;
+  /** E&R mini-site home (`/` on dedicated host, `/er` on path-based). */
+  erHomeHref?: string;
+  erPersonaeHref?: string;
+}) {
   const pathname = usePathname() ?? '/';
   const [hydrated, setHydrated] = useState(false);
   const favCount = useStore((s) => s.favourites.length);
   useEffect(() => setHydrated(true), []);
 
-  const tabs = erSegment ? TABS_ER : TABS_MAIN;
+  const tabs = useMemo(
+    () => (erSegment ? buildErTabs(erHomeHref, erPersonaeHref) : TABS_MAIN),
+    [erSegment, erHomeHref, erPersonaeHref],
+  );
 
   function onClick(tab: Tab) {
     if (tab.openSearch) {
-      // Focus the existing global search input if present.
       const input = document.querySelector<HTMLInputElement>('input[aria-label="Search the catalogue"]');
       input?.focus();
       input?.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -144,14 +166,9 @@ export function MobileTabBar({ erSegment = false }: { erSegment?: boolean }) {
           );
 
           return (
-            <li key={tab.label} className="flex-1">
+            <li key={`${tab.label}-${tab.href}`} className="flex-1">
               {tab.openSearch ? (
-                <button
-                  type="button"
-                  onClick={() => onClick(tab)}
-                  className="w-full"
-                  aria-label={tab.label}
-                >
+                <button type="button" onClick={() => onClick(tab)} className="w-full" aria-label={tab.label}>
                   {inner}
                 </button>
               ) : (

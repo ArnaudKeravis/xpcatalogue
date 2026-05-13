@@ -9,7 +9,7 @@ import { FooterSlot } from '@/components/layout/ChromeSlot';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { MobileTabBar } from '@/components/layout/MobileTabBar';
-import { readErSegment } from '@/lib/erNav';
+import { readErLinkMode, readErSegment, erPaths } from '@/lib/erNav';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -28,6 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  const erLinkMode = readErLinkMode(headers());
   const erSegment = readErSegment(headers());
 
   return (
@@ -40,15 +41,19 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           Skip to main content
         </a>
 
-        <Header />
+        <Header erLinkMode={erLinkMode} />
         <Breadcrumb />
         <div className="flex flex-1 flex-col" id="main-content">
           {children}
         </div>
         <FooterSlot>
-          <Footer />
+          <Footer erLinkMode={erLinkMode} />
         </FooterSlot>
-        <MobileTabBar erSegment={erSegment} />
+        <MobileTabBar
+          erSegment={erSegment}
+          erHomeHref={erSegment ? erPaths.home(erLinkMode) : '/'}
+          erPersonaeHref={erSegment ? erPaths.personae(erLinkMode) : '/areas'}
+        />
       </body>
     </html>
   );

@@ -20,7 +20,10 @@ export function middleware(req: NextRequest) {
   }
 
   const host = req.headers.get('host');
-  const isEr = isErSegmentHost(host);
+  const isErHost = isErSegmentHost(host);
+  const isErPath = pathname.startsWith('/er');
+  const isEr = isErHost || isErPath;
+
   const erRequestOpts = isEr
     ? (() => {
         const requestHeaders = new Headers(req.headers);
@@ -41,7 +44,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (isEr) {
+  if (isErHost) {
     if (pathname === '/') {
       const url = req.nextUrl.clone();
       url.pathname = '/er/segment-home';

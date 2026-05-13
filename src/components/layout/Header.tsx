@@ -1,14 +1,28 @@
 'use client';
 
-import { Heart, LightbulbFilament, List, MapTrifold, SquaresFour, Trophy, UsersThree, X } from '@phosphor-icons/react';
+import {
+  Clock,
+  Factory,
+  FirstAid,
+  Heart,
+  House,
+  LightbulbFilament,
+  List,
+  MapTrifold,
+  SquaresFour,
+  Trophy,
+  TreeStructure,
+  UsersThree,
+  X,
+} from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { GlobalSearch } from '@/components/catalogue/GlobalSearch';
+import { erPaths, type ErLinkMode } from '@/lib/erNav';
 import { useStore } from '@/lib/store';
 
-/** Local brand mark — `public/images/catalogue/assets/brand/xp-catalogue-mark.svg` */
 const XP_CATALOGUE_LOGO = '/images/catalogue/assets/brand/xp-catalogue-mark.svg';
 
 interface NavItem {
@@ -16,18 +30,10 @@ interface NavItem {
   label: string;
   Icon: typeof MapTrifold;
   matches: (pathname: string) => boolean;
-  /** When set, rendered as a pill with the collection gradient. */
   gradient?: string;
 }
 
-/*
- * We intentionally rely only on `pathname` (not `useSearchParams`) so the
- * header stays statically renderable — `useSearchParams` opts every page
- * into CSR bail-out. Gradient pills always display their brand colour; the
- * currently-selected collection is already visible via the sticky filter
- * chip on the /solutions page itself.
- */
-const NAV: NavItem[] = [
+const NAV_GLOBAL: NavItem[] = [
   {
     href: '/areas',
     label: 'Areas',
@@ -62,16 +68,82 @@ const NAV: NavItem[] = [
   },
 ];
 
-/**
- * Persistent global header. Sits above every page (driven by app layout).
- * Left: logo + brand. Centre: global search. Right: pillar nav + theme toggle.
- * On small screens the nav collapses into a sheet menu.
- */
-export function Header() {
+function navErMiniSite(mode: ErLinkMode): NavItem[] {
+  const homeHref = erPaths.home(mode);
+  const personaeHref = erPaths.personae(mode);
+  return [
+    {
+      href: homeHref,
+      label: 'Home',
+      Icon: House,
+      matches: (p) =>
+        p === homeHref ||
+        p === '/er' ||
+        p === '/er/segment-home' ||
+        (mode === 'er-dedicated' && (p === '/' || p === '/er/segment-home')),
+    },
+    {
+      href: personaeHref,
+      label: 'Personae',
+      Icon: UsersThree,
+      matches: (p) =>
+        p === personaeHref ||
+        p === '/er/personae' ||
+        /^\/personae(\/|$)/.test(p) ||
+        p.startsWith('/er/personae/'),
+    },
+    {
+      href: erPaths.needs(mode),
+      label: 'Needs',
+      Icon: FirstAid,
+      matches: (p) => p === erPaths.needs(mode) || p === '/er/needs',
+    },
+    {
+      href: erPaths.ifm(mode),
+      label: 'IFM',
+      Icon: TreeStructure,
+      matches: (p) => p === erPaths.ifm(mode) || p === '/er/ifm',
+    },
+    {
+      href: erPaths.journey(mode),
+      label: 'Journey',
+      Icon: MapTrifold,
+      matches: (p) => p === erPaths.journey(mode) || p === '/er/journey',
+    },
+    {
+      href: erPaths.moments(mode),
+      label: 'Moments',
+      Icon: Clock,
+      matches: (p) => p === erPaths.moments(mode) || p === '/er/moments',
+    },
+    {
+      href: erPaths.operatorLens(mode),
+      label: 'Operator',
+      Icon: Factory,
+      matches: (p) => p === erPaths.operatorLens(mode) || p === '/er/operator',
+    },
+    {
+      href: '/solutions',
+      label: 'Solutions',
+      Icon: SquaresFour,
+      matches: (p) => p.startsWith('/solutions'),
+    },
+    {
+      href: '/saved',
+      label: 'Saved',
+      Icon: Heart,
+      matches: (p) => p.startsWith('/saved'),
+    },
+  ];
+}
+
+export function Header({ erLinkMode = 'global' }: { erLinkMode?: ErLinkMode }) {
   const pathname = usePathname() ?? '/';
   const [menuOpen, setMenuOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const favCount = useStore((s) => s.favourites.length);
+  const mini = erLinkMode !== 'global';
+  const nav = mini ? navErMiniSite(erLinkMode) : NAV_GLOBAL;
 
   useEffect(() => setHydrated(true), []);
   useEffect(() => setMenuOpen(false), [pathname]);
@@ -81,11 +153,10 @@ export function Header() {
       className="sticky top-0 z-40 w-full border-b border-[var(--grey-border)] bg-[var(--surface-card)] backdrop-blur-xl supports-[backdrop-filter]:bg-[var(--surface-card)]"
       style={{ boxShadow: 'var(--shadow-nav)' }}
     >
-      <div className="mx-auto flex flex-row h-14 w-full max-w-[1600px] items-center gap-3 px-4 md:h-16 md:gap-4 md:px-8">
-        {/* Logo + brand */}
+      <div className="mx-auto flex h-14 w-full max-w-[1600px] flex-row items-center gap-3 px-4 md:h-16 md:gap-4 md:px-8">
         <Link
-          href="/"
-          aria-label="XP Catalogue — home"
+          href={mini ? erPaths.home(erLinkMode) : '/'}
+          aria-label={mini ? 'Energy & Resources — home' : 'XP Catalogue — home'}
           className="group flex min-w-0 items-center gap-2.5 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--blue-primary)]"
         >
           <Image
@@ -101,35 +172,31 @@ export function Header() {
               className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--blue)]/60"
               style={{ fontFamily: 'var(--font-body)' }}
             >
-              Digital &amp; AI · Innovation
+              {mini ? 'Energy & Resources' : 'Digital & AI · Innovation'}
             </span>
             <span
               className="-mt-0.5 truncate text-sm font-extrabold text-[var(--blue)]"
               style={{ fontFamily: 'var(--font-heading)' }}
             >
-              XP Catalogue
+              {mini ? 'IFM experience' : 'XP Catalogue'}
             </span>
           </span>
           <span
             className="truncate text-sm font-extrabold text-[var(--blue)] md:hidden"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            XP Catalogue
+            {mini ? 'E&R' : 'XP Catalogue'}
           </span>
         </Link>
 
-        {/* Global search — takes centre space on desktop, right-aligned icon on mobile */}
         <div className="ml-2 hidden flex-1 justify-center md:flex">
           <GlobalSearch />
         </div>
 
-        {/* Desktop nav + controls */}
         <nav className="hidden items-center gap-0.5 md:flex" aria-label="Primary">
-          {NAV.map(({ href, label, Icon, matches, gradient }) => {
+          {nav.map(({ href, label, Icon, matches, gradient }) => {
             const active = matches(pathname);
             const isFav = href === '/saved';
-            // Gradient pills (curated collections) always display their brand colour —
-            // the active collection is reinforced by the filter chip on /solutions.
             if (gradient) {
               return (
                 <Link
@@ -145,7 +212,7 @@ export function Header() {
             }
             return (
               <Link
-                key={href}
+                key={`${href}-${label}`}
                 href={href}
                 aria-current={active ? 'page' : undefined}
                 className={
@@ -170,7 +237,6 @@ export function Header() {
           })}
         </nav>
 
-        {/* Mobile: compact search launcher + menu button */}
         <div className="ml-auto flex items-center gap-2 md:hidden">
           <MobileSearchLauncher />
           <button
@@ -185,14 +251,13 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile sheet */}
       {menuOpen ? (
         <div
           id="header-mobile-menu"
           className="border-t border-[var(--grey-border)] bg-[var(--surface-card)] md:hidden"
         >
           <nav className="flex flex-col gap-1 p-3" aria-label="Primary (mobile)">
-            {NAV.map(({ href, label, Icon, matches, gradient }) => {
+            {nav.map(({ href, label, Icon, matches, gradient }) => {
               const active = matches(pathname);
               if (gradient) {
                 return (
@@ -209,7 +274,7 @@ export function Header() {
               }
               return (
                 <Link
-                  key={href}
+                  key={`${href}-${label}`}
                   href={href}
                   className={
                     active
@@ -235,7 +300,6 @@ export function Header() {
   );
 }
 
-/** Tiny search icon on mobile — opens the full GlobalSearch in-place (full width below header). */
 function MobileSearchLauncher() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -249,7 +313,6 @@ function MobileSearchLauncher() {
         onClick={() => setOpen((v) => !v)}
         className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--grey-border)] bg-[var(--surface-card)] text-[var(--blue)]"
       >
-        <UsersThree size={16} weight="duotone" className="hidden" aria-hidden />
         <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden>
           <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" strokeWidth="1.8" />
           <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />

@@ -14,7 +14,7 @@ import {
 import Link from 'next/link';
 import { COLLECTION_META } from '@/lib/data/collections';
 import { ER_BOK_PERSONAS } from '@/lib/data/er';
-import { erPaths } from '@/lib/erNav';
+import { erPaths, type ErLinkMode } from '@/lib/erNav';
 import type { Area, CatalogueData } from '@/lib/data/types';
 import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 import { TodayWidget, type BucketIconKey } from '@/components/home/TodayWidget';
@@ -32,11 +32,12 @@ const AREAS: Area[] = ['work', 'learn', 'heal', 'play'];
 
 export interface CatalogueHomeProps {
   data: CatalogueData;
-  /** When true, this is the E&R segment home (subdomain or `/er/segment-home`): same hero + catalogue bands, plus IFM / needs / journey entry points. */
-  erSegment: boolean;
+  /** `global` = main XP home; `er-path` | `er-dedicated` = E&R mini-site (isolated chrome + links). */
+  erLinkMode: ErLinkMode;
 }
 
-export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
+export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
+  const erMini = erLinkMode !== 'global';
   const counts = {
     solutions: data.solutions.length,
     personas: data.personas.length,
@@ -86,7 +87,7 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
 
   const workArea = data.areas.work;
   const spotlightBoK = ER_BOK_PERSONAS[0];
-  const spotlightHref = erSegment ? erPaths.persona(erSegment, spotlightBoK.id) : '';
+  const spotlightHref = erMini ? erPaths.persona(erLinkMode, spotlightBoK.id) : '';
 
   return (
     <div className="relative flex flex-1 flex-col overflow-hidden bg-[var(--home-hero-bg)]">
@@ -101,7 +102,7 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
             >
               <span aria-hidden className="h-px w-8 bg-[var(--teal)]" />
               Digital · AI · Innovation
-              {erSegment ? (
+              {erMini ? (
                 <span className="ml-2 rounded-full border border-white/25 bg-white/10 px-2 py-0.5 text-[10px] font-extrabold tracking-[0.14em] text-white/90">
                   Energy &amp; Resources
                 </span>
@@ -124,7 +125,7 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
               className="motion-fade-up max-w-xl text-[clamp(1rem,1.4vw,1.125rem)] font-medium leading-relaxed text-white/85"
               style={{ animationDelay: '280ms' }}
             >
-              {erSegment ? (
+              {erMini ? (
                 <>
                   Same catalogue depth as the global experience — tuned for IFM storytelling on industrial
                   sites. Start from the{' '}
@@ -147,6 +148,7 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
           <HeroCollage className="w-full" />
         </div>
 
+        {!erMini ? (
         <nav
           className="motion-fade-up mx-auto mt-10 flex max-w-[1600px] flex-wrap items-center justify-center gap-3 md:mt-12 md:justify-start md:gap-4"
           style={{ animationDelay: '480ms' }}
@@ -176,24 +178,36 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
             Standard grid only
           </Link>
         </nav>
+        ) : null}
 
         <div
           className="motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-3"
           style={{ animationDelay: '560ms' }}
         >
+          {erMini ? (
+            <EntryCard
+              href={erPaths.personae(erLinkMode)}
+              tag="Personae"
+              icon={<UsersThree size={28} weight="duotone" aria-hidden />}
+              title="Start with E&R personae"
+              body="Eight profiles on one grid — BoK archetypes, a client sponsor, and an operator — same journey depth as the Work area."
+              footer="8 profiles"
+            />
+          ) : (
+            <EntryCard
+              href="/areas"
+              tag="Place"
+              icon={<Buildings size={28} weight="duotone" aria-hidden />}
+              title="Start with a place"
+              body="Four worlds — Work, Learn, Heal, Play. Each with its own personas and daily rhythms."
+              footer="4 areas"
+            />
+          )}
           <EntryCard
-            href="/areas"
-            tag="Place"
-            icon={<Buildings size={28} weight="duotone" aria-hidden />}
-            title="Start with a place"
-            body="Four worlds — Work, Learn, Heal, Play. Each with its own personas and daily rhythms."
-            footer="4 areas"
-          />
-          <EntryCard
-            href={erSegment ? erPaths.personae(erSegment) : featured ? `/${featured.area}/${featured.id}` : '/areas'}
+            href={erMini ? erPaths.personae(erLinkMode) : featured ? `/${featured.area}/${featured.id}` : '/areas'}
             tag="Person"
             icon={
-              !erSegment && featured ? (
+              !erMini && featured ? (
                 <PersonaAvatar
                   photo={featuredFaceSrc}
                   color={featured.color}
@@ -203,17 +217,17 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
                 <UsersThree size={28} weight="duotone" aria-hidden />
               )
             }
-            iconShape={!erSegment && featured ? 'persona' : 'tile'}
-            title={erSegment ? 'Meet E&R personae' : featured ? `Meet ${featured.fullName.split(' ')[0]}` : 'Meet a persona'}
+            iconShape={!erMini && featured ? 'persona' : 'tile'}
+            title={erMini ? 'Meet E&R personae' : featured ? `Meet ${featured.fullName.split(' ')[0]}` : 'Meet a persona'}
             body={
-              erSegment
+              erMini
                 ? 'Eight profiles — six BoK Energy & Mining archetypes, one client sponsor, and one operator — each with the same journey depth as Work.'
                 : featured
                   ? `${featured.role} · ${featuredArea?.label}. See how ${featured.fullName.split(' ')[0]}\u2019s day unfolds.`
                   : `${counts.personas} personas across the four areas — each with a documented journey.`
             }
-            footer={erSegment ? '8 profiles' : `${counts.personas} personas`}
-            hint={erSegment ? 'BoK + client + operator' : 'Featured today'}
+            footer={erMini ? '8 profiles' : `${counts.personas} personas`}
+            hint={erMini ? 'BoK + client + operator' : 'Featured today'}
           />
           <EntryCard
             href="/solutions"
@@ -225,14 +239,14 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
           />
         </div>
 
-        {erSegment ? (
+        {erMini ? (
           <div
             className="motion-fade-up mx-auto mt-8 grid max-w-[1600px] gap-4 md:grid-cols-3"
             style={{ animationDelay: '620ms' }}
             aria-label="Energy and Resources programme hubs"
           >
             <EntryCard
-              href={erPaths.needs(erSegment)}
+              href={erPaths.needs(erLinkMode)}
               tag="Needs"
               icon={<Heart size={28} weight="duotone" aria-hidden />}
               title="User needs hub"
@@ -240,7 +254,7 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
               footer="6 needs"
             />
             <EntryCard
-              href={erPaths.ifm(erSegment)}
+              href={erPaths.ifm(erLinkMode)}
               tag="IFM"
               icon={<TreeStructure size={28} weight="duotone" aria-hidden />}
               title="IFM value case"
@@ -248,7 +262,7 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
               footer="12 pillars"
             />
             <EntryCard
-              href={erPaths.journey(erSegment)}
+              href={erPaths.journey(erLinkMode)}
               tag="Journey"
               icon={<MapTrifold size={28} weight="duotone" aria-hidden />}
               title="Home to home"
@@ -262,7 +276,7 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
       <section className="relative z-10 bg-[var(--surface)] px-6 pb-12 pt-12 md:px-12 md:pt-16">
         <div className="mx-auto grid max-w-[1600px] gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
           <TodayWidget buckets={buckets} />
-          {erSegment && workArea && spotlightBoK ? (
+          {erMini && workArea && spotlightBoK ? (
             <FeaturedPersona
               personaName={spotlightBoK.name}
               fullName={`${spotlightBoK.name} — ${spotlightBoK.profileKey}`}
@@ -290,7 +304,7 @@ export function CatalogueHome({ data, erSegment }: CatalogueHomeProps) {
       </section>
 
       <div className="relative z-10 bg-[var(--surface)]">
-        <CuratedCollectionsBand solutions={data.solutions} />
+        {!erMini ? <CuratedCollectionsBand solutions={data.solutions} /> : null}
       </div>
 
       <section className="relative z-10 bg-[var(--surface)] px-6 pb-16 md:px-12">
