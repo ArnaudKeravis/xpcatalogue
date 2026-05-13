@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { headers } from 'next/headers';
 import './globals.css';
 import '../styles/tokens.css';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
@@ -8,6 +9,7 @@ import { FooterSlot } from '@/components/layout/ChromeSlot';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { MobileTabBar } from '@/components/layout/MobileTabBar';
+import { readErSegment } from '@/lib/erNav';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -25,7 +27,9 @@ export const metadata: Metadata = {
     "Discover Sodexo's digital and innovative experiences — through the moments of real people's days.",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const erSegment = readErSegment(headers());
+
   return (
     <html lang="en" className={openSans.variable} suppressHydrationWarning>
       <body className="flex min-h-screen flex-col bg-[var(--surface)] font-body antialiased">
@@ -44,7 +48,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <FooterSlot>
           <Footer />
         </FooterSlot>
-        <MobileTabBar />
+        <MobileTabBar erSegment={erSegment} />
       </body>
     </html>
   );

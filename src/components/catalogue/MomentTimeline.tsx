@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { momentPersonaTopUrl } from '@/lib/data/momentPersonaTopResolve';
 import type { JourneyStep } from '@/lib/data/types';
 import { JourneyStepIcon } from './JourneyStepIcon';
 
@@ -11,8 +12,8 @@ interface Props {
 
 /**
  * Horizontal scroll strip of moments — a "table of contents" for a persona's day.
- * Each card uses a **vector picto** (Phosphor via `JourneyStepIcon`) on a soft gradient —
- * no raster/module `<img>` heroes, so missing PNGs on deploy never show as broken images.
+ * Uses the same **persona-top moment PNGs** as the moment detail page (when present in
+ * `momentPersonaTop.generated.ts`); otherwise falls back to gradient + `JourneyStepIcon`.
  */
 export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
   if (steps.length === 0) return null;
@@ -25,6 +26,7 @@ export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
       >
         {steps.map((step, i) => {
           const href = `/${area}/${personaId}/moment/${step.id}`;
+          const thumb = momentPersonaTopUrl(personaId, step.id);
           return (
             <li
               key={step.id}
@@ -35,28 +37,45 @@ export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
                 href={href}
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-3 transition-all duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
               >
-                {/* Moment picto — gradient + large step glyph (no external images). */}
                 <div
-                  className="relative -mx-3 -mt-3 mb-3 h-[4.5rem] overflow-hidden rounded-t-2xl border-b border-[var(--grey-border)]"
+                  className="relative -mx-3 -mt-3 mb-3 h-[4.5rem] overflow-hidden rounded-t-2xl border-b border-[var(--grey-border)] bg-[#eef3ff]"
                   aria-hidden
                 >
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background: `linear-gradient(135deg, ${accentColor}2e 0%, rgba(255,255,255,0.96) 48%, #eef3ff 100%)`,
-                    }}
-                  />
-                  <div
-                    className="absolute inset-0 opacity-[0.45]"
-                    style={{
-                      backgroundImage:
-                        'radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px)',
-                      backgroundSize: '11px 11px',
-                    }}
-                  />
-                  <div className="relative flex h-full items-center justify-center">
-                    <JourneyStepIcon step={step} accent={accentColor} size={52} />
-                  </div>
+                  {thumb ? (
+                    <>
+                      <img
+                        src={thumb}
+                        alt=""
+                        className="absolute inset-0 h-full w-full object-cover object-center"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <span
+                        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#001a72]/25 via-transparent to-transparent"
+                        aria-hidden
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(135deg, ${accentColor}2e 0%, rgba(255,255,255,0.96) 48%, #eef3ff 100%)`,
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0 opacity-[0.45]"
+                        style={{
+                          backgroundImage:
+                            'radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px)',
+                          backgroundSize: '11px 11px',
+                        }}
+                      />
+                      <div className="relative flex h-full items-center justify-center">
+                        <JourneyStepIcon step={step} accent={accentColor} size={52} />
+                      </div>
+                    </>
+                  )}
                   <span
                     className="absolute right-2 top-2 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm ring-1 ring-black/5"
                     style={{ background: accentColor }}

@@ -6,6 +6,7 @@ import {
   MagnifyingGlass,
   MapTrifold,
   SquaresFour,
+  UsersThree,
 } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -20,7 +21,7 @@ interface Tab {
   openSearch?: boolean;
 }
 
-const TABS: Tab[] = [
+const TABS_MAIN: Tab[] = [
   { href: '/', label: 'Home', Icon: House, match: (p) => p === '/' },
   {
     href: '/areas',
@@ -49,15 +50,50 @@ const TABS: Tab[] = [
   },
 ];
 
+const TABS_ER: Tab[] = [
+  { href: '/', label: 'Home', Icon: House, match: (p) => p === '/' },
+  {
+    href: '/personae',
+    label: 'Personae',
+    Icon: UsersThree,
+    match: (p) =>
+      p === '/personae' ||
+      /^\/personae\//.test(p) ||
+      p === '/er/personae' ||
+      p.startsWith('/er/personae/'),
+  },
+  {
+    href: '#search',
+    label: 'Search',
+    Icon: MagnifyingGlass,
+    match: () => false,
+    openSearch: true,
+  },
+  {
+    href: '/solutions',
+    label: 'Catalogue',
+    Icon: SquaresFour,
+    match: (p) => p.startsWith('/solutions'),
+  },
+  {
+    href: '/saved',
+    label: 'Saved',
+    Icon: Heart,
+    match: (p) => p.startsWith('/saved'),
+  },
+];
+
 /**
  * Persistent bottom tab bar on < md viewports. Fires a custom `sdx:open-search`
  * event so the Header's global search can pop open (keeps single-source search).
  */
-export function MobileTabBar() {
+export function MobileTabBar({ erSegment = false }: { erSegment?: boolean }) {
   const pathname = usePathname() ?? '/';
   const [hydrated, setHydrated] = useState(false);
   const favCount = useStore((s) => s.favourites.length);
   useEffect(() => setHydrated(true), []);
+
+  const tabs = erSegment ? TABS_ER : TABS_MAIN;
 
   function onClick(tab: Tab) {
     if (tab.openSearch) {
@@ -75,7 +111,7 @@ export function MobileTabBar() {
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <ul className="flex items-stretch justify-around">
-        {TABS.map((tab) => {
+        {tabs.map((tab) => {
           const active = tab.match(pathname);
           const isFav = tab.href === '/saved';
 

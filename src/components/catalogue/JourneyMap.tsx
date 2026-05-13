@@ -112,9 +112,9 @@ export function JourneyMap({
   const hotspotFor = (stepId: string) => journeyHotspots?.find((h) => h.stepId === stepId);
   const hasHotspots = Boolean(journeyHotspots?.length);
 
-  /** % vertical offset on map pins: middle → high → low → middle → high → middle (rhythm lives on the journey canvas, not the strip). */
-  const MAP_PIN_WAVE_TOP_PCT = [0, -2.8, 3.6, 0, -2.8, 0] as const;
-  const pinWaveTopPct = (i: number) => MAP_PIN_WAVE_TOP_PCT[i % MAP_PIN_WAVE_TOP_PCT.length];
+  /** Alternating vertical offset (% of canvas) so pins read as a wave when
+   * hotspot geometry is one row (e.g. work white-collar). Even = up, odd = down. */
+  const pinWaveTopPct = (i: number) => (i % 2 === 0 ? -6.8 : 5.4);
 
   const pinPercentCoords = (step: JourneyStep, index: number) => {
     const box = hotspotFor(step.id);
