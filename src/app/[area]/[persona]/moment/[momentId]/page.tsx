@@ -27,7 +27,6 @@ import { getCatalogueData } from '@/lib/notion';
 import { catalogueModuleForJourneyLabel } from '@/lib/data/moduleJourneyResolve';
 import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
-import { pickFirstRealHero } from '@/lib/data/solutionHeroImage';
 import { solutionsForModule } from '@/lib/data/moduleSolutions';
 import { MOMENT_EDITORIAL } from '@/lib/data/momentEditorial.generated';
 import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
@@ -425,9 +424,6 @@ export default async function MomentPage({ params }: Props) {
                   const modSolutions = solutionsByModule(mod);
                   const count = modSolutions.length;
                   const { Icon: ModIcon, weight: modWeight } = pickModuleVisual(mod);
-                  // Prefer Excel module art, then a real solution hero, then Phosphor on gradient.
-                  const heroSolution = pickFirstRealHero(modSolutions);
-                  const coverSrc = mod.coverImage;
                   return (
                     <StaggerItem key={mod.id}>
                       <Link
@@ -435,72 +431,10 @@ export default async function MomentPage({ params }: Props) {
                         className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(41,56,150,0.14)]"
                       >
                         <div
-                          className="relative flex h-28 items-center justify-center overflow-hidden"
-                          style={{ background: mod.gradient }}
+                          className="relative flex h-12 w-full shrink-0 items-center justify-center bg-[var(--blue)]"
                           aria-hidden
                         >
-                          {coverSrc ? (
-                            <>
-                              <img
-                                src={coverSrc}
-                                alt=""
-                                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-[var(--motion-lg)] ease-[var(--ease-out-quint)] group-hover:scale-[1.04]"
-                                loading="lazy"
-                                decoding="async"
-                              />
-                              <span
-                                className="pointer-events-none absolute inset-0"
-                                style={{
-                                  background:
-                                    'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%)',
-                                }}
-                              />
-                              <span
-                                className="absolute bottom-2 left-2 flex h-7 w-7 items-center justify-center rounded-lg bg-white/95 text-[var(--blue)] shadow-[0_4px_10px_rgba(0,0,0,0.18)] backdrop-blur-sm"
-                              >
-                                <ModIcon size={16} weight={modWeight} />
-                              </span>
-                            </>
-                          ) : heroSolution ? (
-                            <>
-                              <img
-                                src={heroSolution.heroImage!}
-                                alt=""
-                                className="absolute inset-0 h-full w-full object-contain object-center p-2 transition-transform duration-[var(--motion-lg)] ease-[var(--ease-out-quint)] group-hover:scale-[1.02]"
-                                style={{ background: 'linear-gradient(180deg,#f5f7fb 0%,#eef2fa 100%)' }}
-                                loading="lazy"
-                                decoding="async"
-                              />
-                              <span
-                                className="pointer-events-none absolute inset-0"
-                                style={{
-                                  background:
-                                    'linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%)',
-                                }}
-                              />
-                              <span
-                                className="absolute bottom-2 left-2 flex h-7 w-7 items-center justify-center rounded-lg bg-white/95 text-[var(--blue)] shadow-[0_4px_10px_rgba(0,0,0,0.18)] backdrop-blur-sm"
-                              >
-                                <ModIcon size={16} weight={modWeight} />
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <span
-                                className="pointer-events-none absolute inset-0"
-                                style={{
-                                  background:
-                                    'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)',
-                                }}
-                              />
-                              <ModIcon
-                                size={52}
-                                weight={modWeight}
-                                color="#ffffff"
-                                style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.2))' }}
-                              />
-                            </>
-                          )}
+                          <ModIcon size={18} weight={modWeight} className="text-white/95" />
                         </div>
                         <div className="flex flex-1 flex-col p-4">
                           <h3
