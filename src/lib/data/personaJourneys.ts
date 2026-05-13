@@ -1,10 +1,9 @@
 /**
  * Per-persona journey maps + clickable moment hotspots.
  *
- * **Source of truth:** `Classeur Journey.xlsx` sheet *Personae Journey*, ingested by
- * `scripts/ingest_personae_journey_excel.py` into `personaeJourneyExcel.generated.ts`
- * (moment order, labels, hotspot geometry) and `journeyStepsFromExcel.generated.ts`
- * (per-moment module lists).
+ * **Personae Iso Journey** (Column G) names the journey artwork; the ingest script maps each
+ *   Excel key to the attached file name, copies it to ``public/.../excel-maps/{personaId}.*``,
+ *   and derives hotspot boxes from marker detection on that image.
  */
 
 import type { JourneyHotspot } from './types';

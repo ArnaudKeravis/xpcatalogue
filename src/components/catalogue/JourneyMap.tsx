@@ -112,20 +112,19 @@ export function JourneyMap({
   const hotspotFor = (stepId: string) => journeyHotspots?.find((h) => h.stepId === stepId);
   const hasHotspots = Boolean(journeyHotspots?.length);
 
-  /** Alternating vertical offset (% of canvas) so pins read as a wave when
-   * hotspot geometry is one row (e.g. work white-collar). Even = up, odd = down. */
-  const pinWaveTopPct = (i: number) => (i % 2 === 0 ? -6.8 : 5.4);
-
+  /** Percent coords for the journey pin: hotspot box center from Excel/CV ingest. */
   const pinPercentCoords = (step: JourneyStep, index: number) => {
     const box = hotspotFor(step.id);
-    const wave = pinWaveTopPct(index);
     if (box) {
-      const left = box.left + (box.w ?? 0) / 2;
-      const baseTop = Math.max(box.top - 6, 4);
-      const top = Math.min(Math.max(baseTop + wave, 2), 96);
-      return { left, top };
+      const w = box.w ?? 0;
+      const h = box.h ?? 0;
+      return {
+        left: box.left + w / 2,
+        top: box.top + h / 2,
+      };
     }
     const n = Math.max(steps.length - 1, 1);
+    const wave = index % 2 === 0 ? -6.8 : 5.4;
     const left = 8 + (84 / n) * index;
     const top = Math.min(Math.max(88 + wave, 6), 95);
     return { left, top };

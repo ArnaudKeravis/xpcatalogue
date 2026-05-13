@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 """Rebuild persona journeys from **Personae Journey** (Classeur workbook).
 
-Uses header names (not fixed letters) so column shifts are tolerated. Expected headers:
-  - Areas | Personae | … | **Moments Title** | **Description Moment Subtitle** |
-    **Description moment** | **Image left moment** | **Modules**
+Uses header names (not fixed letters) so column shifts are tolerated. Canonical columns:
+
+  - **Areas** (Excel A) · **Personae** (B) · **Personae Name** (C) — identify the catalogue persona row
+  - **Personae Iso Journey** (G) — snake_case key naming the **journey map** asset; must match
+    ``ISO_JOURNEY_KEY_TO_FILENAME`` and a file under ``--journey-assets`` (recursive search).
+  - **Moments Title** (H) — moment label; row order = journey order
+  - **Image left moment** (K) — sole source for the **moment image** asset key; resolved on disk
+    under Journey_Moments_Images, then copied to ``public/.../moments-raster/{personaId}/{stepId}.*``
+    and emitted as ``MOMENT_HERO_RASTER`` (used by journey moment cards + moment page hero).
+
+Other columns (subtitle, body, modules, portrait) are unchanged.
 
 Row order in the sheet = journey order per persona. Column **Modules** is split on comma/semicolon;
 each token is trimmed and stored verbatim on the `JourneyStep`.
@@ -19,7 +27,11 @@ Emits:
 
 Usage:
   python3 scripts/ingest_personae_journey_excel.py \\
-    --xlsx ~/Downloads/Classeur\\ Journey.xlsx
+    --xlsx ~/Downloads/Classeur\\ Journey.xlsx \\
+    --journey-assets ~/Downloads
+
+Requires ``numpy`` and ``pillow`` for marker detection. Rasterization: macOS ``qlmanage``,
+else ``magick`` or ``rsvg-convert`` for SVG.
 """
 
 from __future__ import annotations
@@ -31,6 +43,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from collections import defaultdict
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -42,8 +55,17 @@ except ImportError:
     print("pip install openpyxl", file=sys.stderr)
     raise
 
+_SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
+
+try:
+    from journey_marker_geometry import hotspot_boxes_for_moments, rasterize_journey_asset
+except ImportError:
+    print("pip install numpy pillow", file=sys.stderr)
+    raise
+
 REPO = Path(__file__).resolve().parent.parent
-BASE = "/images/catalogue/assets/journeys"
 
 PAIR_TO_ID: dict[tuple[str, str], str] = {
     ("work", "portfolio manager"): "client-work",
@@ -73,34 +95,56 @@ PAIR_TO_ID: dict[tuple[str, str], str] = {
     ("play", "trade show & event attendent"): "participant",
 }
 
-PERSONA_JOURNEY_IMAGE: dict[str, str] = {
-    "white-collar": f"{BASE}/iso-journey-work-white-collar.svg",
-    "blue-collar": f"{BASE}/iso-journey-work-blue-collar.svg",
-    "grey-collar": f"{BASE}/iso-journey-work-grey-collar.svg",
-    "military": f"{BASE}/iso-journey-work-army-officer.svg",
-    "operator-work": f"{BASE}/iso-journey-operator-site-manager.svg",
-    "operator-heal": f"{BASE}/iso-journey-operator-site-manager.svg",
-    "operator-learn": f"{BASE}/iso-journey-operator-site-manager.svg",
-    "operator-play": f"{BASE}/iso-journey-operator-site-manager.svg",
-    "client-work": f"{BASE}/iso-journey-client-operation-director.svg",
-    "client-heal": f"{BASE}/iso-journey-client-operation-director.svg",
-    "client-learn": f"{BASE}/iso-journey-client-operation-director.svg",
-    "client-play": f"{BASE}/iso-journey-client-operation-director.svg",
-    "doctor": f"{BASE}/iso-journey-heal-doctor.svg",
-    "nurse": f"{BASE}/iso-journey-heal-nurse.svg",
-    "senior": f"{BASE}/iso-journey-heal-senior.svg",
-    "patient": f"{BASE}/iso-journey-heal-patient.svg",
-    "sport-fan": f"{BASE}/sport-fan.jpg",
-    "participant": f"{BASE}/iso-journey-play-event-participant.svg",
-    "vip-guest": f"{BASE}/iso-journey-play-vip-guest-stadium.svg",
-    "tourist": f"{BASE}/iso-journey-play-vip-guest-airport.svg",
-    "student": f"{BASE}/iso-journey-learn-student.svg",
-    "schoolchild": f"{BASE}/iso-journey-learn-schoolchild.svg",
-    "parent": f"{BASE}/iso-journey-learn-parent.svg",
-    "teacher": f"{BASE}/iso-journey-learn-teacher.svg",
+# Exact **Personae Iso Journey** cell values (Column G) from Classeur → journey artwork filename.
+# Whitespace is stripped for lookup; see ``norm_iso_journey_key``.
+ISO_JOURNEY_KEY_TO_FILENAME: dict[str, str] = {
+    "iso_journey_heal_hospital_physician": "Iso Journey Heal Doctor.svg",
+    "iso_journey_heal_long-term_resident": "Iso Journey Heal Senior.svg",
+    "iso_journey_heal_outpatient_&_inpatient": "Iso Journey Heal Patient.svg",
+    "iso_journey_heal_portfolio_manager": "Iso Journey Client Operation Director.svg",
+    "iso_journey_heal_registered_nurse": "Iso Journey Heal Nurse.svg",
+    "iso_journey_heal_site_manager": "Iso Journey Operator Site Manager.svg",
+    "iso_journey_learn_middle_school_student": "Iso Journey Learn Schoolchild.svg",
+    "iso_journey_learn_middle_school_teacher": "Iso Journey Learn Teacher.svg",
+    "iso_journey_learn_portfolio_manager": "Iso Journey Client Operation Director.svg",
+    "iso_journey_learn_site_manager": "Iso Journey Operator Site Manager.svg",
+    "iso_journey_learn_university_student": "Iso Journey Learn Student.svg",
+    "iso_journey_learn_working_parent_of_school-age_children": "Iso Journey Learn Parent.svg",
+    "iso_journey_play_business_traveller_&_vip_guest": "Iso Journey Play VIP Guest Airport.svg",
+    "iso_journey_play_cultural_tourist_&_museum_visitor": "Iso Journey Play Cultural Destination Visitor.svg",
+    "iso_journey_play_executive_&_premium_event_guest": "Iso Journey Play VIP Guest Stadium.svg",
+    "iso_journey_play_parent_&_sports_fan": "Iso Journey Play Football Fan.svg",
+    "iso_journey_play_portfolio_manager": "Iso Journey Client Operation Director.svg",
+    "iso_journey_play_site_manager": "Iso Journey Operator Site Manager.svg",
+    "iso_journey_play_trade_show_&_event_attendent": "Iso Journey Play Event Participant.svg",
+    "iso_journey_work_admin_function": "Iso Journey Work White Collar.svg",
+    "iso_journey_work_army_officer": "Iso Journey Work Army Officer.svg",
+    "iso_journey_work_lab_researcher_commute": "Iso Journey Work Grey Collar.svg",
+    "iso_journey_work_portfolio_manager": "Iso Journey Client Operation Director.svg",
+    "iso_journey_work_production_line_worker": "Iso Journey Work Blue Collar.svg",
+    "iso_journey_work_site_manager": "Iso Journey Operator Site Manager.svg",
 }
 
 PILL_W, PILL_H = 16.0, 10.0
+
+
+def norm_iso_journey_key(raw: Any) -> str:
+    """Normalize Excel **Personae Iso Journey** cell for lookup (strip all whitespace, lower)."""
+    return re.sub(r"\s+", "", str(raw or "").strip().lower())
+
+
+def find_journey_asset(roots: list[Path], filename: str) -> Path | None:
+    target = filename.lower()
+    for root in roots:
+        if not root.is_dir():
+            continue
+        direct = root / filename
+        if direct.is_file():
+            return direct
+        for p in root.rglob("*"):
+            if p.is_file() and p.name.lower() == target:
+                return p
+    return None
 
 
 def norm_persona(s: Any) -> str:
@@ -142,21 +186,6 @@ def make_step_id(persona_id: str, title: str, used: set[str]) -> str:
     return k
 
 
-def layout_hotspots(n: int) -> list[tuple[float, float, float, float]]:
-    """left, top, w, h in percent (0–100), same convention as legacy pill()."""
-    if n <= 0:
-        return []
-    if n == 1:
-        cx, cy = 50.0, 82.0
-        return [(max(0.0, cx - PILL_W / 2), max(0.0, cy - PILL_H / 2), PILL_W, PILL_H)]
-    out: list[tuple[float, float, float, float]] = []
-    for i in range(n):
-        cx = 10.0 + (80.0 * i / (n - 1))
-        cy = 82.0
-        out.append((max(0.0, cx - PILL_W / 2), max(0.0, cy - PILL_H / 2), PILL_W, PILL_H))
-    return out
-
-
 def header_indices(row1: tuple[Any, ...]) -> dict[str, int]:
     h: dict[str, int] = {}
     for i, cell in enumerate(row1):
@@ -182,14 +211,22 @@ def header_indices(row1: tuple[Any, ...]) -> dict[str, int]:
             raise SystemExit(f"missing body column; have {list(h.keys())}")
         return best_i
 
+    def pick_iso_journey_col() -> int:
+        for k, idx in h.items():
+            lk = k.lower()
+            if "personae" in lk and "iso" in lk and "journey" in lk:
+                return idx
+        raise SystemExit(f"missing Personae Iso Journey column; have {list(h.keys())}")
+
     return {
         "area": pick("areas"),
         "personae": pick("personae"),
         "portrait": pick("personae", "portrait"),
+        "iso_journey": pick_iso_journey_col(),
         "moment_title": pick("moments", "title"),
         "subtitle": pick("description", "subtitle"),
         "body": pick_body(),
-        "hero_key": pick("image", "left", "moment"),
+        "hero_key": pick("image", "left", "moment"),  # Excel "Image left moment" (K) — moment raster SoT
         "modules": pick("modules"),
     }
 
@@ -394,7 +431,28 @@ def emit_persona_top(top: dict[str, dict[str, str]]) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--xlsx", type=Path, default=Path.home() / "Downloads/Classeur Journey.xlsx")
+    ap.add_argument(
+        "--journey-assets",
+        type=Path,
+        action="append",
+        default=[],
+        help="Root folder for journey SVGs (recursive). May be passed multiple times.",
+    )
+    ap.add_argument(
+        "--skip-moment-rasters",
+        action="store_true",
+        help="Do not require Journey_Moments_Images; skip hero tile copies.",
+    )
+    ap.add_argument(
+        "--skip-portraits",
+        action="store_true",
+        help="Do not require Personae_Images_Portrait; skip persona-top copies.",
+    )
     args = ap.parse_args()
+
+    journey_roots = list(dict.fromkeys([p.expanduser() for p in args.journey_assets]))
+    if not journey_roots:
+        journey_roots = [Path.home() / "Downloads", Path.home() / "Downloads/moments"]
 
     moments_img = (
         Path.home()
@@ -410,24 +468,25 @@ def main() -> int:
     if not args.xlsx.exists():
         print(f"error: xlsx not found: {args.xlsx}", file=sys.stderr)
         return 2
-    if not moments_img.is_dir():
+
+    if not args.skip_moment_rasters and not moments_img.is_dir():
         print(f"error: Journey_Moments_Images not found: {moments_img}", file=sys.stderr)
         return 2
-    if not portrait_dir.is_dir():
+    if not args.skip_portraits and not portrait_dir.is_dir():
         print(f"error: portrait dir not found: {portrait_dir}", file=sys.stderr)
         return 2
 
-    hero_index = build_image_index(moments_img)
-    portrait_index = build_image_index(portrait_dir)
+    hero_index = build_image_index(moments_img) if moments_img.is_dir() else {}
+    portrait_index = build_image_index(portrait_dir) if portrait_dir.is_dir() else {}
 
     wb = openpyxl.load_workbook(args.xlsx, read_only=True, data_only=True)
     ws = wb["Personae Journey"]
     row1 = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
     col = header_indices(row1)
 
-    # persona_id -> ordered list of moment records
     ordered: dict[str, list[dict[str, Any]]] = defaultdict(list)
     skipped: list[tuple[str, str]] = []
+    iso_carry: dict[str, str] = {}
 
     for row in ws.iter_rows(min_row=2, values_only=True):
         if not row or row[col["area"]] is None:
@@ -441,6 +500,18 @@ def main() -> int:
         title = row[col["moment_title"]]
         if title is None or not str(title).strip():
             continue
+        iso_cell = row[col["iso_journey"]]
+        iso_s = str(iso_cell or "").strip()
+        if iso_s:
+            iso_carry[pid] = iso_s
+        elif pid in iso_carry:
+            iso_s = iso_carry[pid]
+        else:
+            print(
+                f"WARNING: moment row for persona {pid} missing Personae Iso Journey; skipped",
+                file=sys.stderr,
+            )
+            continue
         ordered[pid].append(
             {
                 "title": str(title).strip(),
@@ -449,6 +520,7 @@ def main() -> int:
                 "body": str(row[col["body"]] or "").strip(),
                 "hero_key": str(row[col["hero_key"]] or "").strip(),
                 "portrait_key": str(row[col["portrait"]] or "").strip(),
+                "iso_journey_key": iso_s,
             }
         )
 
@@ -462,23 +534,70 @@ def main() -> int:
 
     hero_out = REPO / "public/images/catalogue/assets/journeys/moments-raster"
     top_out = REPO / "public/images/catalogue/assets/journeys/moment-persona-top"
+    journey_maps_out = REPO / "public/images/catalogue/assets/journeys/excel-maps"
+    journey_maps_out.mkdir(parents=True, exist_ok=True)
+
     missing_hero: list[tuple[str, str, str]] = []
     missing_portrait: list[tuple[str, str, str]] = []
 
     for pid in sorted(ordered.keys()):
         rows = ordered[pid]
-        img = PERSONA_JOURNEY_IMAGE.get(pid)
-        if not img:
-            print(f"error: no journey image for persona {pid}", file=sys.stderr)
+        keys_norm = {norm_iso_journey_key(r["iso_journey_key"]) for r in rows}
+        keys_norm.discard("")
+        if len(keys_norm) > 1:
+            print(f"WARNING: persona {pid} has multiple Personae Iso Journey keys: {keys_norm}", file=sys.stderr)
+        iso_key = next(iter(keys_norm), "")
+        if not iso_key:
+            print(f"error: persona {pid} has no Personae Iso Journey key", file=sys.stderr)
             return 2
-        coords = layout_hotspots(len(rows))
+        fname = ISO_JOURNEY_KEY_TO_FILENAME.get(iso_key)
+        if not fname:
+            print(
+                f"error: unknown Personae Iso Journey key {rows[0]['iso_journey_key']!r} "
+                f"(normalized {iso_key!r}) for persona {pid}",
+                file=sys.stderr,
+            )
+            return 2
+        src_map = find_journey_asset(journey_roots, fname)
+        if not src_map:
+            print(
+                f"error: journey asset {fname!r} not found under {journey_roots} for persona {pid}",
+                file=sys.stderr,
+            )
+            return 2
+
+        ext = src_map.suffix.lower() or ".svg"
+        dest_map = journey_maps_out / f"{pid}{ext}"
+        shutil.copyfile(src_map, dest_map)
+        map_url = f"/images/catalogue/assets/journeys/excel-maps/{pid}{ext}"
+
+        with tempfile.TemporaryDirectory() as td:
+            probe_png = Path(td) / "journey-probe.png"
+            if not rasterize_journey_asset(src_map, probe_png):
+                print(f"error: could not rasterize journey map {src_map} for {pid}", file=sys.stderr)
+                return 2
+            try:
+                coords = hotspot_boxes_for_moments(probe_png, len(rows), PILL_W, PILL_H)
+            except ValueError as e:
+                print(f"error: hotspot detection for {pid}: {e}", file=sys.stderr)
+                return 2
+
         moments_out: list[dict[str, Any]] = []
         pm_list: list[dict[str, str]] = []
 
         for i, r in enumerate(rows):
             sid = make_step_id(pid, r["title"], used_ids)
-            left, topPct, w, h = coords[i]
-            moments_out.append({"id": sid, "label": r["title"], "left": left, "top": topPct, "w": w, "h": h})
+            left, top_pct, w, h = coords[i]
+            moments_out.append(
+                {
+                    "id": sid,
+                    "label": r["title"],
+                    "left": round(left, 3),
+                    "top": round(top_pct, 3),
+                    "w": w,
+                    "h": h,
+                }
+            )
             pm_list.append({"id": sid, "label": r["title"]})
             journey_steps[sid] = {
                 "id": sid,
@@ -488,35 +607,37 @@ def main() -> int:
             }
             editorial.setdefault(pid, {})[sid] = {"subtitle": r["subtitle"], "body": r["body"]}
 
-            src_h = resolve_image_path(r["hero_key"], hero_index, moments_img)
-            if src_h:
-                dest_d = hero_out / pid
-                dest_d.mkdir(parents=True, exist_ok=True)
-                ext = src_h.suffix.lower() or ".png"
-                dest = dest_d / f"{sid}{ext}"
-                shutil.copyfile(src_h, dest)
-                shrink_tile(dest)
-                raster.setdefault(pid, {})[
-                    sid
-                ] = f"/images/catalogue/assets/journeys/moments-raster/{pid}/{sid}{ext}"
-            else:
-                missing_hero.append((pid, sid, r["hero_key"]))
+            if not args.skip_moment_rasters:
+                src_h = resolve_image_path(r["hero_key"], hero_index, moments_img)
+                if src_h:
+                    dest_d = hero_out / pid
+                    dest_d.mkdir(parents=True, exist_ok=True)
+                    hext = src_h.suffix.lower() or ".png"
+                    dest = dest_d / f"{sid}{hext}"
+                    shutil.copyfile(src_h, dest)
+                    shrink_tile(dest)
+                    raster.setdefault(pid, {})[
+                        sid
+                    ] = f"/images/catalogue/assets/journeys/moments-raster/{pid}/{sid}{hext}"
+                else:
+                    missing_hero.append((pid, sid, r["hero_key"]))
 
-            src_p = resolve_image_path(r["portrait_key"], portrait_index, portrait_dir)
-            if src_p:
-                dest_d = top_out / pid
-                dest_d.mkdir(parents=True, exist_ok=True)
-                ext = src_p.suffix.lower() or ".png"
-                dest = dest_d / f"{sid}{ext}"
-                shutil.copyfile(src_p, dest)
-                shrink_tile(dest)
-                top.setdefault(pid, {})[
-                    sid
-                ] = f"/images/catalogue/assets/journeys/moment-persona-top/{pid}/{sid}{ext}"
-            else:
-                missing_portrait.append((pid, sid, r["portrait_key"]))
+            if not args.skip_portraits:
+                src_p = resolve_image_path(r["portrait_key"], portrait_index, portrait_dir)
+                if src_p:
+                    dest_d = top_out / pid
+                    dest_d.mkdir(parents=True, exist_ok=True)
+                    pext = src_p.suffix.lower() or ".png"
+                    dest = dest_d / f"{sid}{pext}"
+                    shutil.copyfile(src_p, dest)
+                    shrink_tile(dest)
+                    top.setdefault(pid, {})[
+                        sid
+                    ] = f"/images/catalogue/assets/journeys/moment-persona-top/{pid}/{sid}{pext}"
+                else:
+                    missing_portrait.append((pid, sid, r["portrait_key"]))
 
-        journeys[pid] = {"image": img, "moments": moments_out}
+        journeys[pid] = {"image": map_url, "moments": moments_out}
         persona_moments_out[pid] = pm_list
 
     (REPO / "src/lib/data/personaeJourneyExcel.generated.ts").write_text(
@@ -526,8 +647,14 @@ def main() -> int:
         emit_journey_steps(journey_steps), encoding="utf-8"
     )
     (REPO / "src/lib/data/momentEditorial.generated.ts").write_text(emit_editorial(editorial), encoding="utf-8")
-    (REPO / "src/lib/data/momentHeroRaster.generated.ts").write_text(emit_raster(raster), encoding="utf-8")
-    (REPO / "src/lib/data/momentPersonaTop.generated.ts").write_text(emit_persona_top(top), encoding="utf-8")
+    if not args.skip_moment_rasters:
+        (REPO / "src/lib/data/momentHeroRaster.generated.ts").write_text(
+            emit_raster(raster), encoding="utf-8"
+        )
+    if not args.skip_portraits:
+        (REPO / "src/lib/data/momentPersonaTop.generated.ts").write_text(
+            emit_persona_top(top), encoding="utf-8"
+        )
     (REPO / "scripts/persona-moments.json").write_text(
         json.dumps(persona_moments_out, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
@@ -540,7 +667,8 @@ def main() -> int:
         print(f"WARNING missing hero ({len(missing_hero)}):", missing_hero[:5])
     if missing_portrait:
         print(f"WARNING missing portrait ({len(missing_portrait)}):", missing_portrait[:5])
-    return 0 if not missing_hero and not missing_portrait else 1
+    ok = not missing_hero and not missing_portrait
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":

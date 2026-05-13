@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { momentPersonaTopUrl } from '@/lib/data/momentPersonaTopResolve';
+import { momentHeroRasterFromExcel } from '@/lib/data/momentHeroRasterResolve';
 import type { JourneyStep } from '@/lib/data/types';
 import { JourneyStepIcon } from './JourneyStepIcon';
 
@@ -11,9 +11,9 @@ interface Props {
 }
 
 /**
- * Horizontal scroll strip of moments — a "table of contents" for a persona's day.
- * Uses the same **persona-top moment PNGs** as the moment detail page (when present in
- * `momentPersonaTop.generated.ts`); otherwise falls back to gradient + `JourneyStepIcon`.
+ * Horizontal strip of moments above the journey map. Thumbnails come **only** from the
+ * Personae Journey Excel sheet (**Image left moment** → `MOMENT_HERO_RASTER` via ingest).
+ * If a row has no copied raster yet, shows gradient + `JourneyStepIcon` (no other image source).
  */
 export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
   if (steps.length === 0) return null;
@@ -26,19 +26,19 @@ export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
       >
         {steps.map((step, i) => {
           const href = `/${area}/${personaId}/moment/${step.id}`;
-          const thumb = momentPersonaTopUrl(personaId, step.id);
+          const thumb = momentHeroRasterFromExcel(personaId, step.id);
           return (
             <li
               key={step.id}
               className="relative shrink-0 snap-start"
-              style={{ flexBasis: '192px' }}
+              style={{ flexBasis: '200px' }}
             >
               <Link
                 href={href}
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-3 transition-all duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
               >
                 <div
-                  className="relative -mx-3 -mt-3 mb-3 h-[4.5rem] overflow-hidden rounded-t-2xl border-b border-[var(--grey-border)] bg-[#eef3ff]"
+                  className="relative -mx-3 -mt-3 mb-3 h-[5.25rem] overflow-hidden rounded-t-2xl border-b border-[var(--grey-border)] bg-[#eef3ff]"
                   aria-hidden
                 >
                   {thumb ? (
@@ -46,7 +46,7 @@ export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
                       <img
                         src={thumb}
                         alt=""
-                        className="absolute inset-0 h-full w-full object-cover object-center"
+                        className="absolute inset-0 h-full w-full object-cover object-top"
                         loading="lazy"
                         decoding="async"
                       />
