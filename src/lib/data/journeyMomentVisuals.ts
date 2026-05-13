@@ -86,7 +86,13 @@ const PLAY_MOMENT_STEMS: Record<string, { stem: string; max: number }> = {
  * Returns `undefined` when only the full journey map should be shown.
  */
 export function resolveJourneyMomentImage(personaId: string, stepId: string): string | undefined {
-  const raster = MOMENT_HERO_RASTER[personaId]?.[stepId];
+  const rasterPersona =
+    personaId === 'exemple-minor' && stepId.startsWith('exemple-minor__') ? 'white-collar' : personaId;
+  const rasterStep =
+    personaId === 'exemple-minor' && stepId.startsWith('exemple-minor__')
+      ? stepId.replace(/^exemple-minor__/, 'white-collar__')
+      : stepId;
+  const raster = MOMENT_HERO_RASTER[rasterPersona]?.[rasterStep];
   if (raster) return raster;
 
   const w = resolveOrdered(personaId, stepId, WORK_ORDER, WORK_MOMENT_STEMS);

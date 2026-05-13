@@ -32,6 +32,7 @@ export const PERSONA_FACE_URL: Record<string, string> = {
   "tourist": "/images/catalogue/assets/personae/face/tourist.png",
   "vip-guest": "/images/catalogue/assets/personae/face/vip-guest.png",
   "white-collar": "/images/catalogue/assets/personae/face/white-collar.png",
+  "exemple-minor": "/images/catalogue/assets/personae/face/white-collar.png",
 };
 
 export const PERSONA_FULL_URL: Record<string, string> = {
@@ -59,6 +60,7 @@ export const PERSONA_FULL_URL: Record<string, string> = {
   "tourist": "/images/catalogue/assets/personae/full/tourist.png",
   "vip-guest": "/images/catalogue/assets/personae/full/vip-guest.png",
   "white-collar": "/images/catalogue/assets/personae/full/white-collar.png",
+  "exemple-minor": "/images/catalogue/assets/personae/full/white-collar.png",
 };
 
 export const PERSONA_LISTING_URL: Record<string, string> = {
@@ -86,4 +88,5 @@ export const PERSONA_LISTING_URL: Record<string, string> = {
   "tourist": "/images/catalogue/assets/personae/portrait/tourist.png",
   "vip-guest": "/images/catalogue/assets/personae/portrait/vip-guest.png",
   "white-collar": "/images/catalogue/assets/personae/portrait/white-collar.png",
+  "exemple-minor": "/images/catalogue/assets/personae/portrait/white-collar.png",
 };

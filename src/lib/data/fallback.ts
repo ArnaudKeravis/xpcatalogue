@@ -17,6 +17,7 @@ import { modulesRecordFromExcelSoT, wireModuleSolutionIdsFromExcelLinks } from '
 import { buildSolutionsCatalogueFromExcel } from './solutionsFromExcel';
 import { applyPersonaMomentModuleFill } from './personaMomentModules';
 import { JOURNEY_STEPS_FROM_EXCEL } from './journeyStepsFromExcel.generated';
+import { cloneWhiteCollarJourneyStepsForExempleMinor } from './journeyStepClone';
 
 export const AREA_CONFIGS: Record<Area, AreaConfig> = {
   work: {
@@ -28,7 +29,15 @@ export const AREA_CONFIGS: Record<Area, AreaConfig> = {
     description:
       'Sodexo makes <strong>every workday more inspiring and fulfilling</strong>, with spaces & services that support your well-being, connection & productivity.',
     isometricUrl: '/images/catalogue/assets/areas/work-area-info-iso.png',
-    personaIds: ['client-work', 'white-collar', 'blue-collar', 'grey-collar', 'military', 'operator-work'],
+    personaIds: [
+      'client-work',
+      'white-collar',
+      'blue-collar',
+      'grey-collar',
+      'military',
+      'operator-work',
+      'exemple-minor',
+    ],
     roleStories: {
       intro: 'In every workplace, Sodexo transforms routine into experience.',
       client:
@@ -593,7 +602,11 @@ const MODULES_WITH_EXCEL_SOT = wireModuleSolutionIdsFromExcelLinks(
   SOLUTIONS_FROM_EXCEL_CLASSEUR,
 );
 const TDDI_MERGED = mergeTddiV2IntoCatalogue(MERGED_MODULES, MERGED_JOURNEY_STEPS, SOLUTIONS_CATALOG);
-const FINAL_JOURNEY_STEPS = applyPersonaMomentModuleFill(TDDI_MERGED.journeySteps, MODULES_WITH_EXCEL_SOT);
+const JOURNEY_STEPS_FILLED = applyPersonaMomentModuleFill(TDDI_MERGED.journeySteps, MODULES_WITH_EXCEL_SOT);
+const FINAL_JOURNEY_STEPS: Record<string, JourneyStep> = {
+  ...JOURNEY_STEPS_FILLED,
+  ...cloneWhiteCollarJourneyStepsForExempleMinor(JOURNEY_STEPS_FILLED),
+};
 
 const MERGED_PERSONAS: Persona[] = CATALOGUE_PERSONAS.map((p) => {
   const def = PERSONA_JOURNEYS[p.id];

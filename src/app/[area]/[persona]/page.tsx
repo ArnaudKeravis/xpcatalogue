@@ -10,6 +10,7 @@ import { ShareButton } from '@/components/ui/ShareButton';
 import { getMomentsForModuleName } from '@/lib/queries/journey';
 import { getCatalogueData } from '@/lib/notion';
 import { catalogueModuleForJourneyLabel } from '@/lib/data/moduleJourneyResolve';
+import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Area, JourneyStep } from '@/lib/data/types';
 
@@ -43,6 +44,15 @@ export default async function PersonaPage({ params }: Props) {
   const steps = persona.steps
     .map((sid) => journeySteps[sid])
     .filter((s): s is JourneyStep => Boolean(s));
+
+  /** Moment strip: first mapped module cover, else moment ISO/raster (no persona face crop). */
+  const stepPreviewImages = steps.map((step) => {
+    for (const label of step.modules) {
+      const m = catalogueModuleForJourneyLabel(modules, label);
+      if (m?.coverImage) return m.coverImage;
+    }
+    return resolveJourneyMomentImage(persona.id, step.id);
+  });
 
   // Only show modules that actually apply to this persona's journey.
   // Labels on steps come from XP flow / editorial maps; catalogue names come from Classeur Modules.xlsx — compare with normalization.
@@ -119,6 +129,7 @@ export default async function PersonaPage({ params }: Props) {
                 personaId={params.persona}
                 steps={steps}
                 accentColor={persona.color}
+                stepPreviewImages={stepPreviewImages}
               />
 
               <div className="mt-6">
@@ -190,14 +201,45 @@ export default async function PersonaPage({ params }: Props) {
                       <li key={mod.id}>
                         <div className="flex h-full flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-md">
                           <div
-                            className="h-1.5 w-full"
-                            style={{ background: mod.gradient }}
+                            className="relative h-[5.25rem] w-full shrink-0 overflow-hidden"
+                            style={
+                              mod.coverImage
+                                ? undefined
+                                : { background: mod.gradient }
+                            }
                             aria-hidden
-                          />
-                          <div className="flex flex-1 flex-col p-3">
-                            <span className="mb-1.5 inline-flex" aria-hidden>
-                              <ModIcon size={24} weight={modWeight} color="var(--blue)" />
+                          >
+                            {mod.coverImage ? (
+                              <>
+                                <img
+                                  src={mod.coverImage}
+                                  alt=""
+                                  className="absolute inset-0 h-full w-full object-cover object-center"
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                                <span
+                                  className="pointer-events-none absolute inset-0"
+                                  style={{
+                                    background:
+                                      'linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.35) 100%)',
+                                  }}
+                                />
+                              </>
+                            ) : (
+                              <span
+                                className="pointer-events-none absolute inset-0"
+                                style={{
+                                  background:
+                                    'radial-gradient(120% 90% at 20% 10%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 55%)',
+                                }}
+                              />
+                            )}
+                            <span className="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-lg bg-white/90 shadow-sm ring-1 ring-black/5">
+                              <ModIcon size={22} weight={modWeight} color="var(--blue)" aria-hidden />
                             </span>
+                          </div>
+                          <div className="flex flex-1 flex-col p-3">
                             <Link
                               href={moduleHref}
                               className="mb-2 text-sm font-extrabold leading-tight text-[var(--blue)] hover:text-[var(--blue-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"

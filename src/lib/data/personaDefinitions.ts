@@ -207,6 +207,42 @@ const RAW_CATALOGUE_PERSONAS: Persona[] = [
     steps: WORK_STEPS,
   }),
   w({
+    id: 'exemple-minor',
+    area: 'work',
+    name: 'Exemple Minor',
+    fullName: 'Alex Rivera',
+    role: 'Demo profile (IFM / E&R pilot)',
+    quote:
+      'Same journey structure as White Collar for now — a sandbox to rehearse Energy & Resources storytelling before BoK personas land.',
+    emoji: '🧪',
+    color: '#b4bbe4',
+    photo: '/images/catalogue/assets/personas/work-white-collar.png',
+    profileEyebrow: 'Pilot',
+    platformSegmentLabel: 'Consumer',
+    workplaceStats: [
+      'Pilot site — Energy & Resources segment framing',
+      'Desk-based (on-site): ~60%',
+      'Field / plant rounds: ~30%',
+      'Remote: ~10%',
+    ],
+    professionalGoals: [
+      'See IFM value levers (safety, reliability, decarbonisation) reflected in everyday services',
+      'Compare client vs operator lenses on the same moments',
+    ],
+    motivations: [
+      'Clear narrative for leadership reviews',
+      'Evidence-backed module and solution mapping',
+    ],
+    pains: [
+      'Content still being migrated from segmentation BoK and IFM value-case PDFs',
+    ],
+    needs: [
+      'Persona-specific user-needs categories under each moment',
+      'Tagged solutions aligned to IFM module families',
+    ],
+    steps: WORK_STEPS,
+  }),
+  w({
     id: 'blue-collar',
     area: 'work',
     name: 'Blue Collar',

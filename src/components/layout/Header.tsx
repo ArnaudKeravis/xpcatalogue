@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, LightbulbFilament, List, MapTrifold, SquaresFour, Trophy, UsersThree, X } from '@phosphor-icons/react';
+import { Heart, LightbulbFilament, List, MapTrifold, SquaresFour, Trophy, UsersThree, X, Factory } from '@phosphor-icons/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -33,6 +33,12 @@ const NAV: NavItem[] = [
     label: 'Areas',
     Icon: MapTrifold,
     matches: (p) => p === '/areas' || /^\/(work|learn|heal|play)(\/|$)/.test(p),
+  },
+  {
+    href: '/er',
+    label: 'E&R',
+    Icon: Factory,
+    matches: (p) => p === '/er' || p.startsWith('/er/'),
   },
   {
     href: '/solutions',

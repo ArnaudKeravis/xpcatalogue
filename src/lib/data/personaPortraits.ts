@@ -10,6 +10,7 @@ export const PERSONA_PORTRAIT_URL: Record<string, string> = {
   'client-work':    `${BASE}/work-client.png`,
   'operator-work':  `${BASE}/work-operator.png`,
   'white-collar':   `${BASE}/work-white-collar.png`,
+  'exemple-minor':  `${BASE}/work-white-collar.png`,
   'blue-collar':    `${BASE}/work-blue-collar.png`,
   'grey-collar':    `${BASE}/work-grey-collar.png`,
   military:         `${BASE}/work-military.png`,

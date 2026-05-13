@@ -31,6 +31,7 @@ import { pickFirstRealHero } from '@/lib/data/solutionHeroImage';
 import { solutionsForModule } from '@/lib/data/moduleSolutions';
 import { MOMENT_EDITORIAL } from '@/lib/data/momentEditorial.generated';
 import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
+import { momentSlugFromStepId } from '@/lib/data/stepIdMomentSlug';
 import type { Area, Module, Solution } from '@/lib/data/types';
 
 export const revalidate = 3600;
@@ -42,7 +43,9 @@ const MOMENT_ICONS: Record<string, Icon> = {
   'welcome-area': DoorOpen,
   workplace: Desktop,
   'wellbeing-break': Heart,
+  'wellbeing-breaktime': Heart,
   'food-beverage-work': ForkKnife,
+  'food-beverage-area': ForkKnife,
   'arrival-campus': Car,
   'morning-class': GraduationCap,
   'lunch-break': ForkKnife,
@@ -71,7 +74,8 @@ function MomentIcon({
   weight?: IconWeight;
   className?: string;
 }) {
-  const Cmp = MOMENT_ICONS[momentId] ?? Car;
+  const slug = momentSlugFromStepId(momentId);
+  const Cmp = MOMENT_ICONS[slug] ?? Car;
   return <Cmp weight={weight ?? 'duotone'} className={className} aria-hidden />;
 }
 
@@ -99,7 +103,11 @@ export default async function MomentPage({ params }: Props) {
   const heroImageSrc = momentIsoImage ?? mapImage;
   const heroIsVector = Boolean(heroImageSrc?.endsWith('.svg'));
   const portraitSrc = resolvePersonaImage('face', persona.id, persona.photo);
-  const editorial = MOMENT_EDITORIAL[persona.id]?.[step.id];
+  const editorialFromWhiteCollar =
+    persona.id === 'exemple-minor' && step.id.startsWith('exemple-minor__')
+      ? MOMENT_EDITORIAL['white-collar']?.[step.id.replace(/^exemple-minor__/, 'white-collar__')]
+      : undefined;
+  const editorial = MOMENT_EDITORIAL[persona.id]?.[step.id] ?? editorialFromWhiteCollar;
   const momentSubtitle = editorial?.subtitle?.trim();
   const momentBody = editorial?.body?.trim() || step.description;
   const eyebrow = persona.profileEyebrow ?? 'Consumer';

@@ -29,8 +29,38 @@ export interface PersonaJourneyDef {
   moments: PersonaJourneyMoment[];
 }
 
-export const PERSONA_JOURNEYS: Record<string, PersonaJourneyDef> =
-  PERSONA_JOURNEYS_EXCEL as Record<string, PersonaJourneyDef>;
+/** Manual journey maps not yet in Classeur Journey.xlsx (demo / pilot personas). */
+const PERSONA_JOURNEYS_MANUAL: Record<string, PersonaJourneyDef> = {
+  'exemple-minor': {
+    image: '/images/catalogue/assets/journeys/iso-journey-work-white-collar.svg',
+    moments: [
+      { id: 'exemple-minor__commute', label: 'Commute', left: 2.0, top: 77.0, w: 16.0, h: 10.0 },
+      { id: 'exemple-minor__welcome-area', label: 'Welcome Area', left: 22.0, top: 77.0, w: 16.0, h: 10.0 },
+      { id: 'exemple-minor__workplace', label: 'Workplace', left: 42.0, top: 77.0, w: 16.0, h: 10.0 },
+      {
+        id: 'exemple-minor__food-beverage-area',
+        label: 'Food & Beverage Area',
+        left: 62.0,
+        top: 77.0,
+        w: 16.0,
+        h: 10.0,
+      },
+      {
+        id: 'exemple-minor__wellbeing-breaktime',
+        label: 'Wellbeing & Breaktime',
+        left: 82.0,
+        top: 77.0,
+        w: 16.0,
+        h: 10.0,
+      },
+    ],
+  },
+};
+
+export const PERSONA_JOURNEYS: Record<string, PersonaJourneyDef> = {
+  ...(PERSONA_JOURNEYS_EXCEL as Record<string, PersonaJourneyDef>),
+  ...PERSONA_JOURNEYS_MANUAL,
+};
 
 /** Convert a journey def's moments into the app's JourneyHotspot shape. */
 export function hotspotsFromJourney(def: PersonaJourneyDef): JourneyHotspot[] {

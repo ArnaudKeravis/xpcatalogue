@@ -1,13 +1,21 @@
 import Link from 'next/link';
 import type { JourneyStep } from '@/lib/data/types';
-import { momentPersonaTopUrl } from '@/lib/data/momentPersonaTop.generated';
+import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
 import { JourneyStepIcon } from './JourneyStepIcon';
+
+/** Vertical rhythm: middle → high → low → middle → high → middle (px `margin-top` from row baseline). */
+const TIMELINE_WAVE_MT = [12, 0, 28, 12, 0, 12] as const;
 
 interface Props {
   area: string;
   personaId: string;
   steps: JourneyStep[];
   accentColor: string;
+  /**
+   * Per-step hero for the strip — prefer first journey module’s `coverImage` from the parent.
+   * When omitted, falls back to moment raster/SVG only (no persona face crop).
+   */
+  stepPreviewImages?: (string | undefined)[];
 }
 
 /**
@@ -17,36 +25,38 @@ interface Props {
  * The parent (persona page) owns padding + the section heading, so this
  * component renders only the scrollable list to avoid duplicated chrome.
  */
-export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
+export function MomentTimeline({ area, personaId, steps, accentColor, stepPreviewImages }: Props) {
   if (steps.length === 0) return null;
 
   return (
     <div aria-label="Day at a glance" className="relative">
       <ol
-        className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3"
+        className="flex snap-x snap-mandatory items-start gap-3 overflow-x-auto py-4 pb-3"
         style={{ scrollbarWidth: 'thin' }}
       >
         {steps.map((step, i) => {
           const href = `/${area}/${personaId}/moment/${step.id}`;
-          const personaTop = momentPersonaTopUrl(personaId, step.id);
+          const fromParent = stepPreviewImages?.[i];
+          const heroSrc = fromParent ?? resolveJourneyMomentImage(personaId, step.id);
+          const waveMt = TIMELINE_WAVE_MT[i % TIMELINE_WAVE_MT.length];
           return (
             <li
               key={step.id}
               className="relative shrink-0 snap-start"
-              style={{ flexBasis: personaTop ? '196px' : '180px' }}
+              style={{ flexBasis: heroSrc ? '196px' : '180px', marginTop: waveMt }}
             >
               <Link
                 href={href}
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-3 transition-all duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
               >
-                {personaTop ? (
+                {heroSrc ? (
                   <div className="-mx-3 -mt-3 mb-2 overflow-hidden rounded-t-2xl border-b border-[var(--grey-border)] bg-[var(--surface)]">
                     <img
-                      src={personaTop}
+                      src={heroSrc}
                       alt=""
                       width={400}
                       height={160}
-                      className="h-[4.5rem] w-full object-cover object-[center_15%]"
+                      className="h-[4.5rem] w-full object-cover object-center"
                       loading="lazy"
                       decoding="async"
                     />
