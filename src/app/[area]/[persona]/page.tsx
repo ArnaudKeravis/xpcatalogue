@@ -10,7 +10,6 @@ import { ShareButton } from '@/components/ui/ShareButton';
 import { getMomentsForModuleName } from '@/lib/queries/journey';
 import { getCatalogueData } from '@/lib/notion';
 import { catalogueModuleForJourneyLabel } from '@/lib/data/moduleJourneyResolve';
-import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Area, JourneyStep } from '@/lib/data/types';
 
@@ -44,15 +43,6 @@ export default async function PersonaPage({ params }: Props) {
   const steps = persona.steps
     .map((sid) => journeySteps[sid])
     .filter((s): s is JourneyStep => Boolean(s));
-
-  /** Moment strip: first mapped module cover, else moment ISO/raster (no persona face crop). */
-  const stepPreviewImages = steps.map((step) => {
-    for (const label of step.modules) {
-      const m = catalogueModuleForJourneyLabel(modules, label);
-      if (m?.coverImage) return m.coverImage;
-    }
-    return resolveJourneyMomentImage(persona.id, step.id);
-  });
 
   // Only show modules that actually apply to this persona's journey.
   // Labels on steps come from XP flow / editorial maps; catalogue names come from Classeur Modules.xlsx — compare with normalization.
@@ -129,7 +119,6 @@ export default async function PersonaPage({ params }: Props) {
                 personaId={params.persona}
                 steps={steps}
                 accentColor={persona.color}
-                stepPreviewImages={stepPreviewImages}
               />
 
               <div className="mt-6">

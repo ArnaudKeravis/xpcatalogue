@@ -112,6 +112,25 @@ export function JourneyMap({
   const hotspotFor = (stepId: string) => journeyHotspots?.find((h) => h.stepId === stepId);
   const hasHotspots = Boolean(journeyHotspots?.length);
 
+  /** % vertical offset on map pins: middle → high → low → middle → high → middle (rhythm lives on the journey canvas, not the strip). */
+  const MAP_PIN_WAVE_TOP_PCT = [0, -2.8, 3.6, 0, -2.8, 0] as const;
+  const pinWaveTopPct = (i: number) => MAP_PIN_WAVE_TOP_PCT[i % MAP_PIN_WAVE_TOP_PCT.length];
+
+  const pinPercentCoords = (step: JourneyStep, index: number) => {
+    const box = hotspotFor(step.id);
+    const wave = pinWaveTopPct(index);
+    if (box) {
+      const left = box.left + (box.w ?? 0) / 2;
+      const baseTop = Math.max(box.top - 6, 4);
+      const top = Math.min(Math.max(baseTop + wave, 2), 96);
+      return { left, top };
+    }
+    const n = Math.max(steps.length - 1, 1);
+    const left = 8 + (84 / n) * index;
+    const top = Math.min(Math.max(88 + wave, 6), 95);
+    return { left, top };
+  };
+
   // ── Cursor parallax: two depth planes ──────────────────────────────────
   // Raw mouse offsets from the canvas center, mapped to a small drift range.
   // Springs smooth the motion so the image feels dampened rather than twitchy.
@@ -162,14 +181,11 @@ export function JourneyMap({
   // by their top-left corner and width/height — compute the center for the
   // route so the line threads through the middle of each scene pin.
   const routePoints = steps
-    .map((step) => {
+    .map((step, i) => {
       const box = hotspotFor(step.id);
       if (!box) return null;
-      return {
-        id: step.id,
-        x: box.left + (box.w ?? 0) / 2,
-        y: box.top + (box.h ?? 0) / 2,
-      };
+      const { left, top } = pinPercentCoords(step, i);
+      return { id: step.id, x: left, y: top };
     })
     .filter((p): p is { id: string; x: number; y: number } => p !== null);
 
@@ -313,12 +329,7 @@ export function JourneyMap({
               style={{ x: pinsX, y: pinsY }}
             >
               {steps.map((step, i) => {
-                const box = hotspotFor(step.id);
-                // Fallback: distribute evenly along the bottom when no hotspots.
-                const left = box
-                  ? box.left + (box.w ?? 0) / 2
-                  : 8 + (84 / Math.max(steps.length - 1, 1)) * i;
-                const top = box ? Math.max(box.top - 6, 4) : 88;
+                const { left, top } = pinPercentCoords(step, i);
                 const Icon = STEP_ICONS[step.id] ?? Car;
 
                 return (

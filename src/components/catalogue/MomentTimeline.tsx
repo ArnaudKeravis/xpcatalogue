@@ -1,76 +1,70 @@
 import Link from 'next/link';
 import type { JourneyStep } from '@/lib/data/types';
-import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
 import { JourneyStepIcon } from './JourneyStepIcon';
-
-/** Vertical rhythm: middle → high → low → middle → high → middle (px `margin-top` from row baseline). */
-const TIMELINE_WAVE_MT = [12, 0, 28, 12, 0, 12] as const;
 
 interface Props {
   area: string;
   personaId: string;
   steps: JourneyStep[];
   accentColor: string;
-  /**
-   * Per-step hero for the strip — prefer first journey module’s `coverImage` from the parent.
-   * When omitted, falls back to moment raster/SVG only (no persona face crop).
-   */
-  stepPreviewImages?: (string | undefined)[];
 }
 
 /**
- * Horizontal scroll strip of moments — a "table of contents" for a persona's day
- * that shows *before* the journey map. Fast visual scan → drill in.
- *
- * The parent (persona page) owns padding + the section heading, so this
- * component renders only the scrollable list to avoid duplicated chrome.
+ * Horizontal scroll strip of moments — a "table of contents" for a persona's day.
+ * Each card uses a **vector picto** (Phosphor via `JourneyStepIcon`) on a soft gradient —
+ * no raster/module `<img>` heroes, so missing PNGs on deploy never show as broken images.
  */
-export function MomentTimeline({ area, personaId, steps, accentColor, stepPreviewImages }: Props) {
+export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
   if (steps.length === 0) return null;
 
   return (
     <div aria-label="Day at a glance" className="relative">
       <ol
-        className="flex snap-x snap-mandatory items-start gap-3 overflow-x-auto py-4 pb-3"
+        className="flex snap-x snap-mandatory items-start gap-3 overflow-x-auto py-3 pb-3"
         style={{ scrollbarWidth: 'thin' }}
       >
         {steps.map((step, i) => {
           const href = `/${area}/${personaId}/moment/${step.id}`;
-          const fromParent = stepPreviewImages?.[i];
-          const heroSrc = fromParent ?? resolveJourneyMomentImage(personaId, step.id);
-          const waveMt = TIMELINE_WAVE_MT[i % TIMELINE_WAVE_MT.length];
           return (
             <li
               key={step.id}
               className="relative shrink-0 snap-start"
-              style={{ flexBasis: heroSrc ? '196px' : '180px', marginTop: waveMt }}
+              style={{ flexBasis: '192px' }}
             >
               <Link
                 href={href}
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-[var(--surface-card)] p-3 transition-all duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
               >
-                {heroSrc ? (
-                  <div className="-mx-3 -mt-3 mb-2 overflow-hidden rounded-t-2xl border-b border-[var(--grey-border)] bg-[var(--surface)]">
-                    <img
-                      src={heroSrc}
-                      alt=""
-                      width={400}
-                      height={160}
-                      className="h-[4.5rem] w-full object-cover object-center"
-                      loading="lazy"
-                      decoding="async"
-                    />
+                {/* Moment picto — gradient + large step glyph (no external images). */}
+                <div
+                  className="relative -mx-3 -mt-3 mb-3 h-[4.5rem] overflow-hidden rounded-t-2xl border-b border-[var(--grey-border)]"
+                  aria-hidden
+                >
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `linear-gradient(135deg, ${accentColor}2e 0%, rgba(255,255,255,0.96) 48%, #eef3ff 100%)`,
+                    }}
+                  />
+                  <div
+                    className="absolute inset-0 opacity-[0.45]"
+                    style={{
+                      backgroundImage:
+                        'radial-gradient(circle, rgba(41, 56, 150, 0.12) 1px, transparent 1px)',
+                      backgroundSize: '11px 11px',
+                    }}
+                  />
+                  <div className="relative flex h-full items-center justify-center">
+                    <JourneyStepIcon step={step} accent={accentColor} size={52} />
                   </div>
-                ) : null}
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <JourneyStepIcon step={step} accent={accentColor} size={32} />
                   <span
-                    className="rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white"
+                    className="absolute right-2 top-2 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm ring-1 ring-black/5"
                     style={{ background: accentColor }}
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
+
                 <h3
                   className="text-sm font-extrabold leading-tight text-[var(--blue)]"
                   style={{ fontFamily: 'var(--font-heading)' }}
@@ -95,7 +89,6 @@ export function MomentTimeline({ area, personaId, steps, accentColor, stepPrevie
                 </div>
               </Link>
 
-              {/* Connector line to next */}
               {i < steps.length - 1 ? (
                 <span
                   aria-hidden
