@@ -19,8 +19,10 @@ export default async function SolutionPage({ params }: Props) {
     : [];
 
   return (
-    <div className="flex flex-1 flex-col bg-[var(--surface)]">
-      <SolutionCard solution={solution} siblings={siblings} module={mod} />
+    <div className="flex min-h-0 flex-1 flex-col bg-[var(--surface)]">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <SolutionCard solution={solution} siblings={siblings} module={mod} />
+      </div>
     </div>
   );
 }
