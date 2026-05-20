@@ -39,6 +39,8 @@ export const PERSONA_FACE_URL: Record<string, string> = {
   "proactive-achiever": "/images/catalogue/assets/personae/full/proactive-achiever.png",
   "family-hero": "/images/catalogue/assets/personae/full/family-hero.png",
   "privacy-seeker": "/images/catalogue/assets/personae/full/privacy-seeker.png",
+  // ── E&R Client (Jordan, IFM sponsor) — synthetic persona slug is `client` ──
+  "client": "/images/catalogue/assets/personae/full/er-client.png",
 };
 
 export const PERSONA_FULL_URL: Record<string, string> = {
@@ -73,6 +75,8 @@ export const PERSONA_FULL_URL: Record<string, string> = {
   "proactive-achiever": "/images/catalogue/assets/personae/full/proactive-achiever.png",
   "family-hero": "/images/catalogue/assets/personae/full/family-hero.png",
   "privacy-seeker": "/images/catalogue/assets/personae/full/privacy-seeker.png",
+  // ── E&R Client (Jordan, IFM sponsor) — synthetic persona slug is `client` ──
+  "client": "/images/catalogue/assets/personae/full/er-client.png",
 };
 
 export const PERSONA_LISTING_URL: Record<string, string> = {
