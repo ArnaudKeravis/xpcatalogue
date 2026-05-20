@@ -180,26 +180,20 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
 
         {/* Entry cards.
          *  - Global home: 3 cards (Place / Person / Tool).
-         *  - E&R home: 2 cards only (User needs hub + Jump into a solution).
-         *    The "Start with E&R personae", "IFM value case" and "Home to home"
-         *    cards were removed at editorial's request — the segment-home
-         *    navigation above already exposes those destinations. */}
+         *  - E&R home: 3 cards (Personae / Needs / Tool). The personae card
+         *    is the editorial entry point and lands on /er/personae. */}
         <div
-          className={
-            erMini
-              ? 'motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-2'
-              : 'motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-3'
-          }
+          className="motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-3"
           style={{ animationDelay: '560ms' }}
         >
           {erMini ? (
             <EntryCard
-              href={erPaths.needs(erLinkMode)}
-              tag="Needs"
-              icon={<Heart size={28} weight="duotone" aria-hidden />}
-              title="User needs hub"
-              body="Six BoK needs with predominant profiles and solution levers — map them to catalogue tags and IFM pillars."
-              footer="6 needs"
+              href={erPaths.personae(erLinkMode)}
+              tag="Personae"
+              icon={<UsersThree size={28} weight="duotone" aria-hidden />}
+              title="Start with a persona"
+              body="Six BoK Energy & Mining archetypes, a client sponsor and an operator — each with the full journey depth."
+              footer="8 profiles"
             />
           ) : (
             <EntryCard
@@ -211,7 +205,16 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
               footer="4 areas"
             />
           )}
-          {!erMini ? (
+          {erMini ? (
+            <EntryCard
+              href={erPaths.needs(erLinkMode)}
+              tag="Needs"
+              icon={<Heart size={28} weight="duotone" aria-hidden />}
+              title="User needs hub"
+              body="Six BoK needs with predominant profiles and solution levers — map them to catalogue tags and IFM pillars."
+              footer="6 needs"
+            />
+          ) : (
             <EntryCard
               href={featured ? `/${featured.area}/${featured.id}` : '/areas'}
               tag="Person"
@@ -236,7 +239,7 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
               footer={`${counts.personas} personas`}
               hint="Featured today"
             />
-          ) : null}
+          )}
           <EntryCard
             href="/solutions"
             tag="Tool"
