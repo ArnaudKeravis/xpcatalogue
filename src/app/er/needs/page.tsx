@@ -1,9 +1,14 @@
 import Link from 'next/link';
 import { ER_USER_NEEDS } from '@/lib/data/er';
+import { findModuleForLever, indexModulesForLevers } from '@/lib/data/er/leverModuleMatch';
+import { getCatalogueData } from '@/lib/notion';
 
 export const revalidate = 3600;
 
-export default function ErUserNeedsPage() {
+export default async function ErUserNeedsPage() {
+  const { modules } = await getCatalogueData();
+  const moduleIndex = indexModulesForLevers(Object.values(modules));
+
   return (
     <div className="mx-auto max-w-[1600px] px-6 py-10 md:px-12 md:py-14">
       <nav className="text-xs font-semibold text-[var(--blue)]/60">
@@ -21,8 +26,8 @@ export default function ErUserNeedsPage() {
       </h1>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[var(--blue)]/80">
         Six needs from the Sodexo Energy &amp; Mining Book of Knowledge (Ipsos consolidation). Each need
-        links predominant employee profiles and the solution levers named in the BoK — ready to tag
-        catalogue modules and solutions in a next data pass.
+        links predominant employee profiles and the solution levers named in the BoK — click a lever
+        to jump to the closest catalogue module.
       </p>
       <p className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--blue)]/55">
         Source: Sodexo Global Needs Based Segmentation — BoK long version (May 2019)
@@ -53,14 +58,31 @@ export default function ErUserNeedsPage() {
                 BoK solution levers
               </p>
               <ul className="mt-1.5 flex flex-wrap gap-1.5">
-                {c.solutionLevers.map((s) => (
-                  <li
-                    key={s}
-                    className="rounded-full border border-[var(--grey-border)] bg-[var(--surface)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--blue)]/85"
-                  >
-                    {s}
-                  </li>
-                ))}
+                {c.solutionLevers.map((s) => {
+                  const match = findModuleForLever(s, moduleIndex);
+                  if (match) {
+                    return (
+                      <li key={s}>
+                        <Link
+                          href={`/modules/${match.module.id}`}
+                          title={`Open module: ${match.module.name}`}
+                          className="inline-flex items-center rounded-full border border-[var(--grey-border)] bg-[var(--surface)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--blue)]/85 transition-[transform,border-color,background-color,color] duration-150 hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:bg-[var(--icon-bg-muted)] hover:text-[var(--blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--blue-primary)]"
+                        >
+                          {s}
+                        </Link>
+                      </li>
+                    );
+                  }
+                  return (
+                    <li
+                      key={s}
+                      className="rounded-full border border-dashed border-[var(--grey-border)] bg-[var(--surface)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--blue)]/55"
+                      title="No matching catalogue module yet"
+                    >
+                      {s}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             {c.catalogueHints?.length ? (

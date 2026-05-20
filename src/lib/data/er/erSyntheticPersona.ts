@@ -2,6 +2,11 @@ import type { Persona } from '@/lib/data/types';
 import type { ErBoKPersona } from './types';
 import { ER_BOK_PERSONAS } from './erBoKPersonas';
 import { ER_CLIENT_BOK } from './erClientPersona';
+import {
+  ER_BOK_JOURNEY_MAP_IMAGE,
+  ER_BOK_HOTSPOTS,
+  ER_BOK_STEP_IDS,
+} from './erBoKJourney';
 
 const BOK_COLORS: Record<string, string> = {
   'remote-lifestyler': '#2d6a8f',
@@ -42,9 +47,17 @@ export function erBoKAsPersona(bok: ErBoKPersona, journeyTemplate: Persona): Per
     motivations: bok.keyNeeds,
     pains: bok.painPoints,
     needs: bok.howWeAddress,
-    steps: journeyTemplate.steps,
-    journeyMapImage: journeyTemplate.journeyMapImage,
-    journeyHotspots: journeyTemplate.journeyHotspots,
+    // ── E&R journey override ───────────────────────────────────────────────
+    // We no longer reuse white-collar's 5-step arc. The BoK editorial team
+    // owns a 7-moment journey (Departure → Bed time) on a mining-site
+    // isometric, defined in `./erBoKJourney`. The synthetic persona surfaces
+    // those IDs, hotspots and map image so JourneyMap + MomentTimeline
+    // render the new arc directly. Moment links must go to
+    // `/er/personae/{slug}/moment/{stepId}` since these IDs don't exist in
+    // the catalogue `journeySteps` map — callers pass a `momentHrefBuilder`.
+    steps: [...ER_BOK_STEP_IDS],
+    journeyMapImage: ER_BOK_JOURNEY_MAP_IMAGE,
+    journeyHotspots: ER_BOK_HOTSPOTS,
     emoji: journeyTemplate.emoji,
   };
 }

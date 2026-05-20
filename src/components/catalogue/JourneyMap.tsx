@@ -16,16 +16,18 @@ import {
   useTransform,
 } from 'framer-motion';
 import {
+  Airplane,
+  Bed,
+  Books,
   Car,
+  Coffee,
   Desktop,
   DoorOpen,
   ForkKnife,
+  GraduationCap,
   Heart,
   Knife,
   SoccerBall,
-  Coffee,
-  GraduationCap,
-  Books,
   Stethoscope,
   Truck,
   type IconWeight,
@@ -59,6 +61,14 @@ const STEP_ICONS: Record<string, StepIconCmp> = {
   'half-time': Coffee,
   'full-time': SoccerBall,
   'networking-lunch': ForkKnife,
+  // E&R BoK journey (7 moments — prefixed IDs to avoid collision)
+  'er-bok__departure-from-home': Airplane,
+  'er-bok__commute': Car,
+  'er-bok__welcome-area': DoorOpen,
+  'er-bok__workplace': Desktop,
+  'er-bok__food-beverage-area': ForkKnife,
+  'er-bok__wellbeing-breaktime': Heart,
+  'er-bok__bed-time': Bed,
 };
 
 interface Props {
@@ -67,6 +77,10 @@ interface Props {
   persona: string;
   journeyMapImage?: string;
   journeyHotspots?: JourneyHotspot[];
+  /** Optional builder used to derive the link target for each moment pin.
+   *  Defaults to `/{area}/{persona}/moment/{stepId}`. Pass a builder to
+   *  redirect into an alternative route (e.g. the E&R-scoped moment view). */
+  momentHrefBuilder?: (stepId: string) => string;
 }
 
 function StepIcon({ stepId, className }: { stepId: string; className?: string }) {
@@ -74,7 +88,7 @@ function StepIcon({ stepId, className }: { stepId: string; className?: string })
   return <Cmp className={className} weight="duotone" aria-hidden />;
 }
 
-function momentHref(area: string, persona: string, stepId: string) {
+function defaultMomentHref(area: string, persona: string, stepId: string) {
   return `/${area}/${persona}/moment/${stepId}`;
 }
 
@@ -105,7 +119,10 @@ export function JourneyMap({
   persona,
   journeyMapImage,
   journeyHotspots,
+  momentHrefBuilder,
 }: Props) {
+  const buildMomentHref = (stepId: string) =>
+    momentHrefBuilder ? momentHrefBuilder(stepId) : defaultMomentHref(area, persona, stepId);
   const reduceMotion = useReducedMotion();
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -359,7 +376,7 @@ export function JourneyMap({
                       />
                     ) : null}
                     <Link
-                      href={momentHref(area, persona, step.id)}
+                      href={buildMomentHref(step.id)}
                       aria-label={`${step.label} — open moment`}
                       className={cn(
                         'group relative inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[11px] font-bold',
@@ -412,7 +429,7 @@ export function JourneyMap({
           {steps.map((step, i) => (
             <Link
               key={step.id}
-              href={momentHref(area, persona, step.id)}
+              href={buildMomentHref(step.id)}
               className="inline-flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[11px] font-bold text-[#001a72] shadow-sm"
               style={{ fontFamily: 'var(--font-body)' }}
             >

@@ -97,8 +97,10 @@ export default async function MomentPage({ params }: Props) {
     .map((name) => catalogueModuleForJourneyLabel(modules, name))
     .filter((m): m is Module => Boolean(m));
 
+  const stepIdx = persona.steps.indexOf(step.id);
+
   const mapImage = persona.journeyMapImage;
-  const momentIsoImage = resolveJourneyMomentImage(persona.id, step.id);
+  const momentIsoImage = resolveJourneyMomentImage(persona.id, step.id, stepIdx);
   const heroImageSrc = momentIsoImage ?? mapImage;
   const heroIsVector = Boolean(heroImageSrc?.endsWith('.svg'));
   const portraitSrc = resolvePersonaImage('face', persona.id, persona.photo);
@@ -123,7 +125,6 @@ export default async function MomentPage({ params }: Props) {
   const solutionsByModule = (m: Module): Solution[] => solutionsForModule(m, solutions);
 
   // Position in journey → Before / During / After framing
-  const stepIdx = persona.steps.indexOf(step.id);
   const prevStep = stepIdx > 0 ? journeySteps[persona.steps[stepIdx - 1]] : null;
   const nextStep =
     stepIdx < persona.steps.length - 1 ? journeySteps[persona.steps[stepIdx + 1]] : null;

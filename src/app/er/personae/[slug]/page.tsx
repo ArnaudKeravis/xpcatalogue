@@ -1,7 +1,12 @@
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { PersonaExperienceBody } from '@/components/catalogue/PersonaExperienceBody';
-import { erBoKAsPersona, erBoKOrClientBySlug, ER_OPERATOR_SLUG } from '@/lib/data/er';
+import {
+  ER_BOK_STEPS,
+  erBoKAsPersona,
+  erBoKOrClientBySlug,
+  ER_OPERATOR_SLUG,
+} from '@/lib/data/er';
 import { getCatalogueData } from '@/lib/notion';
 import { erPaths, readErLinkMode } from '@/lib/erNav';
 
@@ -65,6 +70,13 @@ export default async function ErPersonaDetailPage({ params }: Props) {
       linkPersonaId="white-collar"
       personaHref={personaHref}
       favouriteId={`er-personae/${params.slug}`}
+      // BoK personae carry the E&R-specific journey (Departure → Bed time).
+      // Its step IDs (`er-bok__*`) don't exist in the catalogue's
+      // Excel-ingested `journeySteps`, so we pass them as `extraStepLookup`
+      // and point moment links at the E&R-scoped detail route which knows
+      // how to resolve them.
+      extraStepLookup={ER_BOK_STEPS}
+      momentHrefBuilder={(stepId) => `/er/personae/${params.slug}/moment/${stepId}`}
     />
   );
 }

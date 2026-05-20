@@ -5,9 +5,7 @@ import {
   Compass,
   Heart,
   LightbulbFilament,
-  MapTrifold,
   Trophy,
-  TreeStructure,
   User,
   UsersThree,
 } from '@phosphor-icons/react/dist/ssr';
@@ -145,7 +143,7 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
             </p>
           </div>
 
-          <HeroCollage className="w-full" />
+          <HeroCollage className="w-full" variant={erMini ? 'er' : 'global'} />
         </div>
 
         {!erMini ? (
@@ -180,18 +178,28 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
         </nav>
         ) : null}
 
+        {/* Entry cards.
+         *  - Global home: 3 cards (Place / Person / Tool).
+         *  - E&R home: 2 cards only (User needs hub + Jump into a solution).
+         *    The "Start with E&R personae", "IFM value case" and "Home to home"
+         *    cards were removed at editorial's request — the segment-home
+         *    navigation above already exposes those destinations. */}
         <div
-          className="motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-3"
+          className={
+            erMini
+              ? 'motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-2'
+              : 'motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-3'
+          }
           style={{ animationDelay: '560ms' }}
         >
           {erMini ? (
             <EntryCard
-              href={erPaths.personae(erLinkMode)}
-              tag="Personae"
-              icon={<UsersThree size={28} weight="duotone" aria-hidden />}
-              title="Start with E&R personae"
-              body="Eight profiles on one grid — BoK archetypes, a client sponsor, and an operator — same journey depth as the Work area."
-              footer="8 profiles"
+              href={erPaths.needs(erLinkMode)}
+              tag="Needs"
+              icon={<Heart size={28} weight="duotone" aria-hidden />}
+              title="User needs hub"
+              body="Six BoK needs with predominant profiles and solution levers — map them to catalogue tags and IFM pillars."
+              footer="6 needs"
             />
           ) : (
             <EntryCard
@@ -203,32 +211,32 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
               footer="4 areas"
             />
           )}
-          <EntryCard
-            href={erMini ? erPaths.personae(erLinkMode) : featured ? `/${featured.area}/${featured.id}` : '/areas'}
-            tag="Person"
-            icon={
-              !erMini && featured ? (
-                <PersonaAvatar
-                  photo={featuredFaceSrc}
-                  color={featured.color}
-                  name={featured.fullName}
-                />
-              ) : (
-                <UsersThree size={28} weight="duotone" aria-hidden />
-              )
-            }
-            iconShape={!erMini && featured ? 'persona' : 'tile'}
-            title={erMini ? 'Meet E&R personae' : featured ? `Meet ${featured.fullName.split(' ')[0]}` : 'Meet a persona'}
-            body={
-              erMini
-                ? 'Eight profiles — six BoK Energy & Mining archetypes, one client sponsor, and one operator — each with the same journey depth as Work.'
-                : featured
+          {!erMini ? (
+            <EntryCard
+              href={featured ? `/${featured.area}/${featured.id}` : '/areas'}
+              tag="Person"
+              icon={
+                featured ? (
+                  <PersonaAvatar
+                    photo={featuredFaceSrc}
+                    color={featured.color}
+                    name={featured.fullName}
+                  />
+                ) : (
+                  <UsersThree size={28} weight="duotone" aria-hidden />
+                )
+              }
+              iconShape={featured ? 'persona' : 'tile'}
+              title={featured ? `Meet ${featured.fullName.split(' ')[0]}` : 'Meet a persona'}
+              body={
+                featured
                   ? `${featured.role} · ${featuredArea?.label}. See how ${featured.fullName.split(' ')[0]}\u2019s day unfolds.`
                   : `${counts.personas} personas across the four areas — each with a documented journey.`
-            }
-            footer={erMini ? '8 profiles' : `${counts.personas} personas`}
-            hint={erMini ? 'BoK + client + operator' : 'Featured today'}
-          />
+              }
+              footer={`${counts.personas} personas`}
+              hint="Featured today"
+            />
+          ) : null}
           <EntryCard
             href="/solutions"
             tag="Tool"
@@ -238,39 +246,6 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
             footer={`${counts.solutions} solutions`}
           />
         </div>
-
-        {erMini ? (
-          <div
-            className="motion-fade-up mx-auto mt-8 grid max-w-[1600px] gap-4 md:grid-cols-3"
-            style={{ animationDelay: '620ms' }}
-            aria-label="Energy and Resources programme hubs"
-          >
-            <EntryCard
-              href={erPaths.needs(erLinkMode)}
-              tag="Needs"
-              icon={<Heart size={28} weight="duotone" aria-hidden />}
-              title="User needs hub"
-              body="Six BoK needs with predominant profiles and solution levers — map them to catalogue tags and IFM pillars."
-              footer="6 needs"
-            />
-            <EntryCard
-              href={erPaths.ifm(erLinkMode)}
-              tag="IFM"
-              icon={<TreeStructure size={28} weight="duotone" aria-hidden />}
-              title="IFM value case"
-              body="Accommodation through Systems & Governance — the principles that anchor client conversations."
-              footer="12 pillars"
-            />
-            <EntryCard
-              href={erPaths.journey(erLinkMode)}
-              tag="Journey"
-              icon={<MapTrifold size={28} weight="duotone" aria-hidden />}
-              title="Home to home"
-              body="Departure through back home — shared baseline phases from the BoK with pain themes per stage."
-              footer="9 phases"
-            />
-          </div>
-        ) : null}
       </section>
 
       <section className="relative z-10 bg-[var(--surface)] px-6 pb-12 pt-12 md:px-12 md:pt-16">
@@ -307,21 +282,23 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
         {!erMini ? <CuratedCollectionsBand solutions={data.solutions} /> : null}
       </div>
 
-      <section className="relative z-10 bg-[var(--surface)] px-6 pb-16 md:px-12">
-        <div className="mx-auto max-w-[1600px]">
-          <CatalogueSnapshot
-            stats={[
-              { value: counts.areas, label: 'Areas of life' },
-              { value: counts.personas, label: 'Personas' },
-              { value: counts.modules, label: 'Experience modules' },
-              { value: counts.solutions, label: 'Solutions' },
-              { value: counts.countries, label: 'Countries' },
-            ]}
-            countries={topCountries}
-            totalCountries={counts.countries}
-          />
-        </div>
-      </section>
+      {!erMini ? (
+        <section className="relative z-10 bg-[var(--surface)] px-6 pb-16 md:px-12">
+          <div className="mx-auto max-w-[1600px]">
+            <CatalogueSnapshot
+              stats={[
+                { value: counts.areas, label: 'Areas of life' },
+                { value: counts.personas, label: 'Personas' },
+                { value: counts.modules, label: 'Experience modules' },
+                { value: counts.solutions, label: 'Solutions' },
+                { value: counts.countries, label: 'Countries' },
+              ]}
+              countries={topCountries}
+              totalCountries={counts.countries}
+            />
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }

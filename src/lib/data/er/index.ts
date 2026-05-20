@@ -12,3 +12,13 @@ export {
   erPersonaeDetailSlugs,
   erBoKOrClientBySlug,
 } from './erSyntheticPersona';
+export {
+  ER_BOK_JOURNEY_MAP_IMAGE,
+  ER_BOK_STEP_IDS,
+  ER_BOK_STEPS,
+  ER_BOK_MOMENT_EDITORIAL,
+  ER_BOK_MOMENT_IMAGE,
+  ER_BOK_HOTSPOTS,
+  isErBoKStepId,
+} from './erBoKJourney';
+export type { ErBoKStepId } from './erBoKJourney';

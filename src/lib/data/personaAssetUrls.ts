@@ -33,6 +33,12 @@ export const PERSONA_FACE_URL: Record<string, string> = {
   "vip-guest": "/images/catalogue/assets/personae/face/vip-guest.png",
   "white-collar": "/images/catalogue/assets/personae/face/white-collar.png",
   "exemple-minor": "/images/catalogue/assets/personae/face/white-collar.png",
+  // ── E&R BoK personae — same image used for face + full until dedicated crops are exported ──
+  "remote-lifestyler": "/images/catalogue/assets/personae/full/remote-lifestyler.png",
+  "optimizer": "/images/catalogue/assets/personae/full/optimizer.png",
+  "proactive-achiever": "/images/catalogue/assets/personae/full/proactive-achiever.png",
+  "family-hero": "/images/catalogue/assets/personae/full/family-hero.png",
+  "privacy-seeker": "/images/catalogue/assets/personae/full/privacy-seeker.png",
 };
 
 export const PERSONA_FULL_URL: Record<string, string> = {
@@ -61,6 +67,12 @@ export const PERSONA_FULL_URL: Record<string, string> = {
   "vip-guest": "/images/catalogue/assets/personae/full/vip-guest.png",
   "white-collar": "/images/catalogue/assets/personae/full/white-collar.png",
   "exemple-minor": "/images/catalogue/assets/personae/full/white-collar.png",
+  // ── E&R BoK personae (editorial portraits from BoK long version) ──
+  "remote-lifestyler": "/images/catalogue/assets/personae/full/remote-lifestyler.png",
+  "optimizer": "/images/catalogue/assets/personae/full/optimizer.png",
+  "proactive-achiever": "/images/catalogue/assets/personae/full/proactive-achiever.png",
+  "family-hero": "/images/catalogue/assets/personae/full/family-hero.png",
+  "privacy-seeker": "/images/catalogue/assets/personae/full/privacy-seeker.png",
 };
 
 export const PERSONA_LISTING_URL: Record<string, string> = {

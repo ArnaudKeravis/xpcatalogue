@@ -26,7 +26,7 @@ export const ER_BOK_PERSONAS: ErBoKPersona[] = [
       'No real follow-up before and after rotation',
       'Lack of healthy food; quality inconsistent',
       'Perception of downgraded quality of services on site',
-      'Not much to do except go to the bar for socializing',
+      'Doing something to bring people together and have a bit more civil conversation rather than get a drink in the bar.',
     ],
     howWeAddress: [
       'Healthy food meals, 24/7 retail',
@@ -91,7 +91,7 @@ export const ER_BOK_PERSONAS: ErBoKPersona[] = [
     age: 36,
     gender: 'Female',
     relationship: 'Living with a partner',
-    kids: 'No child',
+    kids: '1 child',
     experience: '4 years in the industry',
     quote: 'I have plans and am willing to work hard to achieve them',
     generalDescription:
@@ -147,7 +147,12 @@ export const ER_BOK_PERSONAS: ErBoKPersona[] = [
       'Family is the most important thing in life',
       'Many years in the industry',
     ],
-    keyNeeds: ['Comfort', 'Socialization (with family / friends)', 'Privacy'],
+    keyNeeds: [
+      'Comfort',
+      'Socialization (with family / friends)',
+      'Privacy',
+      'Variety of choices (ex: coffee shops)',
+    ],
     painPoints: [
       'Misses home and family',
       'Poor connectivity — often pays out of pocket to stay in touch',
@@ -213,8 +218,9 @@ export const ER_BOK_PERSONAS: ErBoKPersona[] = [
     role: 'Pipefitter',
     age: 40,
     gender: 'Male',
-    relationship: 'Divorced with child',
-    kids: 'With child',
+    relationship: 'Divorced – with child',
+    // kids deliberately omitted so the workplace stat doesn't render
+    // "Divorced – with child · With child" via the synth mapper.
     experience: '7 years in the industry',
     quote: 'Well, one needs a job to get the bills paid…',
     generalDescription:

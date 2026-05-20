@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { momentHeroRasterFromExcel } from '@/lib/data/momentHeroRasterResolve';
+import { resolveJourneyMomentImage } from '@/lib/data/journeyMomentVisuals';
 import type { JourneyStep } from '@/lib/data/types';
 import { JourneyStepIcon } from './JourneyStepIcon';
 
@@ -8,14 +8,18 @@ interface Props {
   personaId: string;
   steps: JourneyStep[];
   accentColor: string;
+  /** Optional builder used to derive each moment's link target. Defaults to
+   *  `/{area}/{personaId}/moment/{stepId}`. Pass a builder to point the
+   *  timeline at an alternative route (e.g. the E&R-scoped moment view). */
+  momentHrefBuilder?: (stepId: string) => string;
 }
 
 /**
- * Horizontal strip of moments above the journey map. Thumbnails come **only** from the
- * Personae Journey Excel sheet (**Image left moment** → `MOMENT_HERO_RASTER` via ingest).
- * If a row has no copied raster yet, shows gradient + `JourneyStepIcon` (no other image source).
+ * Horizontal strip of moments above the journey map. Thumbnails prefer **legacy iso SVG**
+ * beats (`journeys/moments/…`) so we do not show Excel persona portraits; if no SVG is
+ * resolved for a step, falls back to Excel raster, then gradient + `JourneyStepIcon`.
  */
-export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
+export function MomentTimeline({ area, personaId, steps, accentColor, momentHrefBuilder }: Props) {
   if (steps.length === 0) return null;
 
   return (
@@ -25,8 +29,10 @@ export function MomentTimeline({ area, personaId, steps, accentColor }: Props) {
         style={{ scrollbarWidth: 'thin' }}
       >
         {steps.map((step, i) => {
-          const href = `/${area}/${personaId}/moment/${step.id}`;
-          const thumb = momentHeroRasterFromExcel(personaId, step.id);
+          const href = momentHrefBuilder
+            ? momentHrefBuilder(step.id)
+            : `/${area}/${personaId}/moment/${step.id}`;
+          const thumb = resolveJourneyMomentImage(personaId, step.id, i);
           return (
             <li
               key={step.id}

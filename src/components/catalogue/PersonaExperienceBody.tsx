@@ -24,6 +24,10 @@ export interface PersonaExperienceBodyProps {
   personaHref: string;
   /** Override favourites store id when `persona.id` is synthetic (defaults to `${persona.area}/${persona.id}`). */
   favouriteId?: string;
+  /** Override the link target for each moment (timeline + journey-map pins).
+   *  Defaults to `/{linkArea}/{linkPersonaId}/moment/{stepId}`. The E&R BoK
+   *  flow passes a builder pointing at `/er/personae/{slug}/moment/{stepId}`. */
+  momentHrefBuilder?: (stepId: string) => string;
 }
 
 export function PersonaExperienceBody({
@@ -35,9 +39,16 @@ export function PersonaExperienceBody({
   linkPersonaId,
   personaHref,
   favouriteId,
-}: PersonaExperienceBodyProps) {
+  momentHrefBuilder,
+  extraStepLookup,
+}: PersonaExperienceBodyProps & { extraStepLookup?: Record<string, JourneyStep> }) {
+  // Allow callers to pass an extra step lookup (e.g. the E&R BoK steps which
+  // live outside the catalogue's Excel-ingested map) so the journey renders
+  // moments that aren't part of `journeySteps`.
+  const lookupStep = (sid: string): JourneyStep | undefined =>
+    journeySteps[sid] ?? extraStepLookup?.[sid];
   const steps = persona.steps
-    .map((sid) => journeySteps[sid])
+    .map(lookupStep)
     .filter((s): s is JourneyStep => Boolean(s));
 
   const journeyModuleNames = new Set(steps.flatMap((s) => s.modules));
@@ -108,6 +119,7 @@ export function PersonaExperienceBody({
                 personaId={linkPersonaId}
                 steps={steps}
                 accentColor={persona.color}
+                momentHrefBuilder={momentHrefBuilder}
               />
 
               <div className="mt-6">
@@ -117,6 +129,7 @@ export function PersonaExperienceBody({
                   persona={linkPersonaId}
                   journeyMapImage={persona.journeyMapImage}
                   journeyHotspots={persona.journeyHotspots}
+                  momentHrefBuilder={momentHrefBuilder}
                 />
                 <div className="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p

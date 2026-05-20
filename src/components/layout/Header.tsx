@@ -1,8 +1,6 @@
 'use client';
 
 import {
-  Clock,
-  Factory,
   FirstAid,
   Heart,
   House,
@@ -11,7 +9,6 @@ import {
   MapTrifold,
   SquaresFour,
   Trophy,
-  TreeStructure,
   UsersThree,
   X,
 } from '@phosphor-icons/react';
@@ -99,28 +96,10 @@ function navErMiniSite(mode: ErLinkMode): NavItem[] {
       matches: (p) => p === erPaths.needs(mode) || p === '/er/needs',
     },
     {
-      href: erPaths.ifm(mode),
-      label: 'IFM',
-      Icon: TreeStructure,
-      matches: (p) => p === erPaths.ifm(mode) || p === '/er/ifm',
-    },
-    {
       href: erPaths.journey(mode),
       label: 'Journey',
       Icon: MapTrifold,
       matches: (p) => p === erPaths.journey(mode) || p === '/er/journey',
-    },
-    {
-      href: erPaths.moments(mode),
-      label: 'Moments',
-      Icon: Clock,
-      matches: (p) => p === erPaths.moments(mode) || p === '/er/moments',
-    },
-    {
-      href: erPaths.operatorLens(mode),
-      label: 'Operator',
-      Icon: Factory,
-      matches: (p) => p === erPaths.operatorLens(mode) || p === '/er/operator',
     },
     {
       href: '/solutions',

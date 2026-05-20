@@ -56,16 +56,16 @@ export default async function ErPersonaePage() {
               the Work catalogue (moments, map, modules).
             </p>
 
-            {work.isometricUrl ? (
-              <div className="mt-4 flex min-h-0 flex-1 items-center justify-center lg:mt-6">
-                <img
-                  src={work.isometricUrl}
-                  alt={`${work.label} isometric illustration`}
-                  className="max-h-full w-auto max-w-full object-contain"
-                  loading="eager"
-                />
-              </div>
-            ) : null}
+            {/* E&R-specific isometric: open-pit mine site (overrides the Work area's
+                building isometric so the visual matches the segment's stories). */}
+            <div className="mt-4 flex min-h-0 flex-1 items-center justify-center lg:mt-6">
+              <img
+                src="/images/catalogue/assets/areas/er-area-info-iso.png"
+                alt="Energy & Resources isometric illustration — open-pit mining site"
+                className="max-h-full w-auto max-w-full object-contain"
+                loading="eager"
+              />
+            </div>
           </section>
 
           <section className="flex min-h-0 flex-col">
