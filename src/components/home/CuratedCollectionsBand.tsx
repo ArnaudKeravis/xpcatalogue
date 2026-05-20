@@ -189,6 +189,7 @@ function buildPreviews(solutions: Solution[]): Record<
   const init: Record<SolutionCollection, { count: number; names: string[] }> = {
     'standard-offer': { count: 0, names: [] },
     'big-bets': { count: 0, names: [] },
+    er: { count: 0, names: [] },
   };
 
   for (const s of solutions) {

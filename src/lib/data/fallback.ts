@@ -15,6 +15,7 @@ import {
 import { mergeTddiV2IntoCatalogue } from './tddiV2CatalogueMerge';
 import { modulesRecordFromExcelSoT, wireModuleSolutionIdsFromExcelLinks } from './modulesExcelMerge';
 import { buildSolutionsCatalogueFromExcel } from './solutionsFromExcel';
+import { ER_SOLUTIONS } from './er/erSolutions';
 import { applyPersonaMomentModuleFill } from './personaMomentModules';
 import { JOURNEY_STEPS_FROM_EXCEL } from './journeyStepsFromExcel.generated';
 import { cloneWhiteCollarJourneyStepsForExempleMinor } from './journeyStepClone';
@@ -597,6 +598,14 @@ for (const [id, step] of Object.entries(JOURNEY_STEPS_FROM_EXCEL)) {
 
 /** Classeur `Solutions.xlsx` → canonical solution catalogue (single source of truth). */
 const SOLUTIONS_FROM_EXCEL_CLASSEUR = buildSolutionsCatalogueFromExcel();
+
+/**
+ * Editorially-authored Energy & Resources benchmark solutions (Canada, India,
+ * Chile, UK & Ireland). Concatenated after the Excel catalogue so they appear
+ * on `/solutions` and are picked up by `enrichSolutionsWithCollections` to
+ * receive the `'er'` collection pill.
+ */
+const SOLUTIONS_WITH_ER = [...SOLUTIONS_FROM_EXCEL_CLASSEUR, ...ER_SOLUTIONS];
 const MODULES_WITH_EXCEL_SOT = wireModuleSolutionIdsFromExcelLinks(
   modulesRecordFromExcelSoT(),
   SOLUTIONS_FROM_EXCEL_CLASSEUR,
@@ -625,7 +634,7 @@ export const STEP_LABEL: Record<string, string> = Object.fromEntries(
 );
 
 export const FALLBACK_DATA: CatalogueData = {
-  solutions: enrichSolutionsWithCollections(SOLUTIONS_FROM_EXCEL_CLASSEUR),
+  solutions: enrichSolutionsWithCollections(SOLUTIONS_WITH_ER),
   personas: MERGED_PERSONAS,
   modules: MODULES_WITH_EXCEL_SOT,
   areas: AREA_CONFIGS,

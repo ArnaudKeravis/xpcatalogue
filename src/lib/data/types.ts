@@ -10,7 +10,7 @@ export type SolutionStatus = 'Scaled' | 'Scaling' | 'Pilot' | 'Study';
  *
  * Source of truth: TDDI Standard Offer deck + *Big Bets 2026* innovation mapping.
  */
-export type SolutionCollection = 'standard-offer' | 'big-bets';
+export type SolutionCollection = 'standard-offer' | 'big-bets' | 'er';
 
 export type SolutionType =
   | 'Application'

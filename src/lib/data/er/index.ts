@@ -22,3 +22,4 @@ export {
   isErBoKStepId,
 } from './erBoKJourney';
 export type { ErBoKStepId } from './erBoKJourney';
+export { ER_SOLUTIONS, ER_SOLUTION_IDS } from './erSolutions';

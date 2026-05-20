@@ -8,6 +8,7 @@ import {
   LinkSimple,
   Phone,
   LightbulbFilament,
+  Lightning,
   TrendUp,
   Trophy,
   User,
@@ -114,7 +115,8 @@ function TitleAndMeta({
         <div className="flex flex-wrap gap-2">
           {current.collections.map((c) => {
             const meta = COLLECTION_META[c];
-            const Icon = c === 'big-bets' ? LightbulbFilament : Trophy;
+            const Icon =
+              c === 'big-bets' ? LightbulbFilament : c === 'er' ? Lightning : Trophy;
             return (
               <Link
                 key={c}

@@ -13,6 +13,7 @@
  */
 
 import type { Solution, SolutionCollection } from './types';
+import { ER_SOLUTION_IDS } from './er/erSolutions';
 
 const BLOCKBUSTER_HASHTAG = '#blockbuster';
 
@@ -111,6 +112,13 @@ export const BIG_BETS_IDS: readonly string[] = [
   'blueOceanUvd',
 ] as const;
 
+/**
+ * **E&R** — Energy & Resources benchmark innovations (Canada, India, Chile, UK & Ireland).
+ * Authored in `src/lib/data/er/erSolutions.ts`; this re-export keeps the
+ * `COLLECTION_INDEX` self-contained and avoids cross-file circular drift.
+ */
+export const ER_IDS: readonly string[] = ER_SOLUTION_IDS;
+
 /* ── Reverse index (id → collections[]) ─────────────────────────────────── */
 
 const COLLECTION_INDEX: Map<string, SolutionCollection[]> = (() => {
@@ -125,6 +133,7 @@ const COLLECTION_INDEX: Map<string, SolutionCollection[]> = (() => {
   };
   STANDARD_OFFER_IDS.forEach((id) => push(id, 'standard-offer'));
   BIG_BETS_IDS.forEach((id) => push(id, 'big-bets'));
+  ER_IDS.forEach((id) => push(id, 'er'));
   return m;
 })();
 
@@ -159,7 +168,7 @@ export interface CollectionMeta {
   /** Solid accent colour (matches gradient anchor). */
   accent: string;
   /** Phosphor icon name — resolved lazily in client components to keep SSR lean. */
-  icon: 'Trophy' | 'Lightbulb';
+  icon: 'Trophy' | 'Lightbulb' | 'Lightning';
   /** Primary editorial link (home tiles, header). */
   href: string;
   /** Filtered catalogue URL when it differs from `href` (e.g. Standard Offer story vs grid). */
@@ -193,9 +202,22 @@ export const COLLECTION_META: Record<SolutionCollection, CollectionMeta> = {
     href: '/big-bets',
     catalogueHref: '/solutions?collection=big-bets#solutions-catalogue',
   },
+  er: {
+    key: 'er',
+    label: 'E&R',
+    shortLabel: 'E&R',
+    tagline: 'Energy & Resources innovations',
+    description:
+      'Field-tested innovations from Sodexo Energy & Resources teams across Canada, India, Chile and the UK & Ireland — remote-camp operations, defence dining, fuel retail HSE and frictionless retail.',
+    gradient: 'linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)',
+    accent: '#ea580c',
+    icon: 'Lightning',
+    href: '/solutions?collection=er#solutions-catalogue',
+    catalogueHref: '/solutions?collection=er#solutions-catalogue',
+  },
 };
 
-export const COLLECTION_KEYS: SolutionCollection[] = ['standard-offer', 'big-bets'];
+export const COLLECTION_KEYS: SolutionCollection[] = ['standard-offer', 'big-bets', 'er'];
 
 /** Type-guard helper for URL params. */
 export function parseCollectionKey(raw: string | undefined): SolutionCollection | undefined {
