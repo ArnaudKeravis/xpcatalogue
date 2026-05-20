@@ -24,10 +24,12 @@ export interface PersonaExperienceBodyProps {
   personaHref: string;
   /** Override favourites store id when `persona.id` is synthetic (defaults to `${persona.area}/${persona.id}`). */
   favouriteId?: string;
-  /** Override the link target for each moment (timeline + journey-map pins).
-   *  Defaults to `/{linkArea}/{linkPersonaId}/moment/{stepId}`. The E&R BoK
-   *  flow passes a builder pointing at `/er/personae/{slug}/moment/{stepId}`. */
-  momentHrefBuilder?: (stepId: string) => string;
+  /** Override the link target prefix for each moment (timeline + journey-map
+   *  pins). The component appends `{stepId}` to this base. Defaults to
+   *  `/{linkArea}/{linkPersonaId}/moment/`. The E&R BoK flow passes
+   *  `/er/personae/{slug}/moment/`. Must be a plain string so it can cross
+   *  the server→client component boundary (functions are not serialisable). */
+  momentHrefBase?: string;
 }
 
 export function PersonaExperienceBody({
@@ -39,7 +41,7 @@ export function PersonaExperienceBody({
   linkPersonaId,
   personaHref,
   favouriteId,
-  momentHrefBuilder,
+  momentHrefBase,
   extraStepLookup,
 }: PersonaExperienceBodyProps & { extraStepLookup?: Record<string, JourneyStep> }) {
   // Allow callers to pass an extra step lookup (e.g. the E&R BoK steps which
@@ -119,7 +121,7 @@ export function PersonaExperienceBody({
                 personaId={linkPersonaId}
                 steps={steps}
                 accentColor={persona.color}
-                momentHrefBuilder={momentHrefBuilder}
+                momentHrefBase={momentHrefBase}
               />
 
               <div className="mt-6">
@@ -129,7 +131,7 @@ export function PersonaExperienceBody({
                   persona={linkPersonaId}
                   journeyMapImage={persona.journeyMapImage}
                   journeyHotspots={persona.journeyHotspots}
-                  momentHrefBuilder={momentHrefBuilder}
+                  momentHrefBase={momentHrefBase}
                 />
                 <div className="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p

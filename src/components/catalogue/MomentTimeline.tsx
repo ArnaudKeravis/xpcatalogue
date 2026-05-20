@@ -8,10 +8,10 @@ interface Props {
   personaId: string;
   steps: JourneyStep[];
   accentColor: string;
-  /** Optional builder used to derive each moment's link target. Defaults to
-   *  `/{area}/{personaId}/moment/{stepId}`. Pass a builder to point the
-   *  timeline at an alternative route (e.g. the E&R-scoped moment view). */
-  momentHrefBuilder?: (stepId: string) => string;
+  /** Optional base URL the timeline appends `{stepId}` to (e.g.
+   *  `"/er/personae/raul/moment/"`). Defaults to
+   *  `/{area}/{personaId}/moment/`. */
+  momentHrefBase?: string;
 }
 
 /**
@@ -19,8 +19,9 @@ interface Props {
  * beats (`journeys/moments/…`) so we do not show Excel persona portraits; if no SVG is
  * resolved for a step, falls back to Excel raster, then gradient + `JourneyStepIcon`.
  */
-export function MomentTimeline({ area, personaId, steps, accentColor, momentHrefBuilder }: Props) {
+export function MomentTimeline({ area, personaId, steps, accentColor, momentHrefBase }: Props) {
   if (steps.length === 0) return null;
+  const baseHref = momentHrefBase ?? `/${area}/${personaId}/moment/`;
 
   return (
     <div aria-label="Day at a glance" className="relative">
@@ -29,9 +30,7 @@ export function MomentTimeline({ area, personaId, steps, accentColor, momentHref
         style={{ scrollbarWidth: 'thin' }}
       >
         {steps.map((step, i) => {
-          const href = momentHrefBuilder
-            ? momentHrefBuilder(step.id)
-            : `/${area}/${personaId}/moment/${step.id}`;
+          const href = `${baseHref}${step.id}`;
           const thumb = resolveJourneyMomentImage(personaId, step.id, i);
           return (
             <li

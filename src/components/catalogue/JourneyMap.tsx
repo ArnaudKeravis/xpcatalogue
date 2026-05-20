@@ -77,19 +77,16 @@ interface Props {
   persona: string;
   journeyMapImage?: string;
   journeyHotspots?: JourneyHotspot[];
-  /** Optional builder used to derive the link target for each moment pin.
-   *  Defaults to `/{area}/{persona}/moment/{stepId}`. Pass a builder to
-   *  redirect into an alternative route (e.g. the E&R-scoped moment view). */
-  momentHrefBuilder?: (stepId: string) => string;
+  /** Optional base URL the client appends `{stepId}` to. Server components
+   *  cannot pass functions to a `'use client'` boundary, so we serialise the
+   *  link template as a plain string (e.g. `"/er/personae/raul/moment/"`).
+   *  Defaults to `/{area}/{persona}/moment/`. */
+  momentHrefBase?: string;
 }
 
 function StepIcon({ stepId, className }: { stepId: string; className?: string }) {
   const Cmp = STEP_ICONS[stepId] ?? Car;
   return <Cmp className={className} weight="duotone" aria-hidden />;
-}
-
-function defaultMomentHref(area: string, persona: string, stepId: string) {
-  return `/${area}/${persona}/moment/${stepId}`;
 }
 
 /**
@@ -119,10 +116,10 @@ export function JourneyMap({
   persona,
   journeyMapImage,
   journeyHotspots,
-  momentHrefBuilder,
+  momentHrefBase,
 }: Props) {
-  const buildMomentHref = (stepId: string) =>
-    momentHrefBuilder ? momentHrefBuilder(stepId) : defaultMomentHref(area, persona, stepId);
+  const baseHref = momentHrefBase ?? `/${area}/${persona}/moment/`;
+  const buildMomentHref = (stepId: string) => `${baseHref}${stepId}`;
   const reduceMotion = useReducedMotion();
   const canvasRef = useRef<HTMLDivElement>(null);
 

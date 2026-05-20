@@ -76,7 +76,7 @@ export default async function ErPersonaDetailPage({ params }: Props) {
       // and point moment links at the E&R-scoped detail route which knows
       // how to resolve them.
       extraStepLookup={ER_BOK_STEPS}
-      momentHrefBuilder={(stepId) => `/er/personae/${params.slug}/moment/${stepId}`}
+      momentHrefBase={`/er/personae/${params.slug}/moment/`}
     />
   );
 }
