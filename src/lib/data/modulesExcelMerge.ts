@@ -4,6 +4,7 @@
  */
 
 import type { Module, Solution } from './types';
+import { solutionForExcelLabel } from './moduleSolutions';
 import { MODULES_EXCEL_SOT, type ModulesExcelRow } from './modulesExcelSoT.generated';
 import { canonModuleName } from './xpFlowAdapter';
 
@@ -127,27 +128,22 @@ export function modulesRecordFromExcelSoT(): Record<string, Module> {
 }
 
 /**
- * Fills {@link Module.solutionIds} **only** from {@link Module.linkedSolutionsExcel}
- * (Modules sheet Column C), in list order, matching each label to {@link Solution.name}
- * (trimmed) in the given catalogue. No other source contributes ids.
+ * Fills {@link Module.solutionIds} from {@link Module.linkedSolutionsExcel}
+ * (Modules sheet Column C), in list order, using the same resolution as {@link solutionsForModule}.
  */
 export function wireModuleSolutionIdsFromExcelLinks(
   modules: Record<string, Module>,
   solutions: readonly Solution[],
 ): Record<string, Module> {
-  const byName = new Map<string, string>();
-  for (const s of solutions) {
-    byName.set(s.name.trim(), s.id);
-  }
   const out: Record<string, Module> = {};
   for (const [key, mod] of Object.entries(modules)) {
     const ids: string[] = [];
     const seen = new Set<string>();
     for (const label of mod.linkedSolutionsExcel ?? []) {
-      const id = byName.get(label.trim());
-      if (id && !seen.has(id)) {
-        seen.add(id);
-        ids.push(id);
+      const sol = solutionForExcelLabel(label, solutions);
+      if (sol && !seen.has(sol.id)) {
+        seen.add(sol.id);
+        ids.push(sol.id);
       }
     }
     out[key] = { ...mod, solutionIds: ids };

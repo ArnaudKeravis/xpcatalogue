@@ -48,7 +48,9 @@ export function canonModuleName(name: string): string {
 const SOLUTION_ALIASES: Record<string, string> = {
   // Wording variants in the Excel
   'nespresso intervallo': 'intervalloNespresso',
+  'nespresso - intervallo': 'intervalloNespresso',
   'intervallo- nespresso': 'intervalloNespresso',
+  'intervallo-nespresso': 'intervalloNespresso',
   'neat frame': 'neatFrame',
   neatframe: 'neatFrame',
   'neat frame- digital reception': 'neatFrame',
@@ -82,6 +84,12 @@ const SOLUTION_ALIASES: Record<string, string> = {
   visionaries777: 'visionaries777',
   placerai: 'placerAi',
   'placer.ai': 'placerAi',
+  soproai: 'soproAi',
+  'sopro ai': 'soproAi',
+  goodbytz: 'goodBytz',
+  productswap: 'productSwap',
+  'product swap': 'productSwap',
+  zeroimpack: 'zeroimpack',
   'brand performance': 'brandPerformance',
   circularplace: 'circularPlace',
   'circular place': 'circularPlace',
