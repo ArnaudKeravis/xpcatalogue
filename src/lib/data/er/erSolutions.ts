@@ -17,6 +17,7 @@
  *   • E&R innovation catalogue Brazil.pptx
  *   • Government & E&R innovations template May 2026 UK&I.pptx
  *   • AU partner pages + Sodexo Australia case studies (May 2026)
+ *   • Robot_Autonomous Retail Store — March 2026.pdf (AiFi + Ottonomy, Gudai-Darri)
  */
 
 import type { Solution } from '@/lib/data/types';
@@ -872,6 +873,70 @@ export const ER_SOLUTIONS: Solution[] = [
     },
     regionsAndCountry: 'Australia',
     url: 'https://www.501fun.com/en-au/our-products/interactive-darts',
+    areas: ['work'],
+  },
+  {
+    id: 'aifi-autonomous-retail-gudai-darri-australia',
+    name: 'AiFi Autonomous Retail Store — Gudai-Darri',
+    module: 'Autonomous Store / Micro-market',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Robotics', '#FIFO', '#FrictionlessRetail', '#AiFi', '#MiningVillage'],
+    flags: ['🇦🇺'],
+    img: '🏪',
+    context:
+      'Australia’s first autonomous retail store at a mining village — owned and operated by Sodexo Australia at Rio Tinto Iron Ore Gudai-Darri village (Pilbara, WA), serving up to 800 FIFO residents and guests with technology from AiFi.',
+    description:
+      'Computer-vision autonomous retail tracks shoppers through the journey so residents complete purchases without a traditional checkout. A portable shipping-container fit-out (air-conditioned) offers 50+ cold beverages and 50+ snacks and confectionery, operating 24/7. Roughly one camera per square metre; AI sensors calculate payment when residents leave. The structure can relocate to new remote sites.',
+    kpis: [
+      { v: '800', l: 'Residents & guests served' },
+      { v: '100+', l: 'SKU types (beverages + snacks)' },
+      { v: '24/7', l: 'Unstaffed store hours' },
+      { v: 'Jan 2025', l: 'Pilot launch at Gudai-Darri' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Differentiated amenity for Rio Tinto FIFO villages — convenience and retail revenue without permanent checkout staffing in remote Pilbara conditions.',
+      consumer:
+        'Fast, frictionless shopping after shifts — grab-and-go without queues in a harsh, remote environment.',
+      sodexo:
+        'Portable container model scales across mining villages; builds on Sodexo-operated village retail and pairs with Ottobot last-mile delivery.',
+    },
+    regionsAndCountry: 'Australia — Gudai-Darri, Pilbara WA (Rio Tinto Iron Ore)',
+    areas: ['work'],
+  },
+  {
+    id: 'ottonomy-delivery-robot-gudai-darri-australia',
+    name: 'Ottobot Autonomous Delivery Robot — Gudai-Darri',
+    module: 'Delivery robots',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Pilot',
+    hashtags: ['#Robotics', '#FIFO', '#LastMile', '#Ottonomy', '#MyVillage'],
+    flags: ['🇦🇺'],
+    img: '🤖',
+    context:
+      'World’s first autonomous food and beverage delivery robot deployed at a mine-site village — trialled by Sodexo Australia at Rio Tinto Gudai-Darri, building on the AiFi autonomous retail store launched January 2025 at the same location.',
+    description:
+      'Ottobot by Ottonomy Inc. navigates premapped, geofenced village routes at walking speed, yielding to people, vehicles and obstacles. Residents order snacks, non-alcoholic drinks, meals and essentials via the My Village app; Sodexo staff load the insulated compartment. On arrival, a text message delivers a unique PIN to unlock the compartment. Initial pilot overseen by on-site Ottonomy; expansion subject to trial results. Brand partners include Coca-Cola, Red Bull, Mars and Smiths Chips alongside village menu items.',
+    kpis: [
+      { v: '1st', l: 'Mine-site village F&B delivery robot globally' },
+      { v: 'Walking speed', l: 'Geofenced autonomous routes' },
+      { v: 'PIN unlock', l: 'Secure compartment hand-off' },
+      { v: 'Pilot', l: 'On-site Ottonomy oversight phase' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Extends village amenity and choice without expanding fixed retail footprint — supports talent attraction in remote FIFO camps.',
+      consumer:
+        'Order to room or common areas; less queue time for meals and retail items across shifts.',
+      sodexo:
+        'Integrated with My Village app and the AiFi autonomous store pilot — a robotics stack for end-to-end remote convenience.',
+    },
+    regionsAndCountry: 'Australia — Gudai-Darri, Pilbara WA (Rio Tinto Iron Ore)',
     areas: ['work'],
   },
 
