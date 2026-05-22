@@ -38,6 +38,7 @@ export const PERSONA_FACE_URL: Record<string, string> = {
   "optimizer": "/images/catalogue/assets/personae/full/optimizer.png",
   "proactive-achiever": "/images/catalogue/assets/personae/full/proactive-achiever.png",
   "family-hero": "/images/catalogue/assets/personae/full/family-hero.png",
+  "social-experiencer": "/images/catalogue/assets/personae/full/social-experiencer.png",
   "privacy-seeker": "/images/catalogue/assets/personae/full/privacy-seeker.png",
   // ── E&R Client (Jordan, IFM sponsor) — synthetic persona slug is `client` ──
   "client": "/images/catalogue/assets/personae/full/er-client.png",
@@ -74,6 +75,7 @@ export const PERSONA_FULL_URL: Record<string, string> = {
   "optimizer": "/images/catalogue/assets/personae/full/optimizer.png",
   "proactive-achiever": "/images/catalogue/assets/personae/full/proactive-achiever.png",
   "family-hero": "/images/catalogue/assets/personae/full/family-hero.png",
+  "social-experiencer": "/images/catalogue/assets/personae/full/social-experiencer.png",
   "privacy-seeker": "/images/catalogue/assets/personae/full/privacy-seeker.png",
   // ── E&R Client (Jordan, IFM sponsor) — synthetic persona slug is `client` ──
   "client": "/images/catalogue/assets/personae/full/er-client.png",
@@ -105,4 +107,12 @@ export const PERSONA_LISTING_URL: Record<string, string> = {
   "vip-guest": "/images/catalogue/assets/personae/portrait/vip-guest.png",
   "white-collar": "/images/catalogue/assets/personae/portrait/white-collar.png",
   "exemple-minor": "/images/catalogue/assets/personae/portrait/white-collar.png",
+  // ── E&R personae listing cards (`/er/personae`) — reuse full editorial portraits ──
+  "remote-lifestyler": "/images/catalogue/assets/personae/portrait/remote-lifestyler.png",
+  "optimizer": "/images/catalogue/assets/personae/portrait/optimizer.png",
+  "proactive-achiever": "/images/catalogue/assets/personae/portrait/proactive-achiever.png",
+  "family-hero": "/images/catalogue/assets/personae/portrait/family-hero.png",
+  "social-experiencer": "/images/catalogue/assets/personae/portrait/social-experiencer.png",
+  "privacy-seeker": "/images/catalogue/assets/personae/portrait/privacy-seeker.png",
+  "client": "/images/catalogue/assets/personae/portrait/er-client.png",
 };

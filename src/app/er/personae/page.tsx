@@ -3,8 +3,7 @@ import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { PersonaPortraitCard } from '@/components/catalogue/PersonaPortraitCard';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
-import { ER_BOK_PERSONAS } from '@/lib/data/er';
-import { ER_CLIENT_BOK } from '@/lib/data/er';
+import { ER_BOK_PERSONAS, ER_CLIENT_BOK, erBoKAsPersona } from '@/lib/data/er';
 import { getCatalogueData } from '@/lib/notion';
 import { erPaths, readErLinkMode } from '@/lib/erNav';
 
@@ -17,6 +16,8 @@ export default async function ErPersonaePage() {
 
   const erLinkMode = readErLinkMode(headers());
   const operator = data.personas.find((p) => p.id === 'operator-work' && p.area === 'work');
+  const journeyTemplate = data.personas.find((p) => p.area === 'work' && p.id === 'white-collar');
+  if (!journeyTemplate) notFound();
 
   return (
     <div className="flex flex-1 flex-col" style={{ background: '#f4f6fb' }}>
@@ -61,7 +62,7 @@ export default async function ErPersonaePage() {
             <div className="mt-4 flex min-h-0 flex-1 items-center justify-center lg:mt-6">
               <img
                 src="/images/catalogue/assets/areas/er-area-info-iso.png"
-                alt="Energy & Resources isometric illustration — open-pit mining site"
+                alt="Energy & Resources isometric illustration — industrial campus"
                 className="max-h-full w-auto max-w-full object-contain"
                 loading="eager"
               />
@@ -86,24 +87,26 @@ export default async function ErPersonaePage() {
             </div>
 
             <Stagger className="mt-3 grid min-h-0 flex-1 grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:mt-4 lg:grid-cols-4">
-              {ER_BOK_PERSONAS.map((bp) => (
-                <StaggerItem key={bp.id} className="min-h-0">
-                  <BoKPortraitCard
-                    href={erPaths.persona(erLinkMode, bp.id)}
-                    profileKey={bp.profileKey}
-                    name={bp.name}
-                    role={bp.role}
-                    teaser={bp.generalDescription}
-                  />
-                </StaggerItem>
-              ))}
+              {ER_BOK_PERSONAS.map((bp) => {
+                const display = erBoKAsPersona(bp, journeyTemplate);
+                return (
+                  <StaggerItem key={bp.id} className="min-h-0">
+                    <PersonaPortraitCard
+                      persona={display}
+                      href={erPaths.persona(erLinkMode, bp.id)}
+                      areaConfig={work}
+                    />
+                  </StaggerItem>
+                );
+              })}
               <StaggerItem key="client" className="min-h-0">
-                <BoKPortraitCard
+                <PersonaPortraitCard
+                  persona={{
+                    ...erBoKAsPersona(ER_CLIENT_BOK, journeyTemplate),
+                    profileEyebrow: 'E&R · Client',
+                  }}
                   href={erPaths.persona(erLinkMode, 'client')}
-                  profileKey={ER_CLIENT_BOK.profileKey}
-                  name={ER_CLIENT_BOK.name}
-                  role={ER_CLIENT_BOK.role}
-                  teaser={ER_CLIENT_BOK.generalDescription}
+                  areaConfig={work}
                 />
               </StaggerItem>
               {operator ? (
@@ -118,61 +121,6 @@ export default async function ErPersonaePage() {
             </Stagger>
           </section>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function BoKPortraitCard({
-  href,
-  profileKey,
-  name,
-  role,
-  teaser,
-}: {
-  href: string;
-  profileKey: string;
-  name: string;
-  role: string;
-  teaser: string;
-}) {
-  return (
-    <div
-      className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-3xl bg-[var(--surface-card)] transition-[transform,box-shadow] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:shadow-[var(--shadow-hover)]"
-      style={{ boxShadow: 'var(--shadow-tile)' }}
-    >
-      <Link
-        href={href}
-        className="absolute inset-0 z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--blue-primary)]"
-        aria-label={`Open ${name} profile`}
-      />
-      <div className="relative min-h-0 flex-1 overflow-hidden bg-gradient-to-br from-[#0f2744] via-[#123a5c] to-[#0d3d35] p-4">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-40"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle, rgba(255,255,255,0.14) 1px, transparent 1px)',
-            backgroundSize: '10px 10px',
-          }}
-          aria-hidden
-        />
-        <span className="relative z-[1] rounded-full bg-white/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-white/85">
-          {profileKey}
-        </span>
-        <div className="relative z-[1] mt-6 flex h-16 w-16 items-center justify-center rounded-full text-xl font-extrabold text-white shadow-lg ring-2 ring-white/30">
-          {name[0]}
-        </div>
-        <p className="relative z-[1] mt-4 truncate text-lg font-extrabold text-white">{name}</p>
-        <p className="relative z-[1] truncate text-xs font-medium text-white/80">{role}</p>
-        <p className="relative z-[1] mt-2 line-clamp-3 text-xs leading-relaxed text-white/75">{teaser}</p>
-      </div>
-      <div className="flex flex-shrink-0 items-center justify-between gap-2 border-t border-[var(--grey-border)] bg-white px-4 py-2.5">
-        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--blue-primary)]">
-          Open journey
-        </span>
-        <span className="text-[var(--blue)]/50 transition-transform group-hover:translate-x-0.5" aria-hidden>
-          →
-        </span>
       </div>
     </div>
   );
