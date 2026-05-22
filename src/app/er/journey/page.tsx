@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ER_HOME_TO_HOME_JOURNEY } from '@/lib/data/er';
+import { ER_BOK_JOURNEY_MAP_IMAGE, ER_HOME_TO_HOME_JOURNEY } from '@/lib/data/er';
 
 export const revalidate = 3600;
 
@@ -21,9 +21,26 @@ export default function ErJourneyPage() {
       </h1>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[var(--blue)]/80">
         Canonical journey structure from the BoK (section 4). Persona heatmaps in the PDF colour which pains
-        matter most per profile — use this list as shared steps; drop in exported journey artwork per persona
-        when ready.
+        matter most per profile — the phases below follow the same home-to-home arc shown on the isometric map.
       </p>
+
+      <figure className="mt-8 overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white shadow-[var(--shadow-sm)]">
+        <div className="relative aspect-[16/10] w-full bg-[#f4f6fb]">
+          <img
+            src={ER_BOK_JOURNEY_MAP_IMAGE}
+            alt="E&R home-to-home journey isometric — departure from home through commute, welcome, workplace, food and beverage, wellbeing and bed time"
+            className="h-full w-full object-contain object-center"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <figcaption
+          className="border-t border-[var(--grey-border)] px-4 py-2.5 text-center text-[11px] font-medium text-[var(--blue)]/65"
+          style={{ fontFamily: 'var(--font-body)' }}
+        >
+          BoK journey map — seven moments from departure from home to bed time (shared across E&amp;R personae)
+        </figcaption>
+      </figure>
 
       <ol className="mt-10 space-y-6">
         {ER_HOME_TO_HOME_JOURNEY.map((phase, idx) => (
