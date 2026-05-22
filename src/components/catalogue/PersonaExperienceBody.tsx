@@ -30,6 +30,14 @@ export interface PersonaExperienceBodyProps {
    *  `/er/personae/{slug}/moment/`. Must be a plain string so it can cross
    *  the server→client component boundary (functions are not serialisable). */
   momentHrefBase?: string;
+  /** Hide the “Who am I” profile block (segment-level journey page). */
+  hideWhoSection?: boolean;
+  /** Hide favourite + share row above the grid. */
+  hideHeaderActions?: boolean;
+  /** Override journey section title (default: “What I do”). */
+  journeyTitle?: string;
+  /** Override journey section subtitle. */
+  journeySubtitle?: string;
 }
 
 export function PersonaExperienceBody({
@@ -42,8 +50,13 @@ export function PersonaExperienceBody({
   personaHref,
   favouriteId,
   momentHrefBase,
+  hideWhoSection = false,
+  hideHeaderActions = false,
+  journeyTitle = 'What I do',
+  journeySubtitle,
   extraStepLookup,
 }: PersonaExperienceBodyProps & { extraStepLookup?: Record<string, JourneyStep> }) {
+  const momentBase = momentHrefBase ?? `/${linkArea}/${linkPersonaId}/moment/`;
   // Allow callers to pass an extra step lookup (e.g. the E&R BoK steps which
   // live outside the catalogue's Excel-ingested map) so the journey renders
   // moments that aren't part of `journeySteps`.
@@ -71,47 +84,54 @@ export function PersonaExperienceBody({
   return (
     <div className="flex flex-1 flex-col bg-[var(--surface)]">
       <div className="mx-auto w-full max-w-[1600px] flex-1 px-4 pb-16 pt-4 md:px-10 lg:px-14">
-        <div
-          className="flex flex-wrap items-center justify-end gap-2 pb-4 print:hidden"
-          style={{ fontFamily: 'var(--font-body)' }}
-        >
-          <FavouriteButton
-            kind="persona"
-            id={favKey}
-            label={persona.fullName}
-            href={personaHref}
-            meta={`${areaConfig.label} · ${persona.role}`}
-            variant="pill"
-          />
-          <ShareButton
-            title={`${persona.fullName} — ${areaConfig.label}`}
-            text={`${persona.role} · ${persona.name}`}
-            url={personaHref}
-          />
-        </div>
+        {hideHeaderActions ? null : (
+          <div
+            className="flex flex-wrap items-center justify-end gap-2 pb-4 print:hidden"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            <FavouriteButton
+              kind="persona"
+              id={favKey}
+              label={persona.fullName}
+              href={personaHref}
+              meta={`${areaConfig.label} · ${persona.role}`}
+              variant="pill"
+            />
+            <ShareButton
+              title={`${persona.fullName} — ${areaConfig.label}`}
+              text={`${persona.role} · ${persona.name}`}
+              url={personaHref}
+            />
+          </div>
+        )}
 
         <div className="grid gap-8 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
-          <PersonaSideNav accentColor={persona.color} />
+          <PersonaSideNav accentColor={persona.color} hiddenSections={hideWhoSection ? ['who'] : undefined} />
 
           <div className="flex flex-col gap-14">
-            <section id="who" aria-labelledby="section-who-heading" className="scroll-mt-28">
-              <SectionHeader
-                number="01"
-                eyebrow="Persona"
-                title="Who am I"
-                subtitle={`${persona.fullName} — ${persona.role}. ${areaConfig.label}.`}
-                accentColor={persona.color}
-                headingId="section-who-heading"
-              />
-              <PersonaProfile persona={persona} area={areaConfig} />
-            </section>
+            {hideWhoSection ? null : (
+              <section id="who" aria-labelledby="section-who-heading" className="scroll-mt-28">
+                <SectionHeader
+                  number="01"
+                  eyebrow="Persona"
+                  title="Who am I"
+                  subtitle={`${persona.fullName} — ${persona.role}. ${areaConfig.label}.`}
+                  accentColor={persona.color}
+                  headingId="section-who-heading"
+                />
+                <PersonaProfile persona={persona} area={areaConfig} />
+              </section>
+            )}
 
             <section id="journey" aria-labelledby="section-journey-heading" className="scroll-mt-28">
               <SectionHeader
-                number="02"
+                number={hideWhoSection ? '01' : '02'}
                 eyebrow="Journey"
-                title="What I do"
-                subtitle={`A day in ${persona.name}'s shoes — ${steps.length} moments that shape the experience.`}
+                title={journeyTitle}
+                subtitle={
+                  journeySubtitle ??
+                  `A day in ${persona.name}'s shoes — ${steps.length} moments that shape the experience.`
+                }
                 accentColor={persona.color}
                 headingId="section-journey-heading"
               />
@@ -155,7 +175,7 @@ export function PersonaExperienceBody({
 
             <section id="modules" aria-labelledby="section-modules-heading" className="scroll-mt-28">
               <SectionHeader
-                number="03"
+                number={hideWhoSection ? '02' : '03'}
                 eyebrow="Modules"
                 title="How Sodexo can help"
                 subtitle={
@@ -209,7 +229,7 @@ export function PersonaExperienceBody({
                                 {momentLinks.map((m) => (
                                   <Link
                                     key={m.id}
-                                    href={`/${linkArea}/${linkPersonaId}/moment/${m.id}`}
+                                    href={`${momentBase}${m.id}`}
                                     className="rounded-full bg-[#f0f4ff] px-2 py-0.5 text-[9px] font-semibold text-[var(--blue-solid)] ring-1 ring-[var(--grey-border)] transition-colors hover:bg-[var(--blue)] hover:text-white hover:ring-[var(--blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
                                   >
                                     {m.label}

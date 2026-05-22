@@ -34,7 +34,6 @@ export function erBoKAsPersona(bok: ErBoKPersona, journeyTemplate: Persona): Per
     role: bok.role,
     quote: bok.quote,
     color,
-    photo: journeyTemplate.photo,
     profileEyebrow: 'E&R · BoK',
     platformSegmentLabel: 'Energy & Resources',
     workplaceStats: [
@@ -59,6 +58,7 @@ export function erBoKAsPersona(bok: ErBoKPersona, journeyTemplate: Persona): Per
     journeyMapImage: ER_BOK_JOURNEY_MAP_IMAGE,
     journeyHotspots: ER_BOK_HOTSPOTS,
     emoji: journeyTemplate.emoji,
+    photo: '',
   };
 }
 

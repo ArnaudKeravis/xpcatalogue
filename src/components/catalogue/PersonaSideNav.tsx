@@ -46,15 +46,20 @@ const STEPS: StepDef[] = [
 
 interface Props {
   accentColor: string;
+  /** Omit nav items (e.g. segment journey page without a persona profile). */
+  hiddenSections?: Array<(typeof STEPS)[number]['id']>;
 }
 
-export function PersonaSideNav({ accentColor }: Props) {
-  const [activeId, setActiveId] = useState<string>('who');
+export function PersonaSideNav({ accentColor, hiddenSections }: Props) {
+  const visibleSteps = hiddenSections?.length
+    ? STEPS.filter((s) => !hiddenSections.includes(s.id))
+    : STEPS;
+  const [activeId, setActiveId] = useState<string>(visibleSteps[0]?.id ?? 'who');
   const lastScrolledRef = useRef<string | null>(null);
 
   useEffect(() => {
     // Observe each section; mark whichever one is mostly in the viewport.
-    const elements = STEPS.map((s) => document.getElementById(s.id)).filter(
+    const elements = visibleSteps.map((s) => document.getElementById(s.id)).filter(
       (el): el is HTMLElement => Boolean(el),
     );
     if (elements.length === 0) return;
@@ -79,7 +84,7 @@ export function PersonaSideNav({ accentColor }: Props) {
     );
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [visibleSteps]);
 
   const handleClick = (id: string) => (ev: React.MouseEvent<HTMLAnchorElement>) => {
     const el = document.getElementById(id);
@@ -101,7 +106,8 @@ export function PersonaSideNav({ accentColor }: Props) {
         aria-label="Persona page sections"
         className="hidden lg:sticky lg:top-24 lg:flex lg:flex-col lg:gap-1.5 lg:self-start lg:pr-2"
       >
-        {STEPS.map(({ id, number, eyebrow, label, Icon }) => {
+        {visibleSteps.map(({ id, number, eyebrow, label, Icon }, index) => {
+          const displayNumber = String(index + 1).padStart(2, '0');
           const isActive = activeId === id;
           return (
             <a
@@ -143,7 +149,7 @@ export function PersonaSideNav({ accentColor }: Props) {
                   }
                   style={{ fontFamily: 'var(--font-body)' }}
                 >
-                  {number} · {eyebrow}
+                  {displayNumber} · {eyebrow}
                 </span>
                 <span
                   className={
@@ -167,7 +173,8 @@ export function PersonaSideNav({ accentColor }: Props) {
         className="sticky top-14 z-20 -mx-4 flex gap-2 overflow-x-auto border-b border-[var(--grey-border)] bg-[var(--surface)]/95 px-4 py-2 backdrop-blur md:-mx-10 md:px-10 lg:hidden"
         style={{ scrollbarWidth: 'thin' }}
       >
-        {STEPS.map(({ id, number, label, Icon }) => {
+        {visibleSteps.map(({ id, label, Icon }, index) => {
+          const displayNumber = String(index + 1).padStart(2, '0');
           const isActive = activeId === id;
           return (
             <a
@@ -191,7 +198,7 @@ export function PersonaSideNav({ accentColor }: Props) {
                 }
                 style={{ fontFamily: 'var(--font-body)' }}
               >
-                {number}
+                {displayNumber}
               </span>
               {label}
             </a>
