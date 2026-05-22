@@ -1,6 +1,6 @@
 /**
  * Energy & Resources innovations — authored from country benchmark decks
- * (Canada, India, Chile, Brazil, UK & Ireland — May 2026).
+ * (Canada, India, Chile, Brazil, Australia, UK & Ireland — May 2026).
  *
  * Each entry is surfaced in the global `/solutions` catalogue and carries the
  * `'er'` collection (assigned via `ER_SOLUTION_IDS` in
@@ -16,6 +16,7 @@
  *   • ER_innovations_template_Chile.pptx / ER_innovations_template_Chile 1.pptx
  *   • E&R innovation catalogue Brazil.pptx
  *   • Government & E&R innovations template May 2026 UK&I.pptx
+ *   • AU partner pages + Sodexo Australia case studies (May 2026)
  */
 
 import type { Solution } from '@/lib/data/types';
@@ -678,6 +679,199 @@ export const ER_SOLUTIONS: Solution[] = [
       sodexo: 'Each innovation priced for the client within the Offshore Living package.',
     },
     regionsAndCountry: 'Brazil',
+    areas: ['work'],
+  },
+
+  /* ── Australia ──────────────────────────────────────────────────────── */
+  {
+    id: 'soap-aid-camp-to-community-australia',
+    name: 'Soap Aid Camp to Community Programme',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Sustainability', '#Indigenous', '#FIFO', '#Hygiene'],
+    flags: ['🇦🇺'],
+    img: '🧼',
+    context:
+      'Sodexo Australia partners with Soap Aid and Woollahra Group (100% Aboriginal-owned) to recycle soap from FIFO accommodation across 100+ Energy & Resources sites, redistributing Healthy Hands bars to communities facing hygiene poverty.',
+    description:
+      'The Camp to Community programme collects usable soap from remote Fly-In Fly-Out sites for recycling instead of landfill, with Woollahra Group distributing recycled bars nationwide. The pilot at a single Sodexo-operated site collected 3,897 kg of soap for recycling in its first months.',
+    kpis: [
+      { v: '38,970', l: 'Recycled soap bars crafted' },
+      { v: '3,247', l: 'Children reached with hygiene education' },
+      { v: '5.62 tCO₂e', l: 'Emissions avoided' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Strengthens ESG and reconciliation outcomes while reducing waste from FIFO villages; blueprint for national scale across E&R sites.',
+      consumer:
+        'Essential hygiene products reach vulnerable communities; supports dignity and health in regional and remote Australia.',
+      sodexo:
+        'Partnership with Indigenous-owned Woollahra Group; aligns with Stretch RAP 2025–28 and $100M+ invested with 50+ Indigenous businesses.',
+    },
+    regionsAndCountry: 'Australia — FIFO E&R sites (national rollout)',
+    url: 'https://au.sodexo.com/insights/case-studies/2025/soap-aid-with-woollahra-group',
+    areas: ['work'],
+  },
+  {
+    id: 'iot-air-quality-monitoring-australia',
+    name: 'IoT Indoor Air Quality Monitoring',
+    module: '',
+    type: 'Software',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#IoT', '#Accommodation', '#HealthAndSafety'],
+    flags: ['🇦🇺'],
+    img: '🌬️',
+    context:
+      'Sodexo services 70+ mining villages across regional and remote Australia. At a remote FIFO site, mould growth in accommodation was linked to ventilation, design, ageing assets and occupant behaviour.',
+    description:
+      'IoT sensors remotely monitor humidity, ventilation, temperature and airborne pollutants — augmenting physical inspections and quantifying conditions before remediation. Dehumidification effectiveness is tracked in real time to protect resident health and client reputation.',
+    kpis: [
+      { v: '70+', l: 'Mining villages in scope' },
+      { v: '8,000+', l: 'Guests with improved accommodation experience' },
+      { v: 'Remote', l: 'Monitoring vs. manual gauge rounds' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Reduces structural defect risk, remediation cost and reputational damage from poor living conditions at remote sites.',
+      consumer:
+        'Healthier rooms — fewer mould-related symptoms and a more comfortable FIFO stay.',
+      sodexo:
+        'Data-led continuous improvement; supports talent attraction and retention in harsh-environment camps.',
+    },
+    regionsAndCountry: 'Australia — remote mining villages',
+    url: 'https://au.sodexo.com/insights/case-studies/iot-air-quality-monitoring',
+    areas: ['work'],
+  },
+  {
+    id: 'remote-water-monitoring-pilbara-australia',
+    name: 'Remote Water Monitoring — Pilbara',
+    module: '',
+    type: 'Software',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#IoT', '#Water', '#FIFO', '#Pilbara'],
+    flags: ['🇦🇺'],
+    img: '💧',
+    context:
+      'Safe potable water is non-negotiable for FIFO mining villages in Western Australia’s Pilbara, where groundwater is the main source. Sodexo manages supply and treatment for 32+ villages, towns and camps.',
+    description:
+      'IoT sensors and transmission equipment remotely monitor treatment plants — tracking levels, historical data and alarms so issues are addressed before supply is affected. Extended from a year-long trial to 13 Pilbara villages with 204 devices monitoring ~25 megalitres of flow daily.',
+    kpis: [
+      { v: '13', l: 'Remote villages live' },
+      { v: '204', l: 'IoT devices deployed' },
+      { v: '~25 ML', l: 'Water flow monitored daily' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Higher safety, efficiency and reliability; reduces human error from manual gauge monitoring across spread-out networks.',
+      consumer: 'Consistent, safe potable water across remote camp stays.',
+      sodexo:
+        'Foundation for further IoT scopes: pump-hour, sewer pit and wastewater plant monitoring.',
+    },
+    regionsAndCountry: 'Australia — Pilbara, Western Australia',
+    url: 'https://au.sodexo.com/insights/case-studies/sodexo-remote-water-monitoring',
+    areas: ['work'],
+  },
+  {
+    id: 'supercharged-shuffleboard-game-volt',
+    name: 'Supercharged Shuffleboard — Game Volt',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#CompetitiveSocialising', '#Entertainment', '#F&B'],
+    flags: ['🇦🇺'],
+    img: '🎯',
+    context:
+      'Technology-enabled competitive socialising is among the fastest-growing trends in hospitality and leisure — especially for extending dwell time and F&B revenue at camp recreation and village social hubs.',
+    description:
+      'Interactive electric shuffleboard merges classic gameplay with video-game scoring: sensor tracking, automated scoring, action replay and five game modes (Shuffle Reloaded, Wave Breaker, Danger Zone, Hoarders, Cluster Puck). Deployed in 200+ locations globally; up to 10 players per table.',
+    kpis: [
+      { v: '200+', l: 'Global installations' },
+      { v: '5', l: 'Interactive game modes' },
+      { v: 'Higher', l: 'Dwell time and F&B attach rate' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Proven ROI for operators; strong food and beverage sales as players order drinks and share food during sessions.',
+      consumer:
+        'Elevated competitive social experience without manual scorekeeping — accessible for mixed skill levels.',
+      sodexo:
+        'Partner solution for Australian E&R recreation fit-outs; requires stable power and 100 Mbps internet per unit.',
+    },
+    regionsAndCountry: 'Australia',
+    url: 'https://game-volt.com/supercharged-shuffleboard',
+    areas: ['work'],
+  },
+  {
+    id: 'batfast-entertainment-simulators-australia',
+    name: 'BatFast — Sports Entertainment Simulators',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaling',
+    hashtags: ['#CompetitiveSocialising', '#Sports', '#Entertainment'],
+    flags: ['🇦🇺'],
+    img: '🏏',
+    context:
+      'BatFast partners with hospitality and leisure operators to deliver cricket, baseball, tennis and multi-sport simulator experiences combined with food and beverage — a core competitive-socialising format for village recreation centres.',
+    description:
+      'Technology-enabled batting cages and sports simulators adapt to every skill level, driving group bookings, longer visits and F&B uplift. Reference concepts include Sixes Social Cricket, Sluggers and Wikit — proven eatertainment models BatFast powers globally.',
+    kpis: [
+      { v: 'Multi-sport', l: 'Cricket, baseball, tennis simulators' },
+      { v: 'Group', l: 'Bookings and events' },
+      { v: 'F&B', l: 'Revenue uplift with extended dwell time' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Differentiated recreation anchor that attracts footfall across the week and supports camp “great night out” positioning.',
+      consumer:
+        'Inclusive, Instagram-friendly group activity — no need to be a sports ace to enjoy.',
+      sodexo:
+        'Consultation-led fit-out partner for Australian E&R leisure and village social spaces.',
+    },
+    regionsAndCountry: 'Australia',
+    url: 'https://batfast.com/entertainment/',
+    areas: ['work'],
+  },
+  {
+    id: 'interactive-darts-501fun-australia',
+    name: 'Interactive Darts — 501fun',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#CompetitiveSocialising', '#AR', '#Entertainment'],
+    flags: ['🇦🇺'],
+    img: '🎱',
+    context:
+      '501fun’s Interactive Darts brings augmented-reality scoring and game modes to bars, hospitality and entertainment venues — a leading competitive-socialising format for Australian camp bars and recreation rooms.',
+    description:
+      'Uses Unicorn Smartboard® for precise autoscoring (no camera calibration), with rich graphics on a large screen, multiplayer modes and optional Social Replay®. Commercial console, steel darts and plug-and-play deployment for demanding leisure environments.',
+    kpis: [
+      { v: 'Autoscoring', l: 'Unicorn Smartboard® accuracy' },
+      { v: 'Multiplayer', l: 'Team and social game modes' },
+      { v: 'Higher', l: 'Dwell time and F&B orders' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'New revenue stream and group-booking magnet; transforms underused space into a vibrant social hub.',
+      consumer:
+        'High-energy, accessible darts with instant scoring — keeps groups engaged for hours.',
+      sodexo:
+        'AU-market partner (501fun en-au); includes 501 Hub platform and optional Social Replay®.',
+    },
+    regionsAndCountry: 'Australia',
+    url: 'https://www.501fun.com/en-au/our-products/interactive-darts',
     areas: ['work'],
   },
 
