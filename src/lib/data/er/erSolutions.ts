@@ -1,6 +1,6 @@
 /**
  * Energy & Resources innovations — authored from country benchmark decks
- * (Canada, India, Chile, UK & Ireland — May 2026).
+ * (Canada, India, Chile, Brazil, UK & Ireland — May 2026).
  *
  * Each entry is surfaced in the global `/solutions` catalogue and carries the
  * `'er'` collection (assigned via `ER_SOLUTION_IDS` in
@@ -13,7 +13,8 @@
  * Source decks (Design Community Hub → Forward Thinking / SoAppro / Benchmark):
  *   • 2026 ER innovations template Canada.pptx
  *   • ER innovations - India.pptx
- *   • ER_innovations_template_Chile.pptx
+ *   • ER_innovations_template_Chile.pptx / ER_innovations_template_Chile 1.pptx
+ *   • E&R innovation catalogue Brazil.pptx
  *   • Government & E&R innovations template May 2026 UK&I.pptx
  */
 
@@ -246,6 +247,122 @@ export const ER_SOLUTIONS: Solution[] = [
     areas: ['work'],
   },
   {
+    id: 'altonorte-laundry-automation-chile',
+    name: 'Altonorte — Laundry Service Automation',
+    module: '',
+    type: 'Software',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaling',
+    hashtags: ['#RFID', '#Laundry', '#Automation'],
+    flags: ['🇨🇱'],
+    img: '👕',
+    context:
+      'Digitisation of laundry service at Altonorte, Chile — RFID integration on clothing to trace washing frequency and maintain a digital record of uniform use.',
+    description:
+      'RFID-tagged garments enable automated, traceable recording of laundry cycles, simplifying uniform delivery and return while reducing waiting times and improving cost management with real-time data and alerts.',
+    kpis: [
+      { v: 'RFID', l: 'Traceable washing frequency per garment' },
+      { v: 'Digital', l: 'Automated use records' },
+      { v: 'Shorter', l: 'Waiting times for uniform handover' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Better cost management and real-time visibility on uniform lifecycle.',
+      consumer: 'Smoother uniform delivery and return with less queue time.',
+      sodexo:
+        'Indexed price in the FM-Soft service covering technology implementation and support.',
+    },
+    regionsAndCountry: 'Chile — Altonorte (in implementation)',
+    areas: ['work'],
+  },
+  {
+    id: 'cleaning-robot-minera-escondida-chile',
+    name: 'Cleaning Robot — Minera Escondida',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Automation', '#Robotics', '#Mining'],
+    flags: ['🇨🇱'],
+    img: '🤖',
+    context:
+      'Autonomous floor-cleaning equipment deployed at Minera Escondida, Chile — defined routes and schedules for frequent cleaning in mining compressors.',
+    description:
+      'Integration of autonomous cleaning robots for continuous, high-standard floor maintenance, freeing staff from repetitive tasks and dedicating labour to higher-value service work.',
+    kpis: [
+      { v: '15–20%', l: 'Product cost savings' },
+      { v: 'Continuous', l: 'High-standard cleaning coverage' },
+      { v: 'Staff', l: 'Redeployed to value-adding tasks' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Consistent cleaning standards with better cost management and real-time alerts.',
+      consumer: 'Cleaner, safer common areas across shifts.',
+      sodexo:
+        'Indexed FM-Soft pricing covering technology implementation and ongoing support.',
+    },
+    regionsAndCountry: 'Chile — Minera Escondida',
+    areas: ['work'],
+  },
+  {
+    id: 'digital-labels-chile',
+    name: 'Digital Labels — Food Service',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#DigitalSignage', '#FoodService', '#Nutrition'],
+    flags: ['🇨🇱'],
+    img: '🏷️',
+    context:
+      'Electronic labels at food pick-up points across Sodexo Chile E&R sites, displaying preparation name and calorie information at the point of withdrawal.',
+    description:
+      'Digital labels replace static signage with accurate, updatable communication on each dish — automating menu communication, smoothing service flow and improving consumer choice.',
+    kpis: [
+      { v: 'Accurate', l: 'Name + calorie info at point of service' },
+      { v: 'Automated', l: 'Menu communication' },
+      { v: 'Smoother', l: 'Service selection flow' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Better cost management with real-time data and operational alerts.',
+      consumer: 'Clearer information and a smoother food-selection experience.',
+      sodexo:
+        'Indexed price in the food service covering technology implementation and support.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'automatic-snacks-chile',
+    name: 'Automatic Snacks — Minera Escondida',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Pilot',
+    hashtags: ['#Vending', '#Frictionless', '#Snacks'],
+    flags: ['🇨🇱'],
+    img: '🍿',
+    context:
+      'Low-friction automatic snack dispensers piloted at Minera Escondida, Chile — mass user registration and traceability at withdrawal.',
+    description:
+      'Automated snack vending with safe, flexible dispensing that reduces operational tasks, extends service hours and provides traceable consumption records.',
+    kpis: [
+      { v: 'Traceable', l: 'Automated use recording' },
+      { v: 'Extended', l: 'Service hours availability' },
+      { v: 'Reduced', l: 'Operational tasks at point of sale' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Better cost management with per-consumption or unified-bag charging models.',
+      consumer: 'Flexible, automatic snack access outside core meal windows.',
+      sodexo:
+        'Charge per consumption (user score) or as a complete bag — pilot underway at Minera Escondida.',
+    },
+    regionsAndCountry: 'Chile — Minera Escondida (pilot)',
+    areas: ['work'],
+  },
+  {
     id: 'simply-to-go-chile',
     name: 'Simply To Go — Smart Cooler',
     module: '',
@@ -274,6 +391,293 @@ export const ER_SOLUTIONS: Solution[] = [
         'Per-transaction charge per user — a usage-based revenue model on top of contracted services.',
     },
     regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'kunstmann-draft-beer-chile',
+    name: 'Kunstmann — Non-Alcoholic Draft Beer',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Beverage', '#ElClub', '#Revenue'],
+    flags: ['🇨🇱'],
+    img: '🍺',
+    context:
+      'Integration of Chile’s leading Kunstmann draft beer in non-alcoholic format with dispenser and cooler, embedded in the El Club offer mix.',
+    description:
+      'Premium draft non-alcoholic beer on tap drives higher revenue and average transaction value versus canned or bottled alternatives, with unrestricted per-person consumption within site policies.',
+    kpis: [
+      { v: '+40%', l: 'Revenue & ATV vs. canned/bottled beer' },
+      { v: 'Unrestricted', l: 'Consumption per person (site policy)' },
+      { v: 'El Club', l: 'Integrated offer mix' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Stronger margin and revenue on beverage retail.',
+      consumer: 'Premium draft experience in a social club setting.',
+      sodexo: 'Paid per transaction by the user within the El Club mix.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'starbucks-automatic-chile',
+    name: 'Starbucks Automatic — El Club',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Coffee', '#Starbucks', '#ElClub'],
+    flags: ['🇨🇱'],
+    img: '☕',
+    context:
+      'Starbucks coffee shop offering integrated into a single automatic device at Sodexo Chile El Club and minimarket sites, ensuring product standardisation.',
+    description:
+      'One-touch Starbucks range in a compact footprint — increases revenue and ATV, expands the El Club cafeteria offer and pairs with additional retail products.',
+    kpis: [
+      { v: 'Higher', l: 'Revenue and ATV' },
+      { v: 'New', l: 'El Club cafeteria offer' },
+      { v: 'Combined', l: 'Sales uplift with add-on products' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Better margin and recognised brand pull on site.',
+      consumer: 'Consistent Starbucks quality without a full café footprint.',
+      sodexo:
+        'Product integrated into El Club and minimarket mix — paid per transaction by the user.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'recovery-capsules-sonic-drops-chile',
+    name: 'Recovery Capsules — Sonic Drops',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Wellbeing', '#Recovery', '#Workplace'],
+    flags: ['🇨🇱'],
+    img: '🧘',
+    context:
+      'Sonic Drops sensory immersion capsules at Chile E&R sites — vibration, sound and light for energy and wellbeing recovery in 20 minutes.',
+    description:
+      'Self-use immersion pods designed to reduce fatigue, improve cognitive attention and support workforce recovery between shifts on remote mining sites.',
+    kpis: [
+      { v: '20 min', l: 'Recovery session' },
+      { v: 'Lower', l: 'Reported fatigue' },
+      { v: 'Improved', l: 'Cognitive attention' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Workplace wellbeing amenity with equipment sales and monthly support per unit.',
+      consumer: 'Quick, private recovery without leaving the camp.',
+      sodexo: 'Equipment sales plus monthly support charges for each deployed unit.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'personal-care-services-chile',
+    name: 'Personal Care Services — On-Site',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Wellbeing', '#Retail', '#Workplace'],
+    flags: ['🇨🇱'],
+    img: '💇',
+    context:
+      'Dedicated spaces for hairdressing and manicure retail on Chile E&R camps, delivered by professionals addressing consumer needs on site.',
+    description:
+      'Personal care services improve the camp experience and satisfaction scores while generating incremental revenue through pay-per-transaction models.',
+    kpis: [
+      { v: 'Higher', l: 'Experience and satisfaction scores' },
+      { v: 'On-site', l: 'Professional retail delivery' },
+      { v: 'Revenue', l: 'Pay-per-transaction per user' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'FTE cost charged to client; users pay per service — workplace wellbeing uplift.',
+      consumer: 'Convenient grooming without travelling off site.',
+      sodexo: 'Dual model: client-funded FTE base plus transaction revenue.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'betterfly-effect-chile',
+    name: 'Betterfly Effect — Incentive App',
+    module: '',
+    type: 'Application',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaling',
+    hashtags: ['#Wellbeing', '#Engagement', '#Habits'],
+    flags: ['🇨🇱'],
+    img: '🦋',
+    context:
+      'Incentive app encouraging healthy habits and benefit usage at Collahuasi, Chile — building a motivated community with rewards for positive actions.',
+    description:
+      'Gamified wellbeing platform that improves behavioural use of services, reduces food-service waste and lifts satisfaction indicators across the camp.',
+    kpis: [
+      { v: 'Lower', l: 'Food-service waste' },
+      { v: 'Higher', l: 'Satisfaction indicators' },
+      { v: 'Better', l: 'Service utilisation behaviours' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Decreased turnover risk and better cost management with real-time data.',
+      consumer: 'Rewards for healthy habits and stronger sense of community.',
+      sodexo:
+        'Unit price per active user (minimum base), indexed to service price or as complementary offer.',
+    },
+    regionsAndCountry: 'Chile — Collahuasi (in implementation)',
+    areas: ['work'],
+  },
+  {
+    id: 'alarm-bracelet-gcare-chile',
+    name: 'Alarm Bracelet — GCare',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Safety', '#Psychosocial', '#Emergency'],
+    flags: ['🇨🇱'],
+    img: '🆘',
+    context:
+      'GCare alert bracelet deployed at Minera Escondida, Chile — mandatory preventive measure for psychosocial risk and violence-free work environments.',
+    description:
+      'Wearable alert system for immediate response to falls, accidents or medical emergencies, with exact location and protocol activation to meet safety regulations.',
+    kpis: [
+      { v: 'Immediate', l: 'Emergency response activation' },
+      { v: 'Exact', l: 'Location of incident' },
+      { v: '8–10%', l: 'Refundable fee modality for client investment' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client:
+        'Compliance with safe, violence-free workplace regulations; investment under refundable cost modality.',
+      consumer: 'Higher perceived safety and faster help in emergencies.',
+      sodexo: 'Client investment with refundable fee structure (8–10%).',
+    },
+    regionsAndCountry: 'Chile — Minera Escondida',
+    areas: ['work'],
+  },
+
+  /* ── Brazil ─────────────────────────────────────────────────────────── */
+  {
+    id: 'central-production-brazil',
+    name: 'Central Production — Culinary Base Model',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Study',
+    hashtags: ['#FoodProduction', '#Efficiency', '#CulinaryBase'],
+    flags: ['🇧🇷'],
+    img: '🍳',
+    context:
+      'Brazil E&R initiative to build central production centres using culinary bases to improve site efficiency, reduce costs and increase flexibility for consumers.',
+    description:
+      'Centralised food production with culinary-base foundations targets gross-margin improvement, lower labour cost and reduced raw-material waste, while giving sites more flexibility to serve diverse consumer needs.',
+    kpis: [
+      { v: 'GM', l: 'Improvement target' },
+      { v: 'Lower', l: 'Labour cost' },
+      { v: 'Reduced', l: 'RMC waste' },
+    ],
+    contact: 'Sodexo Brazil — E&R',
+    benefits: {
+      client: 'More efficient production model with cost and waste reduction at scale.',
+      consumer: 'Better, more flexible food offer on site.',
+      sodexo:
+        'Target: two central production units in FY27 — under evaluation for national rollout.',
+    },
+    regionsAndCountry: 'Brazil (under evaluation)',
+    areas: ['work'],
+  },
+  {
+    id: 'flagship-offshore-living-brazil',
+    name: 'Flagship Offshore Living — Onshore Experience',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#OffshoreLiving', '#Brand', '#Retail'],
+    flags: ['🇧🇷'],
+    img: '⚓',
+    context:
+      'Flagship onshore store in Brazil that simulates the Offshore Living experience clients and guests will receive offshore.',
+    description:
+      'A branded showcase space increases sales volume and brand coverage by letting clients experience the full Offshore Living proposition before deployment offshore.',
+    kpis: [
+      { v: 'Higher', l: 'Sales volume' },
+      { v: 'Broader', l: 'Brand coverage' },
+      { v: 'Experience', l: 'Onshore simulation of offshore offer' },
+    ],
+    contact: 'Sodexo Brazil — E&R',
+    benefits: {
+      client: 'Clear preview of offshore service quality and brand standards.',
+      consumer: 'Familiarity with the offer before boarding.',
+      sodexo: 'Revenue uplift by presenting the offshore experience onshore.',
+    },
+    regionsAndCountry: 'Brazil',
+    areas: ['work'],
+  },
+  {
+    id: 'hospitality-training-brazil',
+    name: 'Hospitality Training — Offshore Living',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Training', '#OffshoreLiving', '#Hospitality'],
+    flags: ['🇧🇷'],
+    img: '🎓',
+    context:
+      'Two-day in-person Offshore Living brand hospitality training in Brazil — customer service and brand operations for frontline teams.',
+    description:
+      'Structured training embeds hospitality, quality and user-experience focus into service delivery, driving more consistent in-service quality and stronger brand application across sites.',
+    kpis: [
+      { v: '120+', l: 'Collaborators trained' },
+      { v: 'Best', l: 'Brand application outcomes' },
+      { v: '2 days', l: 'In-person programme' },
+    ],
+    contact: 'Sodexo Brazil — E&R',
+    benefits: {
+      client: 'Teams aligned to Offshore Living brand standards.',
+      consumer: 'More consistent, hospitality-led service quality.',
+      sodexo: 'Integrated into the Offshore Living offer package.',
+    },
+    regionsAndCountry: 'Brazil',
+    areas: ['work'],
+  },
+  {
+    id: 'offshore-living-innovations-brazil',
+    name: 'Offshore Living Innovations on Board',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#OffshoreLiving', '#Wellbeing', '#Innovation'],
+    flags: ['🇧🇷'],
+    img: '🚢',
+    context:
+      'Bundle of on-board Offshore Living innovations in Brazil — welcome gifts, newsletter, hydroponic garden, Mais Saúde nutritional care and air freshener programmes.',
+    description:
+      'Each innovation carries client value and strengthens the benefits of choosing Offshore Living, lifting client satisfaction, NPS, brand coverage and sales.',
+    kpis: [
+      { v: 'Higher', l: 'Client satisfaction and NPS' },
+      { v: 'Stronger', l: 'Brand coverage rate' },
+      { v: 'Sales', l: 'Increase across onboard offer' },
+    ],
+    contact: 'Sodexo Brazil — E&R',
+    benefits: {
+      client: 'Differentiated offshore living proposition with measurable satisfaction gains.',
+      consumer:
+        'Welcome gifts, wellbeing (Mais Saúde), fresh produce (hydroponic) and curated communications.',
+      sodexo: 'Each innovation priced for the client within the Offshore Living package.',
+    },
+    regionsAndCountry: 'Brazil',
     areas: ['work'],
   },
 
