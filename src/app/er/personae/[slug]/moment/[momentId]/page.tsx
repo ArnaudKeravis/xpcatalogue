@@ -19,7 +19,7 @@ import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { catalogueModuleForJourneyLabel } from '@/lib/data/moduleJourneyResolve';
 import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
-import { pickModuleVisual } from '@/lib/data/moduleVisuals';
+import { ModuleCoverStrip } from '@/components/catalogue/ModuleCoverStrip';
 import { solutionsForModule } from '@/lib/data/moduleSolutions';
 import {
   ER_BOK_MOMENT_EDITORIAL,
@@ -313,19 +313,13 @@ export default async function ErBoKMomentPage({ params }: Props) {
                   const href = `/modules/${mod.id}?area=work&persona=${params.slug}&momentId=${encodeURIComponent(params.momentId)}`;
                   const modSolutions = solutionsByModule(mod);
                   const count = modSolutions.length;
-                  const { Icon: ModIcon, weight: modWeight } = pickModuleVisual(mod);
                   return (
                     <StaggerItem key={mod.id}>
                       <Link
                         href={href}
                         className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(41,56,150,0.14)]"
                       >
-                        <div
-                          className="relative flex h-12 w-full shrink-0 items-center justify-center bg-[var(--blue)]"
-                          aria-hidden
-                        >
-                          <ModIcon size={18} weight={modWeight} className="text-white/95" />
-                        </div>
+                        <ModuleCoverStrip module={mod} />
                         <div className="flex flex-1 flex-col p-4">
                           <h3
                             className="mb-1 text-sm font-extrabold leading-tight text-[var(--blue)]"

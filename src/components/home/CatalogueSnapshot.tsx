@@ -1,5 +1,6 @@
 import { ArrowRight, Globe } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
+import { getFlagLabel } from '@/lib/data/countryFlags';
 
 interface Stat {
   value: number;
@@ -95,7 +96,7 @@ export function CatalogueSnapshot({ stats, countries, totalCountries }: Props) {
                   <Link
                     href={`/solutions?flag=${encodeURIComponent(flag)}`}
                     className="group flex items-center gap-2 rounded-2xl border border-[var(--grey-border)] bg-[var(--surface)] px-3 py-2 transition-[transform,border-color,box-shadow] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-[var(--shadow-sm)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue-primary)]"
-                    aria-label={`Filter solutions by ${flag}`}
+                    aria-label={`Filter solutions by ${getFlagLabel(flag)}`}
                   >
                     <span className="text-xl leading-none" aria-hidden>
                       {flag}
@@ -105,13 +106,13 @@ export function CatalogueSnapshot({ stats, countries, totalCountries }: Props) {
                         className="text-[10px] font-semibold uppercase tracking-wider text-[var(--blue)]/60"
                         style={{ fontFamily: 'var(--font-body)' }}
                       >
-                        Deployments
+                        {getFlagLabel(flag)}
                       </span>
                       <span
                         className="tabular text-sm font-extrabold text-[var(--blue)]"
                         style={{ fontFamily: 'var(--font-heading)' }}
                       >
-                        {count}
+                        {count} deployment{count === 1 ? '' : 's'}
                       </span>
                     </span>
                   </Link>

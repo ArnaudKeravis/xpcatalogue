@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { erPaths, type ErLinkMode } from '@/lib/erNav';
 import { getCatalogueData } from '@/lib/notion';
 import { COLLECTION_META } from '@/lib/data/collections';
+import { getFlagLabel } from '@/lib/data/countryFlags';
 
 /**
  * Global footer. Async server component so we can show live counts from
@@ -19,6 +20,19 @@ export async function Footer({ erLinkMode = 'global' }: { erLinkMode?: ErLinkMod
         countries: new Set(data.solutions.flatMap((s) => s.flags)).size,
       }
     : null;
+
+  const topCountryFlags = data
+    ? (() => {
+        const flagCounts = new Map<string, number>();
+        data.solutions.forEach((s) =>
+          s.flags.forEach((f) => flagCounts.set(f, (flagCounts.get(f) ?? 0) + 1)),
+        );
+        return Array.from(flagCounts.entries())
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+          .map(([flag, count]) => ({ flag, count }));
+      })()
+    : [];
 
   const lastUpdated = data?.lastUpdated
     ? formatRelative(new Date(data.lastUpdated))
@@ -93,6 +107,22 @@ export async function Footer({ erLinkMode = 'global' }: { erLinkMode?: ErLinkMod
                 </div>
               ))}
             </dl>
+          ) : null}
+          {topCountryFlags.length > 0 ? (
+            <ul className="mt-4 flex flex-wrap gap-1.5">
+              {topCountryFlags.map(({ flag, count }) => (
+                <li key={flag}>
+                  <Link
+                    href={`/solutions?flag=${encodeURIComponent(flag)}`}
+                    className="inline-flex items-center gap-1 rounded-full border border-[var(--grey-border)] bg-[var(--surface)] px-2 py-1 text-[10px] font-semibold text-[var(--blue)] transition-colors hover:border-[var(--blue-primary)]"
+                    title={`${getFlagLabel(flag)} — ${count} solutions`}
+                  >
+                    <span aria-hidden>{flag}</span>
+                    <span>{getFlagLabel(flag)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           ) : null}
           {lastUpdated ? (
             <p className="mt-3 text-[11px] text-[var(--blue)]/50">

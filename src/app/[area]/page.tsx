@@ -31,8 +31,8 @@ export default async function AreaPage({ params }: Props) {
           aria-hidden
         />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col gap-6 px-6 py-6 md:px-10 md:py-8 lg:grid lg:grid-cols-[minmax(0,38%)_minmax(0,62%)] lg:gap-10">
-          <section className="flex min-h-0 flex-col">
+        <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col gap-6 px-6 py-6 md:px-10 md:py-8 lg:grid lg:grid-cols-[minmax(0,38%)_minmax(0,62%)] lg:items-start lg:gap-10">
+          <section className="flex w-full min-w-0 flex-col">
             <div className="flex flex-wrap items-end gap-3">
               <h1
                 className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-extrabold leading-none tracking-tight"
@@ -49,18 +49,18 @@ export default async function AreaPage({ params }: Props) {
             </div>
 
             {areaConfig.isometricUrl ? (
-              <div className="mt-4 flex min-h-0 flex-1 items-center justify-center lg:mt-6">
+              <div className="mt-4 flex w-full items-center justify-center lg:mt-6">
                 <img
                   src={areaConfig.isometricUrl}
                   alt={`${areaConfig.label} isometric illustration`}
-                  className="max-h-full w-auto max-w-full object-contain"
+                  className="h-auto w-full max-h-[min(48vh,420px)] max-w-md object-contain sm:max-h-[min(50vh,460px)] sm:max-w-lg lg:max-h-[min(52vh,500px)] lg:max-w-xl"
                   loading="eager"
                 />
               </div>
             ) : null}
           </section>
 
-          <section className="flex min-h-0 flex-col">
+          <section className="flex w-full min-w-0 flex-col">
             <div>
               <h2
                 className="text-[clamp(1.125rem,2.2vw,1.5rem)] font-extrabold text-[var(--blue)]"
@@ -76,9 +76,9 @@ export default async function AreaPage({ params }: Props) {
               </p>
             </div>
 
-            <Stagger className="mt-3 grid min-h-0 flex-1 grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:mt-4 lg:grid-rows-2">
+            <Stagger className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:mt-4 lg:grid-rows-2 lg:items-start lg:content-start">
               {areaPersonas.map((persona) => (
-                <StaggerItem key={persona.id} className="min-h-0">
+                <StaggerItem key={persona.id} className="min-h-0 lg:h-auto">
                   <PersonaPortraitCard
                     persona={persona}
                     href={`/${params.area}/${persona.id}`}

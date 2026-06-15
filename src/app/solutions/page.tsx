@@ -10,6 +10,7 @@ import {
   uniqueTypes,
 } from '@/lib/queries/filterSolutions';
 import { BigBetsCollectionIntro } from '@/components/catalogue/BigBetsCollectionIntro';
+import { CountryFlagTags } from '@/components/catalogue/CountryFlagTags';
 import { ScrollToStandardOfferCatalogue } from '@/components/catalogue/ScrollToStandardOfferCatalogue';
 import { StandardOfferParallax } from '@/components/standard-offer/StandardOfferParallax';
 import { COLLECTION_META, parseCollectionKey } from '@/lib/data/collections';
@@ -304,6 +305,9 @@ export default async function SolutionsPage({ searchParams }: Props) {
                       >
                         {s.description}
                       </p>
+
+                      {/* Country flags */}
+                      <CountryFlagTags solution={s} size="sm" showLabel={false} linkable />
 
                       {/* Badges */}
                       <div className="flex flex-wrap items-center gap-1.5">

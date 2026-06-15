@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ModuleCoverStrip } from '@/components/catalogue/ModuleCoverStrip';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Module } from '@/lib/data/types';
 
@@ -56,13 +57,7 @@ export function ModuleCard({ module, href, compact, momentLinks }: Props) {
       className="block cursor-pointer overflow-hidden rounded-2xl border border-[var(--grey-border)] bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(41,56,150,0.14)]"
       style={{ boxShadow: 'var(--shadow-sm)' }}
     >
-      {/* Match persona journey module tiles: icon on solid catalogue blue (no cover photos — URLs often 404). */}
-      <div
-        className="relative flex h-12 w-full shrink-0 items-center justify-center bg-[var(--blue)]"
-        aria-hidden
-      >
-        <Icon size={18} weight={weight} className="text-white/95" />
-      </div>
+      <ModuleCoverStrip module={module} />
       <div className="p-3">
         <div className="mb-1 text-base font-bold text-[var(--blue)]">{module.name}</div>
         <p className="mb-2 text-xs leading-tight text-gray-500">{module.description}</p>

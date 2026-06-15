@@ -19,6 +19,7 @@ import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { DownloadCta } from '@/components/ui/DownloadCta';
 import { SolutionHeroTile } from '@/components/catalogue/SolutionHeroTile';
+import { CountryFlagTags } from '@/components/catalogue/CountryFlagTags';
 import { COLLECTION_META } from '@/lib/data/collections';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Module, Solution } from '@/lib/data/types';
@@ -94,14 +95,12 @@ function TitleAndMeta({
   current,
   sc,
   titleClassName,
-  metaTextSize,
 }: {
   current: Solution;
   sc: string;
   titleClassName?: string;
   metaTextSize?: 'xs' | 'sm';
 }) {
-  const bodyMeta = metaTextSize === 'sm' ? 'text-sm leading-relaxed' : 'text-xs leading-relaxed';
   return (
     <>
       <h1
@@ -165,25 +164,7 @@ function TitleAndMeta({
         ))}
       </div>
 
-      {current.regionsAndCountry ? (
-        <p className={cn('text-neutral-700', bodyMeta)} style={{ fontFamily: 'var(--font-body)' }}>
-          <span className="font-bold text-[var(--blue)]">Regions and country:</span>{' '}
-          {emphasizeCatalogueText(current.regionsAndCountry, current)}
-        </p>
-      ) : (
-        <div
-          className="flex flex-wrap items-center gap-1"
-          role="group"
-          aria-label={`Deployed in ${current.flags.length} Sodexo region${current.flags.length === 1 ? '' : 's'}`}
-        >
-          <span className="mr-1 text-xs font-bold text-[var(--blue)]">Sodexo Regions:</span>
-          {current.flags.map((f) => (
-            <span key={f} className="text-xl" aria-hidden>
-              {f}
-            </span>
-          ))}
-        </div>
-      )}
+      <CountryFlagTags solution={current} size="md" />
     </>
   );
 }

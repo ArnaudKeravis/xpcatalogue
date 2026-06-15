@@ -1,6 +1,6 @@
 // Static fallback used when Notion is unavailable + static area/module/journey config
 
-import type { Area, AreaConfig, CatalogueData, JourneyStep, Module, Persona } from './types';
+import type { Area, AreaConfig, CatalogueData, JourneyStep, Module, Persona, Solution } from './types';
 import { CATALOGUE_PERSONAS } from './personaDefinitions';
 import { SOLUTIONS_CATALOG } from './solutionsCatalog';
 import { enrichSolutionsWithCollections } from './collections';
@@ -15,6 +15,7 @@ import {
 import { mergeTddiV2IntoCatalogue } from './tddiV2CatalogueMerge';
 import { modulesRecordFromExcelSoT, wireModuleSolutionIdsFromExcelLinks } from './modulesExcelMerge';
 import { buildSolutionsCatalogueFromExcel } from './solutionsFromExcel';
+import { dedupeFlags, parseRegionsToFlags } from './countryFlags';
 import { ER_SOLUTIONS } from './er/erSolutions';
 import { applyPersonaMomentModuleFill } from './personaMomentModules';
 import { JOURNEY_STEPS_FROM_EXCEL } from './journeyStepsFromExcel.generated';
@@ -606,6 +607,28 @@ const SOLUTIONS_FROM_EXCEL_CLASSEUR = buildSolutionsCatalogueFromExcel();
  * receive the `'er'` collection pill.
  */
 const SOLUTIONS_WITH_ER = [...SOLUTIONS_FROM_EXCEL_CLASSEUR, ...ER_SOLUTIONS];
+
+const LEGACY_FLAGS_BY_ID = new Map(SOLUTIONS_CATALOG.map((s) => [s.id, s.flags]));
+const LEGACY_FLAGS_BY_NAME = new Map(
+  SOLUTIONS_CATALOG.map((s) => [s.name.trim().toLowerCase(), s.flags]),
+);
+
+function enrichSolutionFlags(solutions: Solution[]): Solution[] {
+  return solutions.map((s) => {
+    let flags =
+      s.flags.length > 0 ? s.flags : parseRegionsToFlags(s.regionsAndCountry);
+    if (!flags.length) {
+      flags =
+        LEGACY_FLAGS_BY_ID.get(s.id) ??
+        LEGACY_FLAGS_BY_NAME.get(s.name.trim().toLowerCase()) ??
+        [];
+    }
+    flags = dedupeFlags(flags);
+    return flags.length ? { ...s, flags } : s;
+  });
+}
+
+const SOLUTIONS_WITH_FLAGS = enrichSolutionFlags(SOLUTIONS_WITH_ER);
 const MODULES_WITH_EXCEL_SOT = wireModuleSolutionIdsFromExcelLinks(
   modulesRecordFromExcelSoT(),
   SOLUTIONS_FROM_EXCEL_CLASSEUR,
@@ -634,7 +657,7 @@ export const STEP_LABEL: Record<string, string> = Object.fromEntries(
 );
 
 export const FALLBACK_DATA: CatalogueData = {
-  solutions: enrichSolutionsWithCollections(SOLUTIONS_WITH_ER),
+  solutions: enrichSolutionsWithCollections(SOLUTIONS_WITH_FLAGS),
   personas: MERGED_PERSONAS,
   modules: MODULES_WITH_EXCEL_SOT,
   areas: AREA_CONFIGS,

@@ -1,9 +1,9 @@
 /**
  * Per-persona journey maps + clickable moment hotspots.
  *
- * **Personae Iso Journey** (Column G) names the journey artwork; the ingest script maps each
- *   Excel key to the attached file name, copies it to ``public/.../excel-maps/{personaId}.*``,
- *   and derives hotspot boxes from marker detection on that image.
+ * **Personae Iso Journey** (Excel column G) names each artwork file in **Iso_Journeys**
+ * (`iso_journey_<area>_<persona>.png`). The ingest script copies to
+ * ``public/.../excel-maps/{personaId}.png`` and derives hotspot boxes from marker detection.
  */
 
 import type { JourneyHotspot } from './types';
@@ -31,7 +31,7 @@ export interface PersonaJourneyDef {
 /** Manual journey maps not yet in Classeur Journey.xlsx (demo / pilot personas). */
 const PERSONA_JOURNEYS_MANUAL: Record<string, PersonaJourneyDef> = {
   'exemple-minor': {
-    image: '/images/catalogue/assets/journeys/iso-journey-work-white-collar.svg',
+    image: '/images/catalogue/assets/journeys/excel-maps/white-collar.png',
     moments: [
       { id: 'exemple-minor__commute', label: 'Commute', left: 2.0, top: 77.0, w: 16.0, h: 10.0 },
       { id: 'exemple-minor__welcome-area', label: 'Welcome Area', left: 22.0, top: 77.0, w: 16.0, h: 10.0 },

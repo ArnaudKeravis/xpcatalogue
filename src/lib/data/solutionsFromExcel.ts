@@ -4,6 +4,7 @@
  */
 
 import type { Area, Benefits, KPI, Solution } from './types';
+import { parseRegionsToFlags } from './countryFlags';
 import { SOLUTIONS_EXCEL_SOT, type SolutionsExcelRow } from './solutionsExcelSoT.generated';
 
 export function slugifySolutionId(name: string): string {
@@ -52,7 +53,7 @@ export function solutionFromExcelRow(row: SolutionsExcelRow): Solution {
     status: 'Scaled',
     excelSolutionsSheet: true,
     hashtags,
-    flags: [],
+    flags: parseRegionsToFlags(row.regionsAndCountry),
     img: '📦',
     heroImage: row.heroImageUrl ?? undefined,
     context: row.context,

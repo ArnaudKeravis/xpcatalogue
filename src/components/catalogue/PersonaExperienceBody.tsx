@@ -9,7 +9,7 @@ import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { getMomentsForModuleName } from '@/lib/queries/journey';
 import { catalogueModuleForJourneyLabel } from '@/lib/data/moduleJourneyResolve';
-import { pickModuleVisual } from '@/lib/data/moduleVisuals';
+import { ModuleCoverStrip } from '@/components/catalogue/ModuleCoverStrip';
 import type { AreaConfig, JourneyStep, Module, Persona } from '@/lib/data/types';
 
 export interface PersonaExperienceBodyProps {
@@ -183,16 +183,10 @@ export function PersonaExperienceBody({
                   {relevantModules.map((mod) => {
                     const momentLinks = getMomentsForModuleName(mod.name, steps);
                     const moduleHref = `/modules/${mod.id}?area=${linkArea}&persona=${linkPersonaId}`;
-                    const { Icon: ModIcon, weight: modWeight } = pickModuleVisual(mod);
                     return (
                       <li key={mod.id}>
                         <div className="flex h-full flex-col overflow-hidden rounded-2xl border-2 border-transparent bg-white shadow-[var(--shadow-sm)] transition-all hover:-translate-y-0.5 hover:border-[var(--blue-primary)] hover:shadow-md">
-                          <div
-                            className="relative flex h-12 w-full shrink-0 items-center justify-center bg-[var(--blue)]"
-                            aria-hidden
-                          >
-                            <ModIcon size={18} weight={modWeight} className="text-white/95" />
-                          </div>
+                          <ModuleCoverStrip module={mod} />
                           <div className="flex flex-1 flex-col p-3">
                             <Link
                               href={moduleHref}

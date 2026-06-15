@@ -11,6 +11,7 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { COLLECTION_META, COLLECTION_KEYS } from '@/lib/data/collections';
+import { getFlagLabel } from '@/lib/data/countryFlags';
 import type { Area, SolutionCollection, SolutionStatus, SolutionType } from '@/lib/data/types';
 
 type AreaOption = { value: Area; label: string };
@@ -383,9 +384,12 @@ export function SolutionsFilterBar({
                 active={active}
                 onClick={() => toggleMulti('flag', flag)}
                 disabled={pending}
-                title={`${count} solution${count === 1 ? '' : 's'}`}
+                title={`${getFlagLabel(flag)} — ${count} solution${count === 1 ? '' : 's'}`}
               >
-                <span className="text-base leading-none">{flag}</span>
+                <span className="text-base leading-none" aria-hidden>
+                  {flag}
+                </span>
+                <span className="ml-1 text-[10px] font-semibold">{getFlagLabel(flag)}</span>
                 <span className="ml-1 text-[10px] opacity-60">{count}</span>
               </Chip>
             );

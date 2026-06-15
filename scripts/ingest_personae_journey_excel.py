@@ -4,8 +4,9 @@
 Uses header names (not fixed letters) so column shifts are tolerated. Canonical columns:
 
   - **Areas** (Excel A) · **Personae** (B) · **Personae Name** (C) — identify the catalogue persona row
-  - **Personae Iso Journey** (G) — snake_case key naming the **journey map** asset; must match
-    ``ISO_JOURNEY_KEY_TO_FILENAME`` and a file under ``--journey-assets`` (recursive search).
+  - **Personae Iso Journey** (G) — snake_case key naming the **journey map** asset in
+    ``Iso_Journeys`` (or legacy ``Iso Journey ….svg``); copied to
+    ``public/.../excel-maps/{personaId}.*`` with hotspots from marker detection.
   - **Moments Title** (H) — moment label; row order = journey order
   - **Image left moment** (K) — sole source for the **moment image** asset key; resolved on disk
     under Journey_Moments_Images, then copied to ``public/.../moments-raster/{personaId}/{stepId}.*``
@@ -133,7 +134,7 @@ def norm_iso_journey_key(raw: Any) -> str:
     return re.sub(r"\s+", "", str(raw or "").strip().lower())
 
 
-def find_journey_asset(roots: list[Path], filename: str) -> Path | None:
+def find_journey_asset_by_filename(roots: list[Path], filename: str) -> Path | None:
     target = filename.lower()
     for root in roots:
         if not root.is_dir():
@@ -144,6 +145,36 @@ def find_journey_asset(roots: list[Path], filename: str) -> Path | None:
         for p in root.rglob("*"):
             if p.is_file() and p.name.lower() == target:
                 return p
+    return None
+
+
+def find_journey_asset_by_iso_key(roots: list[Path], iso_key: str) -> Path | None:
+    """Resolve journey art from **Iso_Journeys** / Journey_isos — files named after Excel keys."""
+    if not iso_key:
+        return None
+    exts = (".png", ".svg", ".jpg", ".jpeg", ".webp")
+    for root in roots:
+        if not root.is_dir():
+            continue
+        for ext in exts:
+            direct = root / f"{iso_key}{ext}"
+            if direct.is_file():
+                return direct
+        for p in root.rglob("*"):
+            if not p.is_file() or p.suffix.lower() not in exts:
+                continue
+            if norm_iso_journey_key(p.stem) == iso_key:
+                return p
+    return None
+
+
+def resolve_journey_asset(roots: list[Path], iso_key: str, legacy_filename: str | None) -> Path | None:
+    """Iso_Journeys key-based PNGs first, then legacy ``Iso Journey …``.svg filenames."""
+    found = find_journey_asset_by_iso_key(roots, iso_key)
+    if found:
+        return found
+    if legacy_filename:
+        return find_journey_asset_by_filename(roots, legacy_filename)
     return None
 
 
@@ -450,9 +481,14 @@ def main() -> int:
     )
     args = ap.parse_args()
 
+    _iso_journeys_default = (
+        Path.home()
+        / "Library/CloudStorage/OneDrive-SODEXO/Design Community Hub - Documents"
+        / "05_Sodexo Labs/Catalogue/Images catalogue/Iso_Journeys"
+    )
     journey_roots = list(dict.fromkeys([p.expanduser() for p in args.journey_assets]))
     if not journey_roots:
-        journey_roots = [Path.home() / "Downloads", Path.home() / "Downloads/moments"]
+        journey_roots = [_iso_journeys_default, Path.home() / "Downloads"]
 
     moments_img = (
         Path.home()
@@ -551,17 +587,12 @@ def main() -> int:
             print(f"error: persona {pid} has no Personae Iso Journey key", file=sys.stderr)
             return 2
         fname = ISO_JOURNEY_KEY_TO_FILENAME.get(iso_key)
-        if not fname:
-            print(
-                f"error: unknown Personae Iso Journey key {rows[0]['iso_journey_key']!r} "
-                f"(normalized {iso_key!r}) for persona {pid}",
-                file=sys.stderr,
-            )
-            return 2
-        src_map = find_journey_asset(journey_roots, fname)
+        src_map = resolve_journey_asset(journey_roots, iso_key, fname)
         if not src_map:
             print(
-                f"error: journey asset {fname!r} not found under {journey_roots} for persona {pid}",
+                f"error: journey asset for key {iso_key!r}"
+                + (f" / legacy {fname!r}" if fname else "")
+                + f" not found under {journey_roots} for persona {pid}",
                 file=sys.stderr,
             )
             return 2

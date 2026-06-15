@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
+import { PERSONA_LISTING_FRAME_LG } from '@/lib/data/personaListingFrame';
 import { resolvePersonaImage } from '@/lib/data/personaImageResolve';
+import { cn } from '@/lib/utils/cn';
 import type { AreaConfig, Persona } from '@/lib/data/types';
 
 /**
- * Card is flex-column so the portrait grows to fill the grid cell height
- * (needed for the 3×2 no-scroll layout) while the coloured name bar stays fixed.
+ * Card is flex-column so the portrait grows to fill the grid cell height on small
+ * screens; on desktop (`lg+`) the portrait frame uses a fixed WORK-aligned aspect.
  */
 export function PersonaPortraitCard({
   persona,
@@ -22,7 +24,10 @@ export function PersonaPortraitCard({
 
   return (
     <div
-      className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-3xl bg-[var(--surface-card)] transition-[transform,box-shadow] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:shadow-[var(--shadow-hover)]"
+      className={cn(
+        'group relative flex h-full min-h-0 flex-col overflow-hidden rounded-3xl bg-[var(--surface-card)] transition-[transform,box-shadow] duration-[var(--motion-base)] ease-[var(--ease-out-quint)] hover:-translate-y-1 hover:shadow-[var(--shadow-hover)]',
+        'lg:h-auto lg:w-full',
+      )}
       style={{ boxShadow: 'var(--shadow-tile)' }}
     >
       <Link
@@ -31,7 +36,7 @@ export function PersonaPortraitCard({
         aria-label={`Open ${persona.fullName} journey`}
       />
       <div
-        className="relative min-h-0 flex-1 overflow-hidden"
+        className={cn('relative min-h-0 flex-1 overflow-hidden', PERSONA_LISTING_FRAME_LG)}
         style={{
           background: `linear-gradient(180deg, ${persona.color}1a 0%, ${persona.color}33 100%)`,
         }}
