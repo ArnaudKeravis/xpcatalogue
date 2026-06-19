@@ -20,6 +20,7 @@ import { CatalogueSnapshot } from '@/components/home/CatalogueSnapshot';
 import { CuratedCollectionsBand } from '@/components/home/CuratedCollectionsBand';
 import { FeaturedPersona } from '@/components/home/FeaturedPersona';
 import { HeroCollage } from '@/components/home/HeroCollage';
+import { HomeExploreBandeau } from '@/components/home/HomeExploreBandeau';
 
 const ASSETS = {
   bokeh: '/images/catalogue/assets/home/home-bokeh.png',
@@ -91,8 +92,8 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
     <div className="relative flex flex-1 flex-col overflow-hidden bg-[var(--home-hero-bg)]">
       <HeroDecor />
 
-      <section className="relative z-10 px-6 pb-12 pt-14 md:px-12 md:pt-20 lg:pt-24">
-        <div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
+      <section className="relative z-10 px-6 pb-12 pt-10 md:px-12 md:pt-14 lg:pt-16">
+        <div className="mx-auto grid max-w-[1600px] gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-10">
           <div className="flex flex-col items-start gap-5 text-white">
             <span
               className="motion-fade-up inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.22em] text-white/70"
@@ -143,12 +144,16 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
             </p>
           </div>
 
-          <HeroCollage className="w-full" variant={erMini ? 'er' : 'global'} />
+          {erMini ? (
+            <HeroCollage className="w-full" variant="er" />
+          ) : (
+            <HomeExploreBandeau className="w-full max-w-xl lg:max-w-none lg:justify-self-end" />
+          )}
         </div>
 
         {!erMini ? (
         <nav
-          className="motion-fade-up mx-auto mt-10 flex max-w-[1600px] flex-wrap items-center justify-center gap-3 md:mt-12 md:justify-start md:gap-4"
+          className="motion-fade-up mx-auto mt-8 flex max-w-[1600px] flex-wrap items-center justify-center gap-3 md:mt-10 md:justify-start md:gap-4"
           style={{ animationDelay: '480ms' }}
           aria-label="TDDI curated shortlists"
         >
@@ -158,7 +163,7 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
             style={{ fontFamily: 'var(--font-body)' }}
           >
             <Trophy size={18} weight="duotone" className="text-[var(--teal)]" aria-hidden />
-            Standard Offer
+            {COLLECTION_META['standard-offer'].label}
           </Link>
           <Link
             href={COLLECTION_META['big-bets'].href}
@@ -173,7 +178,7 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
             className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-transparent px-4 py-2.5 text-sm font-semibold text-white/95 underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            Standard grid only
+            Spark Offer grid only
           </Link>
         </nav>
         ) : null}
@@ -183,7 +188,8 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
          *  - E&R home: 3 cards (Personae / Needs / Tool). The personae card
          *    is the editorial entry point and lands on /er/personae. */}
         <div
-          className="motion-fade-up mx-auto mt-12 grid max-w-[1600px] gap-4 md:grid-cols-3"
+          id="explore"
+          className="motion-fade-up mx-auto mt-10 scroll-mt-24 grid max-w-[1600px] gap-4 md:grid-cols-3"
           style={{ animationDelay: '560ms' }}
         >
           {erMini ? (

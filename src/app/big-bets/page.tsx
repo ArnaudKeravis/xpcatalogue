@@ -148,7 +148,7 @@ export default async function BigBetsPage() {
             <p className="text-sm leading-relaxed text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
               Exemplar initiatives span Labs pilots, robotics, frictionless formats, wellbeing devices, sustainable packaging,
               and digital platforms — the catalogue subset tagged <strong>#blockbuster</strong> continues to denote the legacy
-              P&amp;L-impact AI shortlist, now folded into <strong>Standard Offer</strong> scope.
+              P&amp;L-impact AI shortlist, now folded into <strong>Spark Offer</strong> scope.
             </p>
           </div>
         </section>

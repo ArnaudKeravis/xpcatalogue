@@ -45,16 +45,15 @@ export async function Footer({ erLinkMode = 'global' }: { erLinkMode?: ErLinkMod
     { href: '/heal', label: 'Heal' },
     { href: '/play', label: 'Play' },
     { href: '/solutions', label: 'All solutions' },
-    { href: COLLECTION_META['standard-offer'].href, label: 'Standard Offer' },
+    { href: COLLECTION_META['standard-offer'].href, label: COLLECTION_META['standard-offer'].label },
     {
       href: COLLECTION_META['standard-offer'].catalogueHref!,
-      label: 'Standard Offer + grid',
+      label: `${COLLECTION_META['standard-offer'].label} + grid`,
     },
     { href: COLLECTION_META['big-bets'].href, label: 'Big Bets' },
     { href: COLLECTION_META['big-bets'].catalogueHref!, label: 'Big Bets + grid' },
     { href: '/search-guide', label: 'Search guide' },
     { href: '/saved', label: 'My saved' },
-    { href: '/login', label: 'Sign in' },
   ];
 
   const erBrowse = [
@@ -67,7 +66,6 @@ export async function Footer({ erLinkMode = 'global' }: { erLinkMode?: ErLinkMod
     { href: erPaths.operatorLens(erLinkMode), label: 'Operator view' },
     { href: '/solutions', label: 'Solutions (catalogue)' },
     { href: '/saved', label: 'My saved' },
-    { href: '/login', label: 'Sign in' },
   ];
 
   return (

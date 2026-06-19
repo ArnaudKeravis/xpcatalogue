@@ -7,7 +7,7 @@ const ANCHOR_ID = 'solutions-catalogue';
 
 /**
  * When landing on `/solutions?collection=standard-offer`, scroll past the embedded
- * Standard Offer story so filters + grid appear first (option B: narrative stays,
+ * Spark Offer story so filters + grid appear first (option B: narrative stays,
  * catalogue is where the eye lands).
  */
 export function ScrollToStandardOfferCatalogue() {

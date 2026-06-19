@@ -4,9 +4,9 @@ import { COLLECTION_META } from '@/lib/data/collections';
 import type { Solution, SolutionCollection } from '@/lib/data/types';
 
 /**
- * Home-page band that surfaces the two curated collections — Standard Offer
+ * Home-page band that surfaces the two curated collections — Spark Offer
  * and Big Bets. Each tile becomes an editorial
- * shortcut into `COLLECTION_META.href` (Standard Offer story vs Big Bets story),
+ * shortcut into `COLLECTION_META.href` (Spark Offer story vs Big Bets story),
  * with a live count and a few representative solution names so the band is never empty-feeling.
  *
  * Rendered as a server component: counts + previews are derived from the
@@ -41,7 +41,7 @@ export function CuratedCollectionsBand({ solutions }: { solutions: Solution[] })
               style={{ fontFamily: 'var(--font-body)' }}
             >
               Two shortlists to cut through 91 solutions —{' '}
-              <strong className="text-[var(--blue)]">Standard Offer</strong> for scaled, client-ready
+              <strong className="text-[var(--blue)]">{COLLECTION_META['standard-offer'].label}</strong> for scaled, client-ready
               products (including legacy P&amp;L-impact solutions tagged <strong className="text-[var(--blue)]">#blockbuster</strong>), and{' '}
               <strong className="text-[var(--blue)]">Big Bets</strong> for FY26 innovation priorities across Food & Beyond, Health &
               Wellbeing, and Automation.

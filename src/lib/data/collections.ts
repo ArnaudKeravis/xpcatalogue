@@ -1,7 +1,7 @@
 /**
  * Curated collections — hand-tagged shortlists of catalogue solutions.
  *
- * 1. **Standard Offer** — Sodexo’s scaled, client-ready backbone (TDDI Standard Offer deck).
+ * 1. **Spark Offer** — Sodexo’s scaled, client-ready backbone (TDDI Spark Offer deck).
  *    Former “AI blockbuster” catalogue entries are folded in here and additionally carry
  *    the `#blockbuster` hashtag for filtering (replacing the old standalone collection).
  *
@@ -19,7 +19,7 @@ const BLOCKBUSTER_HASHTAG = '#blockbuster';
 
 /**
  * Solutions that historically sat on the AI “blockbuster” P&L-impact slide —
- * surfaced today as **Standard Offer** plus the `#blockbuster` hashtag (not a collection).
+ * surfaced today as **Spark Offer** plus the `#blockbuster` hashtag (not a collection).
  */
 export const BLOCKBUSTER_TAG_IDS: readonly string[] = [
   '4site',
@@ -36,7 +36,7 @@ export const BLOCKBUSTER_TAG_IDS: readonly string[] = [
 
 /**
  * Solution IDs (matching `src/lib/data/solutionsCatalog.ts`) that belong to
- * the Standard Offer. Derived from the TDDI Standard Offer deck, **union** the
+ * the Spark Offer. Derived from the TDDI Spark Offer deck, **union** the
  * former AI blockbuster shortlist so every blockbuster-tagged solution is standard-offer scoped.
  */
 export const STANDARD_OFFER_IDS: readonly string[] = Array.from(
@@ -171,23 +171,23 @@ export interface CollectionMeta {
   icon: 'Trophy' | 'Lightbulb' | 'Lightning';
   /** Primary editorial link (home tiles, header). */
   href: string;
-  /** Filtered catalogue URL when it differs from `href` (e.g. Standard Offer story vs grid). */
+  /** Filtered catalogue URL when it differs from `href` (e.g. Spark Offer story vs grid). */
   catalogueHref?: string;
 }
 
 export const COLLECTION_META: Record<SolutionCollection, CollectionMeta> = {
   'standard-offer': {
     key: 'standard-offer',
-    label: 'Standard Offer',
-    shortLabel: 'Standard',
-    tagline: 'Scaled and ready to propose',
+    label: 'Spark Offer',
+    shortLabel: 'Spark Offer',
+    tagline: 'Technology designed for people',
     description:
-      'Our matured, client-ready products — the backbone of the Standard Offer. Each has been deployed at scale with proven impact.',
+      'Our packaged digital & AI capabilities — the commercial backbone of every bid and renewal. Mature, client-ready products deployed at scale across IQ, OS and XP.',
     gradient: 'linear-gradient(135deg, #0b76b8 0%, #14b8a6 100%)',
     accent: '#14b8a6',
     icon: 'Trophy',
     href: '/standard-offer',
-    catalogueHref: '/solutions?collection=standard-offer#solutions-catalogue',
+    catalogueHref: '/standard-offer#spark-solutions',
   },
   'big-bets': {
     key: 'big-bets',

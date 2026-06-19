@@ -74,22 +74,22 @@ export default function SearchGuidePage() {
             </span>
             <div>
               <h2 className="text-lg font-extrabold text-[var(--blue)]" style={{ fontFamily: 'var(--font-heading)' }}>
-                Standard Offer &amp; Big Bets
+                Spark Offer &amp; Big Bets
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-[var(--blue)]/75" style={{ fontFamily: 'var(--font-body)' }}>
                 Use collection chips for TDDI-aligned shortlists. The{' '}
                 <Link href={so.href} className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline">
-                  Standard Offer story
+                  {so.label} story
                 </Link>{' '}
                 explains the IQ / OS / XP framing on a dedicated page; the{' '}
                 <Link
                   href={so.catalogueHref!}
                   className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline"
                 >
-                  Standard Offer catalogue view
+                  {so.label} catalogue view
                 </Link>{' '}
                 stacks that narrative with the filtered grid. Legacy P&amp;L-impact AI products from the blockbuster slide
-                remain in Standard Offer scope and carry the{' '}
+                remain in {so.label} scope and carry the{' '}
                 <Link
                   href="/solutions?hashtag=%23blockbuster"
                   className="font-bold text-[var(--blue-primary)] underline-offset-2 hover:underline"
@@ -153,7 +153,7 @@ export default function SearchGuidePage() {
             style={{ fontFamily: 'var(--font-body)' }}
           >
             <Trophy size={16} weight="duotone" className="text-[var(--teal)]" aria-hidden />
-            Standard Offer story
+            {so.label} story
           </Link>
           <Link
             href={so.catalogueHref!}
@@ -161,7 +161,7 @@ export default function SearchGuidePage() {
             style={{ fontFamily: 'var(--font-body)' }}
           >
             <Sparkle size={16} weight="duotone" className="text-[var(--teal)]" aria-hidden />
-            Standard Offer + grid
+            {so.label} + grid
           </Link>
         </div>
       </main>

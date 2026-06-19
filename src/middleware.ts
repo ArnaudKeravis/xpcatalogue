@@ -3,8 +3,6 @@ import type { NextRequest } from 'next/server';
 import { ER_SEGMENT_HEADER } from '@/lib/erNav';
 import { isErSegmentHost } from '@/lib/erSegmentHost';
 
-const COOKIE = 'sdx_auth';
-
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
@@ -31,18 +29,6 @@ export function middleware(req: NextRequest) {
         return { request: { headers: requestHeaders } } as const;
       })()
     : undefined;
-
-  const authed = req.cookies.get(COOKIE)?.value === '1';
-
-  if (!authed) {
-    if (pathname === '/login' && req.method === 'POST') {
-      return NextResponse.next();
-    }
-    if (pathname !== '/login') {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
-    return NextResponse.next();
-  }
 
   if (isErHost) {
     if (pathname === '/') {

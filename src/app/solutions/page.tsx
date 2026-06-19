@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { SolutionsFilterBar } from '@/components/catalogue/SolutionsFilterBar';
@@ -11,8 +12,6 @@ import {
 } from '@/lib/queries/filterSolutions';
 import { BigBetsCollectionIntro } from '@/components/catalogue/BigBetsCollectionIntro';
 import { CountryFlagTags } from '@/components/catalogue/CountryFlagTags';
-import { ScrollToStandardOfferCatalogue } from '@/components/catalogue/ScrollToStandardOfferCatalogue';
-import { StandardOfferParallax } from '@/components/standard-offer/StandardOfferParallax';
 import { COLLECTION_META, parseCollectionKey } from '@/lib/data/collections';
 import { cn } from '@/lib/utils/cn';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
@@ -111,11 +110,24 @@ export default async function SolutionsPage({ searchParams }: Props) {
   const hashtagFilter = many(searchParams.hashtag);
   const flagFilter = many(searchParams.flag);
 
-  // Curated collection filter — accepts ?collection=standard-offer or ?collection=big-bets.
-  // Multiple values are supported (OR semantics) to allow future cross-collection views.
   const collectionFilter = many(searchParams.collection)
     .map(parseCollectionKey)
     .filter((c): c is SolutionCollection => Boolean(c));
+
+  if (collectionFilter.length === 1 && collectionFilter[0] === 'standard-offer') {
+    const params = new URLSearchParams();
+    if (q) params.set('q', q);
+    if (rawMod) params.set('module', rawMod);
+    if (area) params.set('area', area);
+    if (status) params.set('status', status);
+    if (type) params.set('type', type);
+    if (personaId) params.set('persona', personaId);
+    if (momentId) params.set('moment', momentId);
+    hashtagFilter.forEach((h) => params.append('hashtag', h));
+    flagFilter.forEach((f) => params.append('flag', f));
+    const qs = params.toString();
+    redirect(qs ? `/standard-offer?${qs}#spark-solutions` : '/standard-offer#spark-solutions');
+  }
 
   const filtered = filterSolutions(
     solutions,
@@ -156,10 +168,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
   if (q) titleParts.push(`“${q}”`);
   const title = titleParts.length > 0 ? `Solutions — ${titleParts.join(' · ')}` : 'All solutions';
 
-  const catalogueAnchorId =
-    soloCollection?.key === 'standard-offer' || soloCollection?.key === 'big-bets'
-      ? 'solutions-catalogue'
-      : undefined;
+  const catalogueAnchorId = soloCollection?.key === 'big-bets' ? 'solutions-catalogue' : undefined;
 
   const areaOptions = (['work', 'learn', 'heal', 'play'] as const).map((id) => ({
     value: id,
@@ -168,16 +177,8 @@ export default async function SolutionsPage({ searchParams }: Props) {
 
   return (
     <main id="main-content" className="flex flex-1 flex-col bg-[var(--surface)]">
-      {soloCollection?.key === 'standard-offer' ? (
-        <>
-          <Suspense fallback={null}>
-            <ScrollToStandardOfferCatalogue />
-          </Suspense>
-          <StandardOfferParallax embedded />
-        </>
-      ) : (
-        <div className="px-4 py-6 md:px-8">
-          {soloCollection?.key === 'big-bets' ? (
+      <div className="px-4 py-6 md:px-8">
+        {soloCollection?.key === 'big-bets' ? (
             <BigBetsCollectionIntro solutionCount={filtered.length} />
           ) : soloCollection ? (
             <div
@@ -218,8 +219,7 @@ export default async function SolutionsPage({ searchParams }: Props) {
               {title}
             </h1>
           )}
-        </div>
-      )}
+      </div>
       <div
         id={catalogueAnchorId}
         className={cn('flex-1 px-4 pb-10 md:px-8', catalogueAnchorId && 'scroll-mt-28')}

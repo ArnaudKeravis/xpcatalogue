@@ -8,7 +8,7 @@ export type SolutionStatus = 'Scaled' | 'Scaling' | 'Pilot' | 'Study';
  * because collections are finite, institutionally-blessed shortlists used to answer
  * "what's our scaled, client-ready standard offer?" and "which solutions map to our Big Bets?".
  *
- * Source of truth: TDDI Standard Offer deck + *Big Bets 2026* innovation mapping.
+ * Source of truth: TDDI Spark Offer deck + *Big Bets 2026* innovation mapping.
  */
 export type SolutionCollection = 'standard-offer' | 'big-bets' | 'er';
 

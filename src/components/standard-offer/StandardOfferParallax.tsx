@@ -196,7 +196,7 @@ const FILTERED_CATALOGUE_HREF = '/solutions?collection=standard-offer#solutions-
 
 export function StandardOfferParallax({ embedded = false, featured }: StandardOfferParallaxProps) {
   const catalogueHref = embedded ? '#solutions-catalogue' : FILTERED_CATALOGUE_HREF;
-  const primaryCtaLabel = embedded ? 'Jump to solutions below' : 'Browse Standard Offer solutions';
+  const primaryCtaLabel = embedded ? 'Jump to solutions below' : 'Browse Spark Offer solutions';
   const closingCtaLabel = embedded ? 'Jump to filters & grid' : 'Open filtered catalogue';
   const showFeatured = Boolean(featured) && !embedded;
 
@@ -210,19 +210,19 @@ export function StandardOfferParallax({ embedded = false, featured }: StandardOf
             style={{ fontFamily: 'var(--font-body)' }}
           >
             <Trophy size={14} weight="duotone" className="text-[var(--teal)]" aria-hidden />
-            TDDI · Standard Offer
+            TDDI · Spark Offer
           </span>
           <h1
             className="mt-5 text-[clamp(2rem,5vw,3.25rem)] font-extrabold leading-[1.05] text-[var(--blue)]"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            Standard Offer — the backbone you can sell with confidence
+            Spark Offer — the backbone you can sell with confidence
           </h1>
           <p
             className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[var(--blue)]/75 md:text-lg"
             style={{ fontFamily: 'var(--font-body)' }}
           >
-            The TDDI Standard Offer packages our most mature, scaled products: the ones already deployed with clients,
+            The TDDI Spark Offer packages our most mature, scaled products: the ones already deployed with clients,
             with clear outcomes and runbooks. It is organised around three pillars —{' '}
             <strong className="text-[var(--blue)]">IQ</strong> (insight &amp; intelligence),{' '}
             <strong className="text-[var(--blue)]">OS</strong> (operations &amp; orchestration), and{' '}
@@ -290,7 +290,7 @@ export function StandardOfferParallax({ embedded = false, featured }: StandardOf
             >
               <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">In the catalogue</p>
               <p className="mt-2 text-sm leading-snug text-[var(--blue)]/75">
-                Look for solutions tagged <strong className="text-[var(--blue)]">Standard Offer</strong> in the intelligence lane — they are curated for scale and repeatability across accounts.
+                Look for solutions tagged <strong className="text-[var(--blue)]">Spark Offer</strong> in the intelligence lane — they are curated for scale and repeatability across accounts.
               </p>
             </div>
           </div>
@@ -326,7 +326,7 @@ export function StandardOfferParallax({ embedded = false, featured }: StandardOf
             >
               <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--blue)]/55">Why it matters</p>
               <p className="mt-2 text-sm leading-snug text-[var(--blue)]/75">
-                Standard Offer here means procurement-safe patterns: pricing, SLAs, and implementation paths that sales and delivery already know how to land.
+                Spark Offer here means procurement-safe patterns: pricing, SLAs, and implementation paths that sales and delivery already know how to land.
               </p>
             </div>
           </div>
@@ -350,7 +350,7 @@ export function StandardOfferParallax({ embedded = false, featured }: StandardOf
               </p>
               <ul className="list-inside list-disc space-y-1.5 text-sm text-[var(--blue)]/80" style={{ fontFamily: 'var(--font-body)' }}>
                 <li>Consumer-grade journeys wired to Sodexo operations</li>
-                <li>Composable with the rest of the Standard Offer stack — not isolated gadgets</li>
+                <li>Composable with the rest of the Spark Offer stack — not isolated gadgets</li>
               </ul>
               {showFeatured && featured ? (
                 <FeaturedStrip solutions={featured.xp} label="Featured · XP" compact />
@@ -378,7 +378,7 @@ export function StandardOfferParallax({ embedded = false, featured }: StandardOf
             Ready to assemble a client-ready basket?
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm text-[var(--blue)]/70 md:text-base" style={{ fontFamily: 'var(--font-body)' }}>
-            Filter the full catalogue to Standard Offer, combine with areas and personas, then save favourites for your pitch.
+            Filter the full catalogue to Spark Offer, combine with areas and personas, then save favourites for your pitch.
           </p>
           {embedded ? (
             <a

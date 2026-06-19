@@ -29,6 +29,10 @@ interface Props {
   flags: { flag: string; count: number }[];
   totalCount: number;
   filteredCount: number;
+  /** Defaults to `/solutions`. Use `/standard-offer` for the Spark catalogue embed. */
+  basePath?: string;
+  /** Collections always applied server-side; kept in URL and hidden from the curated toggle row. */
+  lockedCollections?: SolutionCollection[];
 }
 
 const MULTI_KEYS = ['hashtag', 'flag', 'collection'] as const;
@@ -53,6 +57,8 @@ export function SolutionsFilterBar({
   flags,
   totalCount,
   filteredCount,
+  basePath = '/solutions',
+  lockedCollections,
 }: Props) {
   const router = useRouter();
   const sp = useSearchParams();
@@ -72,6 +78,11 @@ export function SolutionsFilterBar({
   );
   const selectedPersona = sp.get('persona') ?? '';
 
+  const lockedSet = useMemo(
+    () => new Set(lockedCollections ?? []),
+    [lockedCollections],
+  );
+
   const activeFilterCount = useMemo(() => {
     let n = 0;
     if (sp.get('q')?.trim()) n++;
@@ -83,18 +94,21 @@ export function SolutionsFilterBar({
     if (sp.get('moment')) n++;
     n += selectedHashtags.length;
     n += selectedFlags.length;
-    n += selectedCollections.length;
+    n += selectedCollections.filter((c) => !lockedSet.has(c)).length;
     return n;
-  }, [sp, selectedHashtags.length, selectedFlags.length, selectedCollections.length]);
+  }, [sp, selectedHashtags.length, selectedFlags.length, selectedCollections, lockedSet]);
 
   const pushParams = useCallback(
     (mutate: (p: URLSearchParams) => void) => {
       const next = new URLSearchParams(sp.toString());
       mutate(next);
+      lockedCollections?.forEach((key) => {
+        if (!next.getAll('collection').includes(key)) next.append('collection', key);
+      });
       const qs = next.toString();
-      startTransition(() => router.push(qs ? `/solutions?${qs}` : '/solutions'));
+      startTransition(() => router.push(qs ? `${basePath}?${qs}` : basePath));
     },
-    [router, sp]
+    [router, sp, basePath, lockedCollections],
   );
 
   const clearFilters = () => {
@@ -103,8 +117,9 @@ export function SolutionsFilterBar({
       const next = new URLSearchParams();
       const momentId = sp.get('momentId');
       if (momentId) next.set('momentId', momentId);
+      lockedCollections?.forEach((key) => next.append('collection', key));
       const qs = next.toString();
-      router.push(qs ? `/solutions?${qs}` : '/solutions');
+      router.push(qs ? `${basePath}?${qs}` : basePath);
     });
   };
 
@@ -167,7 +182,8 @@ export function SolutionsFilterBar({
         </div>
       </div>
 
-      {/* Row 0: curated collections — high-signal shortcuts to scaled / AI-P&L shortlists */}
+      {/* Row 0: curated collections — hidden when a collection is locked (e.g. Spark page) */}
+      {!lockedCollections?.length ? (
       <div
         className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-[var(--grey-border)] bg-[var(--icon-bg-muted)] px-3 py-2.5"
         role="group"
@@ -217,6 +233,35 @@ export function SolutionsFilterBar({
           </span>
         ) : null}
       </div>
+      ) : (
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-[var(--grey-border)] bg-[var(--icon-bg-muted)] px-3 py-2.5">
+          <span
+            className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--blue)]/70"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            Scope
+          </span>
+          {lockedCollections.map((key) => {
+            const meta = COLLECTION_META[key];
+            return (
+              <span
+                key={key}
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-white shadow-[var(--shadow-sm)]"
+                style={{ fontFamily: 'var(--font-body)', backgroundImage: meta.gradient }}
+              >
+                <Trophy size={13} weight="fill" aria-hidden />
+                    {meta.label}
+              </span>
+            );
+          })}
+          <span
+            className="ml-auto text-[11px] text-[var(--blue)]/60"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
+            {COLLECTION_META[lockedCollections[0]].tagline}
+          </span>
+        </div>
+      )}
 
       {/* Row A: free-text search + clear */}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end">

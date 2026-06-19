@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { GlobalSearch } from '@/components/catalogue/GlobalSearch';
+import { COLLECTION_META } from '@/lib/data/collections';
 import { erPaths, type ErLinkMode } from '@/lib/erNav';
 import { useStore } from '@/lib/store';
 
@@ -45,7 +46,7 @@ const NAV_GLOBAL: NavItem[] = [
   },
   {
     href: '/standard-offer',
-    label: 'Standard Offer',
+    label: COLLECTION_META['standard-offer'].label,
     Icon: Trophy,
     matches: (p) => p === '/standard-offer',
     gradient: 'linear-gradient(135deg, #0b76b8 0%, #14b8a6 100%)',
