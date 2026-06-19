@@ -50,7 +50,7 @@ export function middleware(req: NextRequest) {
       url.pathname = target;
       return NextResponse.rewrite(url, erRequestOpts);
     }
-    if (pathname.startsWith('/personae/')) {
+    if (pathname.startsWith('/personae/') || pathname.startsWith('/journey/')) {
       const url = req.nextUrl.clone();
       url.pathname = `/er${pathname}`;
       return NextResponse.rewrite(url, erRequestOpts);

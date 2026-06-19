@@ -113,7 +113,7 @@ export const BIG_BETS_IDS: readonly string[] = [
 ] as const;
 
 /**
- * **E&R** — Energy & Resources benchmark innovations (Canada, India, Chile, UK & Ireland).
+ * **E&R** — Energy & Resources benchmark innovations (Canada, India, Chile, Brazil, Australia, UK & Ireland).
  * Authored in `src/lib/data/er/erSolutions.ts`; this re-export keeps the
  * `COLLECTION_INDEX` self-contained and avoids cross-file circular drift.
  */
@@ -208,7 +208,7 @@ export const COLLECTION_META: Record<SolutionCollection, CollectionMeta> = {
     shortLabel: 'E&R',
     tagline: 'Energy & Resources innovations',
     description:
-      'Field-tested innovations from Sodexo Energy & Resources teams across Canada, India, Chile and the UK & Ireland — remote-camp operations, defence dining, fuel retail HSE and frictionless retail.',
+      'Field-tested innovations from Sodexo Energy & Resources teams across Canada, India, Chile, Brazil, Australia and the UK & Ireland — remote camps, IoT operations, competitive socialising, sustainability and defence dining.',
     gradient: 'linear-gradient(135deg, #ea580c 0%, #f59e0b 100%)',
     accent: '#ea580c',
     icon: 'Lightning',

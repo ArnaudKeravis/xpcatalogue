@@ -1,6 +1,6 @@
 /**
  * Energy & Resources innovations — authored from country benchmark decks
- * (Canada, India, Chile, UK & Ireland — May 2026).
+ * (Canada, India, Chile, Brazil, Australia, UK & Ireland — May 2026).
  *
  * Each entry is surfaced in the global `/solutions` catalogue and carries the
  * `'er'` collection (assigned via `ER_SOLUTION_IDS` in
@@ -13,8 +13,11 @@
  * Source decks (Design Community Hub → Forward Thinking / SoAppro / Benchmark):
  *   • 2026 ER innovations template Canada.pptx
  *   • ER innovations - India.pptx
- *   • ER_innovations_template_Chile.pptx
+ *   • ER_innovations_template_Chile.pptx / ER_innovations_template_Chile 1.pptx
+ *   • E&R innovation catalogue Brazil.pptx
  *   • Government & E&R innovations template May 2026 UK&I.pptx
+ *   • AU partner pages + Sodexo Australia case studies (May 2026)
+ *   • Robot_Autonomous Retail Store — March 2026.pdf (AiFi + Ottonomy, Gudai-Darri)
  */
 
 import type { Solution } from '@/lib/data/types';
@@ -246,6 +249,122 @@ export const ER_SOLUTIONS: Solution[] = [
     areas: ['work'],
   },
   {
+    id: 'altonorte-laundry-automation-chile',
+    name: 'Altonorte — Laundry Service Automation',
+    module: '',
+    type: 'Software',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaling',
+    hashtags: ['#RFID', '#Laundry', '#Automation'],
+    flags: ['🇨🇱'],
+    img: '👕',
+    context:
+      'Digitisation of laundry service at Altonorte, Chile — RFID integration on clothing to trace washing frequency and maintain a digital record of uniform use.',
+    description:
+      'RFID-tagged garments enable automated, traceable recording of laundry cycles, simplifying uniform delivery and return while reducing waiting times and improving cost management with real-time data and alerts.',
+    kpis: [
+      { v: 'RFID', l: 'Traceable washing frequency per garment' },
+      { v: 'Digital', l: 'Automated use records' },
+      { v: 'Shorter', l: 'Waiting times for uniform handover' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Better cost management and real-time visibility on uniform lifecycle.',
+      consumer: 'Smoother uniform delivery and return with less queue time.',
+      sodexo:
+        'Indexed price in the FM-Soft service covering technology implementation and support.',
+    },
+    regionsAndCountry: 'Chile — Altonorte (in implementation)',
+    areas: ['work'],
+  },
+  {
+    id: 'cleaning-robot-minera-escondida-chile',
+    name: 'Cleaning Robot — Minera Escondida',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Automation', '#Robotics', '#Mining'],
+    flags: ['🇨🇱'],
+    img: '🤖',
+    context:
+      'Autonomous floor-cleaning equipment deployed at Minera Escondida, Chile — defined routes and schedules for frequent cleaning in mining compressors.',
+    description:
+      'Integration of autonomous cleaning robots for continuous, high-standard floor maintenance, freeing staff from repetitive tasks and dedicating labour to higher-value service work.',
+    kpis: [
+      { v: '15–20%', l: 'Product cost savings' },
+      { v: 'Continuous', l: 'High-standard cleaning coverage' },
+      { v: 'Staff', l: 'Redeployed to value-adding tasks' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Consistent cleaning standards with better cost management and real-time alerts.',
+      consumer: 'Cleaner, safer common areas across shifts.',
+      sodexo:
+        'Indexed FM-Soft pricing covering technology implementation and ongoing support.',
+    },
+    regionsAndCountry: 'Chile — Minera Escondida',
+    areas: ['work'],
+  },
+  {
+    id: 'digital-labels-chile',
+    name: 'Digital Labels — Food Service',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#DigitalSignage', '#FoodService', '#Nutrition'],
+    flags: ['🇨🇱'],
+    img: '🏷️',
+    context:
+      'Electronic labels at food pick-up points across Sodexo Chile E&R sites, displaying preparation name and calorie information at the point of withdrawal.',
+    description:
+      'Digital labels replace static signage with accurate, updatable communication on each dish — automating menu communication, smoothing service flow and improving consumer choice.',
+    kpis: [
+      { v: 'Accurate', l: 'Name + calorie info at point of service' },
+      { v: 'Automated', l: 'Menu communication' },
+      { v: 'Smoother', l: 'Service selection flow' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Better cost management with real-time data and operational alerts.',
+      consumer: 'Clearer information and a smoother food-selection experience.',
+      sodexo:
+        'Indexed price in the food service covering technology implementation and support.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'automatic-snacks-chile',
+    name: 'Automatic Snacks — Minera Escondida',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Pilot',
+    hashtags: ['#Vending', '#Frictionless', '#Snacks'],
+    flags: ['🇨🇱'],
+    img: '🍿',
+    context:
+      'Low-friction automatic snack dispensers piloted at Minera Escondida, Chile — mass user registration and traceability at withdrawal.',
+    description:
+      'Automated snack vending with safe, flexible dispensing that reduces operational tasks, extends service hours and provides traceable consumption records.',
+    kpis: [
+      { v: 'Traceable', l: 'Automated use recording' },
+      { v: 'Extended', l: 'Service hours availability' },
+      { v: 'Reduced', l: 'Operational tasks at point of sale' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Better cost management with per-consumption or unified-bag charging models.',
+      consumer: 'Flexible, automatic snack access outside core meal windows.',
+      sodexo:
+        'Charge per consumption (user score) or as a complete bag — pilot underway at Minera Escondida.',
+    },
+    regionsAndCountry: 'Chile — Minera Escondida (pilot)',
+    areas: ['work'],
+  },
+  {
     id: 'simply-to-go-chile',
     name: 'Simply To Go — Smart Cooler',
     module: '',
@@ -274,6 +393,550 @@ export const ER_SOLUTIONS: Solution[] = [
         'Per-transaction charge per user — a usage-based revenue model on top of contracted services.',
     },
     regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'kunstmann-draft-beer-chile',
+    name: 'Kunstmann — Non-Alcoholic Draft Beer',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Beverage', '#ElClub', '#Revenue'],
+    flags: ['🇨🇱'],
+    img: '🍺',
+    context:
+      'Integration of Chile’s leading Kunstmann draft beer in non-alcoholic format with dispenser and cooler, embedded in the El Club offer mix.',
+    description:
+      'Premium draft non-alcoholic beer on tap drives higher revenue and average transaction value versus canned or bottled alternatives, with unrestricted per-person consumption within site policies.',
+    kpis: [
+      { v: '+40%', l: 'Revenue & ATV vs. canned/bottled beer' },
+      { v: 'Unrestricted', l: 'Consumption per person (site policy)' },
+      { v: 'El Club', l: 'Integrated offer mix' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Stronger margin and revenue on beverage retail.',
+      consumer: 'Premium draft experience in a social club setting.',
+      sodexo: 'Paid per transaction by the user within the El Club mix.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'starbucks-automatic-chile',
+    name: 'Starbucks Automatic — El Club',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Coffee', '#Starbucks', '#ElClub'],
+    flags: ['🇨🇱'],
+    img: '☕',
+    context:
+      'Starbucks coffee shop offering integrated into a single automatic device at Sodexo Chile El Club and minimarket sites, ensuring product standardisation.',
+    description:
+      'One-touch Starbucks range in a compact footprint — increases revenue and ATV, expands the El Club cafeteria offer and pairs with additional retail products.',
+    kpis: [
+      { v: 'Higher', l: 'Revenue and ATV' },
+      { v: 'New', l: 'El Club cafeteria offer' },
+      { v: 'Combined', l: 'Sales uplift with add-on products' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Better margin and recognised brand pull on site.',
+      consumer: 'Consistent Starbucks quality without a full café footprint.',
+      sodexo:
+        'Product integrated into El Club and minimarket mix — paid per transaction by the user.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'recovery-capsules-sonic-drops-chile',
+    name: 'Recovery Capsules — Sonic Drops',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Wellbeing', '#Recovery', '#Workplace'],
+    flags: ['🇨🇱'],
+    img: '🧘',
+    context:
+      'Sonic Drops sensory immersion capsules at Chile E&R sites — vibration, sound and light for energy and wellbeing recovery in 20 minutes.',
+    description:
+      'Self-use immersion pods designed to reduce fatigue, improve cognitive attention and support workforce recovery between shifts on remote mining sites.',
+    kpis: [
+      { v: '20 min', l: 'Recovery session' },
+      { v: 'Lower', l: 'Reported fatigue' },
+      { v: 'Improved', l: 'Cognitive attention' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Workplace wellbeing amenity with equipment sales and monthly support per unit.',
+      consumer: 'Quick, private recovery without leaving the camp.',
+      sodexo: 'Equipment sales plus monthly support charges for each deployed unit.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'personal-care-services-chile',
+    name: 'Personal Care Services — On-Site',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Wellbeing', '#Retail', '#Workplace'],
+    flags: ['🇨🇱'],
+    img: '💇',
+    context:
+      'Dedicated spaces for hairdressing and manicure retail on Chile E&R camps, delivered by professionals addressing consumer needs on site.',
+    description:
+      'Personal care services improve the camp experience and satisfaction scores while generating incremental revenue through pay-per-transaction models.',
+    kpis: [
+      { v: 'Higher', l: 'Experience and satisfaction scores' },
+      { v: 'On-site', l: 'Professional retail delivery' },
+      { v: 'Revenue', l: 'Pay-per-transaction per user' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'FTE cost charged to client; users pay per service — workplace wellbeing uplift.',
+      consumer: 'Convenient grooming without travelling off site.',
+      sodexo: 'Dual model: client-funded FTE base plus transaction revenue.',
+    },
+    regionsAndCountry: 'Chile',
+    areas: ['work'],
+  },
+  {
+    id: 'betterfly-effect-chile',
+    name: 'Betterfly Effect — Incentive App',
+    module: '',
+    type: 'Application',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaling',
+    hashtags: ['#Wellbeing', '#Engagement', '#Habits'],
+    flags: ['🇨🇱'],
+    img: '🦋',
+    context:
+      'Incentive app encouraging healthy habits and benefit usage at Collahuasi, Chile — building a motivated community with rewards for positive actions.',
+    description:
+      'Gamified wellbeing platform that improves behavioural use of services, reduces food-service waste and lifts satisfaction indicators across the camp.',
+    kpis: [
+      { v: 'Lower', l: 'Food-service waste' },
+      { v: 'Higher', l: 'Satisfaction indicators' },
+      { v: 'Better', l: 'Service utilisation behaviours' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client: 'Decreased turnover risk and better cost management with real-time data.',
+      consumer: 'Rewards for healthy habits and stronger sense of community.',
+      sodexo:
+        'Unit price per active user (minimum base), indexed to service price or as complementary offer.',
+    },
+    regionsAndCountry: 'Chile — Collahuasi (in implementation)',
+    areas: ['work'],
+  },
+  {
+    id: 'alarm-bracelet-gcare-chile',
+    name: 'Alarm Bracelet — GCare',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Safety', '#Psychosocial', '#Emergency'],
+    flags: ['🇨🇱'],
+    img: '🆘',
+    context:
+      'GCare alert bracelet deployed at Minera Escondida, Chile — mandatory preventive measure for psychosocial risk and violence-free work environments.',
+    description:
+      'Wearable alert system for immediate response to falls, accidents or medical emergencies, with exact location and protocol activation to meet safety regulations.',
+    kpis: [
+      { v: 'Immediate', l: 'Emergency response activation' },
+      { v: 'Exact', l: 'Location of incident' },
+      { v: '8–10%', l: 'Refundable fee modality for client investment' },
+    ],
+    contact: 'Sodexo Chile — E&R',
+    benefits: {
+      client:
+        'Compliance with safe, violence-free workplace regulations; investment under refundable cost modality.',
+      consumer: 'Higher perceived safety and faster help in emergencies.',
+      sodexo: 'Client investment with refundable fee structure (8–10%).',
+    },
+    regionsAndCountry: 'Chile — Minera Escondida',
+    areas: ['work'],
+  },
+
+  /* ── Brazil ─────────────────────────────────────────────────────────── */
+  {
+    id: 'central-production-brazil',
+    name: 'Central Production — Culinary Base Model',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Study',
+    hashtags: ['#FoodProduction', '#Efficiency', '#CulinaryBase'],
+    flags: ['🇧🇷'],
+    img: '🍳',
+    context:
+      'Brazil E&R initiative to build central production centres using culinary bases to improve site efficiency, reduce costs and increase flexibility for consumers.',
+    description:
+      'Centralised food production with culinary-base foundations targets gross-margin improvement, lower labour cost and reduced raw-material waste, while giving sites more flexibility to serve diverse consumer needs.',
+    kpis: [
+      { v: 'GM', l: 'Improvement target' },
+      { v: 'Lower', l: 'Labour cost' },
+      { v: 'Reduced', l: 'RMC waste' },
+    ],
+    contact: 'Sodexo Brazil — E&R',
+    benefits: {
+      client: 'More efficient production model with cost and waste reduction at scale.',
+      consumer: 'Better, more flexible food offer on site.',
+      sodexo:
+        'Target: two central production units in FY27 — under evaluation for national rollout.',
+    },
+    regionsAndCountry: 'Brazil (under evaluation)',
+    areas: ['work'],
+  },
+  {
+    id: 'flagship-offshore-living-brazil',
+    name: 'Flagship Offshore Living — Onshore Experience',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#OffshoreLiving', '#Brand', '#Retail'],
+    flags: ['🇧🇷'],
+    img: '⚓',
+    context:
+      'Flagship onshore store in Brazil that simulates the Offshore Living experience clients and guests will receive offshore.',
+    description:
+      'A branded showcase space increases sales volume and brand coverage by letting clients experience the full Offshore Living proposition before deployment offshore.',
+    kpis: [
+      { v: 'Higher', l: 'Sales volume' },
+      { v: 'Broader', l: 'Brand coverage' },
+      { v: 'Experience', l: 'Onshore simulation of offshore offer' },
+    ],
+    contact: 'Sodexo Brazil — E&R',
+    benefits: {
+      client: 'Clear preview of offshore service quality and brand standards.',
+      consumer: 'Familiarity with the offer before boarding.',
+      sodexo: 'Revenue uplift by presenting the offshore experience onshore.',
+    },
+    regionsAndCountry: 'Brazil',
+    areas: ['work'],
+  },
+  {
+    id: 'hospitality-training-brazil',
+    name: 'Hospitality Training — Offshore Living',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Training', '#OffshoreLiving', '#Hospitality'],
+    flags: ['🇧🇷'],
+    img: '🎓',
+    context:
+      'Two-day in-person Offshore Living brand hospitality training in Brazil — customer service and brand operations for frontline teams.',
+    description:
+      'Structured training embeds hospitality, quality and user-experience focus into service delivery, driving more consistent in-service quality and stronger brand application across sites.',
+    kpis: [
+      { v: '120+', l: 'Collaborators trained' },
+      { v: 'Best', l: 'Brand application outcomes' },
+      { v: '2 days', l: 'In-person programme' },
+    ],
+    contact: 'Sodexo Brazil — E&R',
+    benefits: {
+      client: 'Teams aligned to Offshore Living brand standards.',
+      consumer: 'More consistent, hospitality-led service quality.',
+      sodexo: 'Integrated into the Offshore Living offer package.',
+    },
+    regionsAndCountry: 'Brazil',
+    areas: ['work'],
+  },
+  {
+    id: 'offshore-living-innovations-brazil',
+    name: 'Offshore Living Innovations on Board',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#OffshoreLiving', '#Wellbeing', '#Innovation'],
+    flags: ['🇧🇷'],
+    img: '🚢',
+    context:
+      'Bundle of on-board Offshore Living innovations in Brazil — welcome gifts, newsletter, hydroponic garden, Mais Saúde nutritional care and air freshener programmes.',
+    description:
+      'Each innovation carries client value and strengthens the benefits of choosing Offshore Living, lifting client satisfaction, NPS, brand coverage and sales.',
+    kpis: [
+      { v: 'Higher', l: 'Client satisfaction and NPS' },
+      { v: 'Stronger', l: 'Brand coverage rate' },
+      { v: 'Sales', l: 'Increase across onboard offer' },
+    ],
+    contact: 'Sodexo Brazil — E&R',
+    benefits: {
+      client: 'Differentiated offshore living proposition with measurable satisfaction gains.',
+      consumer:
+        'Welcome gifts, wellbeing (Mais Saúde), fresh produce (hydroponic) and curated communications.',
+      sodexo: 'Each innovation priced for the client within the Offshore Living package.',
+    },
+    regionsAndCountry: 'Brazil',
+    areas: ['work'],
+  },
+
+  /* ── Australia ──────────────────────────────────────────────────────── */
+  {
+    id: 'soap-aid-camp-to-community-australia',
+    name: 'Soap Aid Camp to Community Programme',
+    module: '',
+    type: 'Service',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Sustainability', '#Indigenous', '#FIFO', '#Hygiene'],
+    flags: ['🇦🇺'],
+    img: '🧼',
+    context:
+      'Sodexo Australia partners with Soap Aid and Woollahra Group (100% Aboriginal-owned) to recycle soap from FIFO accommodation across 100+ Energy & Resources sites, redistributing Healthy Hands bars to communities facing hygiene poverty.',
+    description:
+      'The Camp to Community programme collects usable soap from remote Fly-In Fly-Out sites for recycling instead of landfill, with Woollahra Group distributing recycled bars nationwide. The pilot at a single Sodexo-operated site collected 3,897 kg of soap for recycling in its first months.',
+    kpis: [
+      { v: '38,970', l: 'Recycled soap bars crafted' },
+      { v: '3,247', l: 'Children reached with hygiene education' },
+      { v: '5.62 tCO₂e', l: 'Emissions avoided' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Strengthens ESG and reconciliation outcomes while reducing waste from FIFO villages; blueprint for national scale across E&R sites.',
+      consumer:
+        'Essential hygiene products reach vulnerable communities; supports dignity and health in regional and remote Australia.',
+      sodexo:
+        'Partnership with Indigenous-owned Woollahra Group; aligns with Stretch RAP 2025–28 and $100M+ invested with 50+ Indigenous businesses.',
+    },
+    regionsAndCountry: 'Australia — FIFO E&R sites (national rollout)',
+    url: 'https://au.sodexo.com/insights/case-studies/2025/soap-aid-with-woollahra-group',
+    areas: ['work'],
+  },
+  {
+    id: 'iot-air-quality-monitoring-australia',
+    name: 'IoT Indoor Air Quality Monitoring',
+    module: '',
+    type: 'Software',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#IoT', '#Accommodation', '#HealthAndSafety'],
+    flags: ['🇦🇺'],
+    img: '🌬️',
+    context:
+      'Sodexo services 70+ mining villages across regional and remote Australia. At a remote FIFO site, mould growth in accommodation was linked to ventilation, design, ageing assets and occupant behaviour.',
+    description:
+      'IoT sensors remotely monitor humidity, ventilation, temperature and airborne pollutants — augmenting physical inspections and quantifying conditions before remediation. Dehumidification effectiveness is tracked in real time to protect resident health and client reputation.',
+    kpis: [
+      { v: '70+', l: 'Mining villages in scope' },
+      { v: '8,000+', l: 'Guests with improved accommodation experience' },
+      { v: 'Remote', l: 'Monitoring vs. manual gauge rounds' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Reduces structural defect risk, remediation cost and reputational damage from poor living conditions at remote sites.',
+      consumer:
+        'Healthier rooms — fewer mould-related symptoms and a more comfortable FIFO stay.',
+      sodexo:
+        'Data-led continuous improvement; supports talent attraction and retention in harsh-environment camps.',
+    },
+    regionsAndCountry: 'Australia — remote mining villages',
+    url: 'https://au.sodexo.com/insights/case-studies/iot-air-quality-monitoring',
+    areas: ['work'],
+  },
+  {
+    id: 'remote-water-monitoring-pilbara-australia',
+    name: 'Remote Water Monitoring — Pilbara',
+    module: '',
+    type: 'Software',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#IoT', '#Water', '#FIFO', '#Pilbara'],
+    flags: ['🇦🇺'],
+    img: '💧',
+    context:
+      'Safe potable water is non-negotiable for FIFO mining villages in Western Australia’s Pilbara, where groundwater is the main source. Sodexo manages supply and treatment for 32+ villages, towns and camps.',
+    description:
+      'IoT sensors and transmission equipment remotely monitor treatment plants — tracking levels, historical data and alarms so issues are addressed before supply is affected. Extended from a year-long trial to 13 Pilbara villages with 204 devices monitoring ~25 megalitres of flow daily.',
+    kpis: [
+      { v: '13', l: 'Remote villages live' },
+      { v: '204', l: 'IoT devices deployed' },
+      { v: '~25 ML', l: 'Water flow monitored daily' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Higher safety, efficiency and reliability; reduces human error from manual gauge monitoring across spread-out networks.',
+      consumer: 'Consistent, safe potable water across remote camp stays.',
+      sodexo:
+        'Foundation for further IoT scopes: pump-hour, sewer pit and wastewater plant monitoring.',
+    },
+    regionsAndCountry: 'Australia — Pilbara, Western Australia',
+    url: 'https://au.sodexo.com/insights/case-studies/sodexo-remote-water-monitoring',
+    areas: ['work'],
+  },
+  {
+    id: 'supercharged-shuffleboard-game-volt',
+    name: 'Supercharged Shuffleboard — Game Volt',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#CompetitiveSocialising', '#Entertainment', '#F&B'],
+    flags: ['🇦🇺'],
+    img: '🎯',
+    context:
+      'Technology-enabled competitive socialising is among the fastest-growing trends in hospitality and leisure — especially for extending dwell time and F&B revenue at camp recreation and village social hubs.',
+    description:
+      'Interactive electric shuffleboard merges classic gameplay with video-game scoring: sensor tracking, automated scoring, action replay and five game modes (Shuffle Reloaded, Wave Breaker, Danger Zone, Hoarders, Cluster Puck). Deployed in 200+ locations globally; up to 10 players per table.',
+    kpis: [
+      { v: '200+', l: 'Global installations' },
+      { v: '5', l: 'Interactive game modes' },
+      { v: 'Higher', l: 'Dwell time and F&B attach rate' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Proven ROI for operators; strong food and beverage sales as players order drinks and share food during sessions.',
+      consumer:
+        'Elevated competitive social experience without manual scorekeeping — accessible for mixed skill levels.',
+      sodexo:
+        'Partner solution for Australian E&R recreation fit-outs; requires stable power and 100 Mbps internet per unit.',
+    },
+    regionsAndCountry: 'Australia',
+    url: 'https://game-volt.com/supercharged-shuffleboard',
+    areas: ['work'],
+  },
+  {
+    id: 'batfast-entertainment-simulators-australia',
+    name: 'BatFast — Sports Entertainment Simulators',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaling',
+    hashtags: ['#CompetitiveSocialising', '#Sports', '#Entertainment'],
+    flags: ['🇦🇺'],
+    img: '🏏',
+    context:
+      'BatFast partners with hospitality and leisure operators to deliver cricket, baseball, tennis and multi-sport simulator experiences combined with food and beverage — a core competitive-socialising format for village recreation centres.',
+    description:
+      'Technology-enabled batting cages and sports simulators adapt to every skill level, driving group bookings, longer visits and F&B uplift. Reference concepts include Sixes Social Cricket, Sluggers and Wikit — proven eatertainment models BatFast powers globally.',
+    kpis: [
+      { v: 'Multi-sport', l: 'Cricket, baseball, tennis simulators' },
+      { v: 'Group', l: 'Bookings and events' },
+      { v: 'F&B', l: 'Revenue uplift with extended dwell time' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Differentiated recreation anchor that attracts footfall across the week and supports camp “great night out” positioning.',
+      consumer:
+        'Inclusive, Instagram-friendly group activity — no need to be a sports ace to enjoy.',
+      sodexo:
+        'Consultation-led fit-out partner for Australian E&R leisure and village social spaces.',
+    },
+    regionsAndCountry: 'Australia',
+    url: 'https://batfast.com/entertainment/',
+    areas: ['work'],
+  },
+  {
+    id: 'interactive-darts-501fun-australia',
+    name: 'Interactive Darts — 501fun',
+    module: '',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#CompetitiveSocialising', '#AR', '#Entertainment'],
+    flags: ['🇦🇺'],
+    img: '🎱',
+    context:
+      '501fun’s Interactive Darts brings augmented-reality scoring and game modes to bars, hospitality and entertainment venues — a leading competitive-socialising format for Australian camp bars and recreation rooms.',
+    description:
+      'Uses Unicorn Smartboard® for precise autoscoring (no camera calibration), with rich graphics on a large screen, multiplayer modes and optional Social Replay®. Commercial console, steel darts and plug-and-play deployment for demanding leisure environments.',
+    kpis: [
+      { v: 'Autoscoring', l: 'Unicorn Smartboard® accuracy' },
+      { v: 'Multiplayer', l: 'Team and social game modes' },
+      { v: 'Higher', l: 'Dwell time and F&B orders' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'New revenue stream and group-booking magnet; transforms underused space into a vibrant social hub.',
+      consumer:
+        'High-energy, accessible darts with instant scoring — keeps groups engaged for hours.',
+      sodexo:
+        'AU-market partner (501fun en-au); includes 501 Hub platform and optional Social Replay®.',
+    },
+    regionsAndCountry: 'Australia',
+    url: 'https://www.501fun.com/en-au/our-products/interactive-darts',
+    areas: ['work'],
+  },
+  {
+    id: 'aifi-autonomous-retail-gudai-darri-australia',
+    name: 'AiFi Autonomous Retail Store — Gudai-Darri',
+    module: 'Autonomous Store / Micro-market',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Scaled',
+    hashtags: ['#Robotics', '#FIFO', '#FrictionlessRetail', '#AiFi', '#MiningVillage'],
+    flags: ['🇦🇺'],
+    img: '🏪',
+    context:
+      'Australia’s first autonomous retail store at a mining village — owned and operated by Sodexo Australia at Rio Tinto Iron Ore Gudai-Darri village (Pilbara, WA), serving up to 800 FIFO residents and guests with technology from AiFi.',
+    description:
+      'Computer-vision autonomous retail tracks shoppers through the journey so residents complete purchases without a traditional checkout. A portable shipping-container fit-out (air-conditioned) offers 50+ cold beverages and 50+ snacks and confectionery, operating 24/7. Roughly one camera per square metre; AI sensors calculate payment when residents leave. The structure can relocate to new remote sites.',
+    kpis: [
+      { v: '800', l: 'Residents & guests served' },
+      { v: '100+', l: 'SKU types (beverages + snacks)' },
+      { v: '24/7', l: 'Unstaffed store hours' },
+      { v: 'Jan 2025', l: 'Pilot launch at Gudai-Darri' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Differentiated amenity for Rio Tinto FIFO villages — convenience and retail revenue without permanent checkout staffing in remote Pilbara conditions.',
+      consumer:
+        'Fast, frictionless shopping after shifts — grab-and-go without queues in a harsh, remote environment.',
+      sodexo:
+        'Portable container model scales across mining villages; builds on Sodexo-operated village retail and pairs with Ottobot last-mile delivery.',
+    },
+    regionsAndCountry: 'Australia — Gudai-Darri, Pilbara WA (Rio Tinto Iron Ore)',
+    areas: ['work'],
+  },
+  {
+    id: 'ottonomy-delivery-robot-gudai-darri-australia',
+    name: 'Ottobot Autonomous Delivery Robot — Gudai-Darri',
+    module: 'Delivery robots',
+    type: 'Device',
+    catalogueTag: ER_CATALOGUE_TAG,
+    status: 'Pilot',
+    hashtags: ['#Robotics', '#FIFO', '#LastMile', '#Ottonomy', '#MyVillage'],
+    flags: ['🇦🇺'],
+    img: '🤖',
+    context:
+      'World’s first autonomous food and beverage delivery robot deployed at a mine-site village — trialled by Sodexo Australia at Rio Tinto Gudai-Darri, building on the AiFi autonomous retail store launched January 2025 at the same location.',
+    description:
+      'Ottobot by Ottonomy Inc. navigates premapped, geofenced village routes at walking speed, yielding to people, vehicles and obstacles. Residents order snacks, non-alcoholic drinks, meals and essentials via the My Village app; Sodexo staff load the insulated compartment. On arrival, a text message delivers a unique PIN to unlock the compartment. Initial pilot overseen by on-site Ottonomy; expansion subject to trial results. Brand partners include Coca-Cola, Red Bull, Mars and Smiths Chips alongside village menu items.',
+    kpis: [
+      { v: '1st', l: 'Mine-site village F&B delivery robot globally' },
+      { v: 'Walking speed', l: 'Geofenced autonomous routes' },
+      { v: 'PIN unlock', l: 'Secure compartment hand-off' },
+      { v: 'Pilot', l: 'On-site Ottonomy oversight phase' },
+    ],
+    contact: 'Sodexo Australia — E&R',
+    benefits: {
+      client:
+        'Extends village amenity and choice without expanding fixed retail footprint — supports talent attraction in remote FIFO camps.',
+      consumer:
+        'Order to room or common areas; less queue time for meals and retail items across shifts.',
+      sodexo:
+        'Integrated with My Village app and the AiFi autonomous store pilot — a robotics stack for end-to-end remote convenience.',
+    },
+    regionsAndCountry: 'Australia — Gudai-Darri, Pilbara WA (Rio Tinto Iron Ore)',
     areas: ['work'],
   },
 

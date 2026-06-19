@@ -34,6 +34,8 @@ export const erPaths = {
   needs: (mode: ErLinkMode) => (short(mode) ? '/needs' : '/er/needs'),
   ifm: (mode: ErLinkMode) => (short(mode) ? '/ifm' : '/er/ifm'),
   journey: (mode: ErLinkMode) => (short(mode) ? '/journey' : '/er/journey'),
+  journeyMoment: (mode: ErLinkMode, momentId: string) =>
+    short(mode) ? `/journey/moment/${momentId}` : `/er/journey/moment/${momentId}`,
   moments: (mode: ErLinkMode) => (short(mode) ? '/moments' : '/er/moments'),
   operatorLens: (mode: ErLinkMode) => (short(mode) ? '/operator' : '/er/operator'),
 };

@@ -7,6 +7,9 @@
 
 const BASE = "/images/catalogue/assets/personae";
 
+/** Bump when E&R editorial portraits are re-exported (cache bust on CDN). */
+const ER_ASSET_V = "?v=20260522";
+
 export const PERSONA_FACE_URL: Record<string, string> = {
   "blue-collar": "/images/catalogue/assets/personae/face/blue-collar.png",
   "client-heal": "/images/catalogue/assets/personae/face/client-heal.png",
@@ -33,14 +36,15 @@ export const PERSONA_FACE_URL: Record<string, string> = {
   "vip-guest": "/images/catalogue/assets/personae/face/vip-guest.png",
   "white-collar": "/images/catalogue/assets/personae/face/white-collar.png",
   "exemple-minor": "/images/catalogue/assets/personae/face/white-collar.png",
-  // ── E&R BoK personae — same image used for face + full until dedicated crops are exported ──
-  "remote-lifestyler": "/images/catalogue/assets/personae/full/remote-lifestyler.png",
-  "optimizer": "/images/catalogue/assets/personae/full/optimizer.png",
-  "proactive-achiever": "/images/catalogue/assets/personae/full/proactive-achiever.png",
-  "family-hero": "/images/catalogue/assets/personae/full/family-hero.png",
-  "privacy-seeker": "/images/catalogue/assets/personae/full/privacy-seeker.png",
+  // ── E&R BoK personae — small crops (listing cards, chips) ──
+  "remote-lifestyler": `/images/catalogue/assets/personae/portrait/remote-lifestyler.png${ER_ASSET_V}`,
+  "optimizer": `/images/catalogue/assets/personae/portrait/optimizer.png${ER_ASSET_V}`,
+  "proactive-achiever": `/images/catalogue/assets/personae/portrait/proactive-achiever.png${ER_ASSET_V}`,
+  "family-hero": `/images/catalogue/assets/personae/portrait/family-hero.png${ER_ASSET_V}`,
+  "social-experiencer": `/images/catalogue/assets/personae/portrait/social-experiencer.png${ER_ASSET_V}`,
+  "privacy-seeker": `/images/catalogue/assets/personae/portrait/privacy-seeker.png${ER_ASSET_V}`,
   // ── E&R Client (Jordan, IFM sponsor) — synthetic persona slug is `client` ──
-  "client": "/images/catalogue/assets/personae/full/er-client.png",
+  "client": `/images/catalogue/assets/personae/portrait/er-client.png${ER_ASSET_V}`,
 };
 
 export const PERSONA_FULL_URL: Record<string, string> = {
@@ -70,13 +74,14 @@ export const PERSONA_FULL_URL: Record<string, string> = {
   "white-collar": "/images/catalogue/assets/personae/full/white-collar.png",
   "exemple-minor": "/images/catalogue/assets/personae/full/white-collar.png",
   // ── E&R BoK personae (editorial portraits from BoK long version) ──
-  "remote-lifestyler": "/images/catalogue/assets/personae/full/remote-lifestyler.png",
-  "optimizer": "/images/catalogue/assets/personae/full/optimizer.png",
-  "proactive-achiever": "/images/catalogue/assets/personae/full/proactive-achiever.png",
-  "family-hero": "/images/catalogue/assets/personae/full/family-hero.png",
-  "privacy-seeker": "/images/catalogue/assets/personae/full/privacy-seeker.png",
+  "remote-lifestyler": `/images/catalogue/assets/personae/full/remote-lifestyler.png${ER_ASSET_V}`,
+  "optimizer": `/images/catalogue/assets/personae/full/optimizer.png${ER_ASSET_V}`,
+  "proactive-achiever": `/images/catalogue/assets/personae/full/proactive-achiever.png${ER_ASSET_V}`,
+  "family-hero": `/images/catalogue/assets/personae/full/family-hero.png${ER_ASSET_V}`,
+  "social-experiencer": `/images/catalogue/assets/personae/full/social-experiencer.png${ER_ASSET_V}`,
+  "privacy-seeker": `/images/catalogue/assets/personae/full/privacy-seeker.png${ER_ASSET_V}`,
   // ── E&R Client (Jordan, IFM sponsor) — synthetic persona slug is `client` ──
-  "client": "/images/catalogue/assets/personae/full/er-client.png",
+  "client": `/images/catalogue/assets/personae/full/er-client.png${ER_ASSET_V}`,
 };
 
 export const PERSONA_LISTING_URL: Record<string, string> = {
@@ -105,4 +110,12 @@ export const PERSONA_LISTING_URL: Record<string, string> = {
   "vip-guest": "/images/catalogue/assets/personae/portrait/vip-guest.png",
   "white-collar": "/images/catalogue/assets/personae/portrait/white-collar.png",
   "exemple-minor": "/images/catalogue/assets/personae/portrait/white-collar.png",
+  // ── E&R personae listing cards (`/er/personae`) ──
+  "remote-lifestyler": `/images/catalogue/assets/personae/portrait/remote-lifestyler.png${ER_ASSET_V}`,
+  "optimizer": `/images/catalogue/assets/personae/portrait/optimizer.png${ER_ASSET_V}`,
+  "proactive-achiever": `/images/catalogue/assets/personae/portrait/proactive-achiever.png${ER_ASSET_V}`,
+  "family-hero": `/images/catalogue/assets/personae/portrait/family-hero.png${ER_ASSET_V}`,
+  "social-experiencer": `/images/catalogue/assets/personae/portrait/social-experiencer.png${ER_ASSET_V}`,
+  "privacy-seeker": `/images/catalogue/assets/personae/portrait/privacy-seeker.png${ER_ASSET_V}`,
+  "client": `/images/catalogue/assets/personae/portrait/er-client.png${ER_ASSET_V}`,
 };
