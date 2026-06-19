@@ -93,6 +93,12 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
       <HeroDecor />
 
       <section className="relative z-10 px-6 pb-12 pt-10 md:px-12 md:pt-14 lg:pt-16">
+        {!erMini ? (
+          <div className="motion-fade-up mx-auto mb-8 max-w-[1600px] md:mb-10" style={{ animationDelay: '120ms' }}>
+            <HomeExploreBandeau />
+          </div>
+        ) : null}
+
         <div className="mx-auto grid max-w-[1600px] gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-10">
           <div className="flex flex-col items-start gap-5 text-white">
             <span
@@ -144,11 +150,7 @@ export function CatalogueHome({ data, erLinkMode }: CatalogueHomeProps) {
             </p>
           </div>
 
-          {erMini ? (
-            <HeroCollage className="w-full" variant="er" />
-          ) : (
-            <HomeExploreBandeau className="w-full max-w-xl lg:max-w-none lg:justify-self-end" />
-          )}
+          <HeroCollage className="w-full" variant={erMini ? 'er' : 'global'} />
         </div>
 
         {!erMini ? (

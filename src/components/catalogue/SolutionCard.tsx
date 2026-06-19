@@ -15,6 +15,7 @@ import {
 } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { useState, useTransition, type ReactNode } from 'react';
+import { SparkSharePointCallout } from '@/components/spark/SparkSharePointCallout';
 import { FavouriteButton } from '@/components/ui/FavouriteButton';
 import { ShareButton } from '@/components/ui/ShareButton';
 import { DownloadCta } from '@/components/ui/DownloadCta';
@@ -24,6 +25,7 @@ import { COLLECTION_META } from '@/lib/data/collections';
 import { pickModuleVisual } from '@/lib/data/moduleVisuals';
 import type { Module, Solution } from '@/lib/data/types';
 import { emphasizeCatalogueText } from '@/lib/format/emphasizeCatalogueText';
+import { isSparkOfferSolution } from '@/lib/sparkSharePoint';
 import { cn } from '@/lib/utils/cn';
 
 export type SolutionCardLayoutVariant = 'classic' | 'editorial' | 'bento' | 'quiet';
@@ -341,6 +343,7 @@ export function SolutionCard({
   const allSolutions = [solution, ...siblings];
   const current = allSolutions.find((s) => s.id === active) ?? solution;
   const sc = statusColor(current.status);
+  const isSpark = isSparkOfferSolution(current);
   const railVisual = hideModuleRail ? null : pickModuleVisual(module ?? undefined);
   const variant = layoutVariant;
 
@@ -479,9 +482,44 @@ export function SolutionCard({
     </>
   );
 
+  const descriptionOnlyBento = (
+    <div className="rounded-2xl bg-white p-4" style={{ boxShadow: 'var(--shadow-sm)' }}>
+      <div className="mb-2 flex items-center gap-2">
+        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] bg-[var(--icon-bg)]">
+          <Article size={20} weight="fill" color="var(--blue)" />
+        </div>
+        <h2 className="text-base font-bold text-[var(--blue)]" style={{ fontFamily: 'var(--font-body)' }}>
+          Description
+        </h2>
+      </div>
+      <div className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-800">
+        {emphasizeCatalogueText(current.description, current)}
+      </div>
+    </div>
+  );
+
+  const sparkBentoMain = (
+    <div className="flex min-h-0 flex-1 gap-5 overflow-y-auto p-6">
+      <div className="min-w-0 flex-1 space-y-3">
+        <TitleAndMeta current={current} sc={sc} />
+        {descriptionOnlyBento}
+        <SparkSharePointCallout variant="inline" solutionName={current.name} className="max-w-none" />
+      </div>
+      <aside className="w-72 flex-shrink-0 space-y-3">
+        <SolutionHeroTile
+          solution={current}
+          module={module}
+          alt={`${current.name} — ${module?.name ?? current.module}`}
+        />
+      </aside>
+    </div>
+  );
+
   let mainScroll: ReactNode;
 
-  if (variant === 'editorial') {
+  if (isSpark) {
+    mainScroll = sparkBentoMain;
+  } else if (variant === 'editorial') {
     mainScroll = (
       <div className="flex min-h-0 flex-1 overflow-y-auto bg-[var(--surface)]">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 p-6 lg:flex-row lg:items-start">
