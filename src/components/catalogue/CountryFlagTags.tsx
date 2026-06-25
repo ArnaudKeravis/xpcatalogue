@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { dedupeFlags, getFlagLabel, resolveSolutionFlags } from '@/lib/data/countryFlags';
+import { dedupeFlags, getFlagIcon, getFlagLabel, resolveSolutionFlags } from '@/lib/data/countryFlags';
 import type { Solution } from '@/lib/data/types';
 import { cn } from '@/lib/utils/cn';
 
@@ -49,7 +49,7 @@ export function CountryFlagTags({
         const inner = (
           <>
             <span className={cn(flagSize, 'leading-none')} aria-hidden>
-              {flag}
+              {getFlagIcon(flag)}
             </span>
             <span
               className="text-[10px] font-semibold uppercase tracking-wide text-[var(--blue)]/75"

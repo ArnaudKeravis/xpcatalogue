@@ -1,7 +1,30 @@
 /**
  * Parse Excel **Regions and country** free-text into flag emoji arrays used by
  * filters, home country lens, footer counts, and solution cards.
+ *
+ * Regional Sodexo codes (APAC, COTU, UKI…) can also be represented as
+ * `region:*` tokens — see {@link getFlagIcon} / {@link getFlagLabel}.
  */
+
+export const REGIONAL_FLAG_PREFIX = 'region:';
+
+/** Sodexo regional codes displayed as a single tag (not expanded to countries). */
+const REGIONAL_FLAG_META: Record<string, { icon: string; label: string }> = {
+  'region:uki': { icon: '🇬🇧', label: 'UKI' },
+  'region:apac': { icon: '🌐', label: 'APAC' },
+  'region:cotu': { icon: '🌐', label: 'COTU' },
+};
+
+export function isRegionalFlag(flag: string): boolean {
+  return flag.startsWith(REGIONAL_FLAG_PREFIX);
+}
+
+export function getFlagIcon(flag: string): string {
+  if (isRegionalFlag(flag)) {
+    return REGIONAL_FLAG_META[flag]?.icon ?? '🌐';
+  }
+  return flag;
+}
 
 /** Human label for each flag emoji (filters, tags, aria). */
 export const FLAG_LABELS: Record<string, string> = {
@@ -46,6 +69,7 @@ const REGION_TO_FLAGS: Record<string, string[]> = {
   'united states': ['🇺🇸'],
   france: ['🇫🇷'],
   'uk&i': ['🇬🇧'],
+  uki: ['🇬🇧'],
   uk: ['🇬🇧'],
   'united kingdom': ['🇬🇧'],
   brazil: ['🇧🇷'],
@@ -137,6 +161,12 @@ export function parseRegionsToFlags(regionsAndCountry: string | null | undefined
 }
 
 export function getFlagLabel(flag: string): string {
+  if (isRegionalFlag(flag)) {
+    return (
+      REGIONAL_FLAG_META[flag]?.label ??
+      flag.slice(REGIONAL_FLAG_PREFIX.length).toUpperCase()
+    );
+  }
   return FLAG_LABELS[flag] ?? flag;
 }
 

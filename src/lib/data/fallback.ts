@@ -15,7 +15,8 @@ import {
 import { mergeTddiV2IntoCatalogue } from './tddiV2CatalogueMerge';
 import { modulesRecordFromExcelSoT, wireModuleSolutionIdsFromExcelLinks } from './modulesExcelMerge';
 import { buildSolutionsCatalogueFromExcel } from './solutionsFromExcel';
-import { dedupeFlags, parseRegionsToFlags } from './countryFlags';
+import { dedupeFlags, getFlagIcon, getFlagLabel, parseRegionsToFlags } from './countryFlags';
+import { getNotionRegionOverride } from './solutionRegionOverrides';
 import { ER_SOLUTIONS } from './er/erSolutions';
 import { applyPersonaMomentModuleFill } from './personaMomentModules';
 import { JOURNEY_STEPS_FROM_EXCEL } from './journeyStepsFromExcel.generated';
@@ -615,6 +616,15 @@ const LEGACY_FLAGS_BY_NAME = new Map(
 
 function enrichSolutionFlags(solutions: Solution[]): Solution[] {
   return solutions.map((s) => {
+    const notion = getNotionRegionOverride(s.id);
+    if (notion) {
+      return {
+        ...s,
+        regionsAndCountry: notion.regionsAndCountry,
+        flags: dedupeFlags(notion.flags),
+      };
+    }
+
     let flags =
       s.flags.length > 0 ? s.flags : parseRegionsToFlags(s.regionsAndCountry);
     if (!flags.length) {
