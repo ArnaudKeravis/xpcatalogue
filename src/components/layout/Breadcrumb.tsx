@@ -87,6 +87,9 @@ function computeFromPath(pathname: string): BreadcrumbItem[] {
   if (parts[0] === 'saved') {
     return [{ label: 'Saved' }];
   }
+  if (parts[0] === 'login') {
+    return [{ label: 'Sign in' }];
+  }
 
   const area = parts[0];
   if (area in AREA_LABELS) {
